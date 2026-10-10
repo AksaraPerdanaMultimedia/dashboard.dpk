@@ -383,6 +383,32 @@ html[data-theme=dark] .musErr{background:rgba(255,107,91,.2);color:#ffd0c8;borde
 @keyframes stAlarm{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(220,38,38,.7),2px 2px 0 var(--ink)}50%{transform:scale(1.07);box-shadow:0 0 0 9px rgba(220,38,38,0),2px 2px 0 var(--ink)}}
 html[data-theme=dark] .st-kosong{background:repeating-linear-gradient(45deg,#334155 0 8px,#273449 8px 16px);color:#e2e8f0;border-color:#94a3b8}
 @media(prefers-reduced-motion:reduce){.stp,.stp:after{animation:none}}
+
+/* ===== Warna menu aktif per menu, FIELDSA, animasi sapaan ===== */
+nav a:before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--nc,var(--ac));border:2px solid var(--ink);margin-right:10px;vertical-align:middle}
+nav a.on:before{background:var(--nt);border-color:var(--ink)}
+nav a:hover{box-shadow:inset 5px 0 0 var(--nc,var(--ac))}
+nav a.on{background:linear-gradient(90deg,var(--nc),var(--nc2))!important;color:var(--nt)!important;border-color:transparent!important;box-shadow:4px 4px 0 var(--ink)!important}
+nav a.ext{color:var(--tx);background:linear-gradient(90deg,rgba(249,115,22,.14),rgba(185,28,28,.08));border:2px dashed var(--ink)}
+nav a.ext:hover{background:linear-gradient(90deg,#f97316,#b91c1c);color:#fff8e8;border-style:solid}
+.xo{display:inline-block;transition:transform .3s}
+nav a.ext:hover .xo{transform:translate(2px,-2px)}
+@media(max-width:980px){nav>a.on{color:var(--nt)!important}nav a:before{width:8px;height:8px}}
+
+.hero{background-size:220% 220%;animation:heroBg 9s ease-in-out infinite alternate}
+@keyframes heroBg{0%{background-position:0% 50%}100%{background-position:100% 50%}}
+.wl{display:inline-block;animation:wl 2.6s ease-in-out infinite}
+@keyframes wl{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-8px)}}
+.hero h2{filter:drop-shadow(0 0 14px rgba(255,248,232,.35))}
+.hero p{animation:heroIn 1s .3s cubic-bezier(.2,.7,.2,1) both}
+.hero-ic{position:relative;animation:float 3.2s ease-in-out infinite,glowPulse 3s ease-in-out infinite}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 0 10px rgba(255,255,255,.08),0 0 28px rgba(253,224,71,.45)}50%{box-shadow:0 0 0 14px rgba(255,255,255,.14),0 0 56px rgba(253,224,71,.8)}}
+.halo{position:absolute;inset:-12px;border-radius:50%;border:2px dashed rgba(255,248,232,.75);animation:spin 14s linear infinite;pointer-events:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tw{transform-box:fill-box;transform-origin:center;animation:twk 2.2s ease-in-out infinite}
+.tw.t2{animation-delay:.6s}.tw.t3{animation-delay:1.2s}
+@keyframes twk{0%,100%{opacity:.25;transform:scale(.7)}50%{opacity:1;transform:scale(1.35)}}
+@media(prefers-reduced-motion:reduce){.wl,.halo,.tw,.hero,.hero-ic{animation:none}}
 </style>
 </head>
 <body>
@@ -443,7 +469,7 @@ const TX={
  wo_hc:[['Bulan','Total','Done','Done %','Pending','Pending %','Cancel','Cancel %','Lainnya','Selisih Total'],['Month','Total','Done','Done %','Pending','Pending %','Cancel','Cancel %','Other','Change in Total']],
  wo_hr:[['Work Order','Customer','Teknisi','Jadwal Ulang','Sisa'],['Work Order','Customer','Technician','Reschedule','Remaining']],
  wo_overdue:['Lewat jadwal','Overdue'], wo_today:['Hari ini','Today'],
- st_done:['Done','Done'], st_pending:['Pending','Pending'], st_cancel:['Cancel','Cancel'], st_working:['Sedang Di Kerjakan Hari Ini','Being Worked On Today'], st_belum:['Belum Dikerjakan','Not Started Yet'], card_resched:['JADWAL ULANG PENDINGAN','RESCHEDULED PENDING'], sd_besok:['Sudah Dijadwalkan Besok','Scheduled for Tomorrow'], sd_hari:['Sudah Dijadwalkan Hari Ini','Scheduled for Today'], sd_tgl:['Sudah Dijadwalkan {tgl}','Scheduled for {tgl}'],
+ st_done:['Done','Done'], st_pending:['Pending','Pending'], st_cancel:['Cancel','Cancel'], st_working:['Sedang Di Kerjakan Hari Ini','Being Worked On Today'], st_belum:['Belum Dikerjakan','Not Started Yet'], card_resched:['JADWAL ULANG PENDINGAN','RESCHEDULED PENDING'], sd_besok:['Sudah Dijadwalkan Besok','Scheduled for Tomorrow'], sd_hari:['Sudah Dijadwalkan Hari Ini','Scheduled for Today'], sd_tgl:['Sudah Dijadwalkan {tgl}','Scheduled for {tgl}'], ov_allmonths:['Semua bulan','All months'],
  // reminder
  rem_now:['SEGERA – JADWAL ULANG HARI INI','URGENT – RESCHEDULE TODAY'], rem_tmr:['SEGERA – JADWAL ULANG BESOK 16.00','URGENT – RESCHEDULE TOMORROW 16:00'],
  rem_h:['PENGINGAT JADWAL ULANG H-','RESCHEDULE REMINDER D-'], rem_sched:['Jadwal:','Schedule:'],
@@ -563,10 +589,13 @@ function cmpChart(ms){if(!ms.length)return '';
  <div class="legend">${cols.map(c=>`<span><i style="background:${c[1]}"></i>${c[2]}${c[4]?' ('+(LANG==='en'?'dashed':'putus-putus')+')':''}</span>`).join('')}</div>`}
 
 /* ---------- navigasi & kerangka ---------- */
+const NC={dashboard:['#2c7b82','#1d4f55','#fff8e8'],absensi:['#d6262b','#8e1a1c','#fff8e8'],kpi:['#2f8f5b','#14532d','#fff8e8'],wo:['#f2b843','#e8772e','#2a1a14'],barang:['#7c3aed','#4c1d95','#fff8e8'],jadwal:['#0ea5e9','#1d4ed8','#fff8e8']};
+const ncSt=k=>{const c=NC[k]||['#5b8cff','#8b5cf6','#fff'];return `--nc:${c[0]};--nc2:${c[1]};--nt:${c[2]}`};
 function buildNav(){
- $('nav').innerHTML=`<a id="n_dashboard" onclick="go('dashboard')">${T('dashboard')}</a>`
+ $('nav').innerHTML=`<a id="n_dashboard" style="${ncSt('dashboard')}" onclick="go('dashboard')">${T('dashboard')}</a>`
   +`<div class="grp" onclick="toggleGrp()"><span>${T('menu')}</span><span id="arr" class="arr">${S.grpOpen?'▾':'▸'}</span></div>`
-  +`<div id="grp" class="sub ${S.grpOpen?'':'hide'}">${(S.menus||[]).map(m=>`<a id="n_${m}" onclick="go('${m}')">${T('lbl_'+m)}</a>`).join('')}</div>`;
+  +`<div id="grp" class="sub ${S.grpOpen?'':'hide'}">${(S.menus||[]).map(m=>`<a id="n_${m}" style="${ncSt(m)}" onclick="go('${m}')">${T('lbl_'+m)}</a>`).join('')}`
+  +`<a class="ext" style="--nc:#f97316;--nc2:#b91c1c;--nt:#fff8e8" href="https://fieldsa.fiberstar.co.id/#/tasklist/dispatchingboard" target="_blank" rel="noopener">FIELDSA <span class="xo">↗</span></a></div>`;
  markNav();
 }
 function markNav(){document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.id==='n_'+S.menu))}
@@ -938,13 +967,14 @@ const ICON={
  pagi:'<svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"><path d="M16 40a16 16 0 0 1 32 0"/><path d="M6 48h52"/><path d="M32 14v7M14 22l5 5M50 22l-5 5M6 36h6M52 36h6"/></svg>',
  siang:'<svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"><circle cx="32" cy="32" r="11" fill="#fde047" stroke="#fde047"/><path d="M32 6v7M32 51v7M6 32h7M51 32h7M13.6 13.6l5 5M45.4 45.4l5 5M13.6 50.4l5-5M45.4 18.6l5-5"/></svg>',
  sore:'<svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"><circle cx="32" cy="36" r="12" fill="#fde047" stroke="#fde047"/><path d="M6 48h52"/><path d="M32 16v7M14 24l5 5M50 24l-5 5M8 36h5M51 36h5"/></svg>',
- malam:'<svg viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M40 10a22 22 0 1 0 14 38a18 18 0 0 1-14-38z" fill="#fde68a" stroke="#fde68a" stroke-width="2"/><circle cx="52" cy="14" r="2" fill="#fff"/><circle cx="12" cy="18" r="1.6" fill="#fff"/><circle cx="20" cy="50" r="1.4" fill="#fff"/></svg>'
+ malam:'<svg viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round"><defs><radialGradient id="mg" cx="38%" cy="32%" r="72%"><stop offset="0" stop-color="#fffbeb"/><stop offset=".4" stop-color="#fde68a"/><stop offset=".8" stop-color="#fb923c"/><stop offset="1" stop-color="#e11d48"/></radialGradient><filter id="mglow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><path d="M40 9a23 23 0 1 0 15 40a19 19 0 0 1-15-40z" fill="url(#mg)" stroke="#9a3412" stroke-width="1.4" filter="url(#mglow)"/><circle cx="25" cy="27" r="3" fill="#fb923c" opacity=".35"/><circle cx="31" cy="41" r="2" fill="#fb923c" opacity=".3"/><g fill="#fff"><circle class="tw" cx="52" cy="11" r="1.9"/><circle class="tw t2" cx="9" cy="17" r="1.4"/><circle class="tw t3" cx="55" cy="47" r="1.4"/><circle class="tw t2" cx="12" cy="52" r="1.7"/></g></svg>'
 };
+function wave(t){return [...t].map((c,i)=>c===' '?' ':`<span class="wl" style="animation-delay:${(i*0.07).toFixed(2)}s">${c}</span>`).join('')}
 function greetHTML(){const b=BAND(new Date().getHours()),g=GREET[b];
  const dt=new Date().toLocaleDateString(locale(),{weekday:'long',day:'numeric',month:'long',year:'numeric'});
  return `<div class="hero ${g.c}"><span class="orb o1"></span><span class="orb o2"></span>
-  <div class="hero-ic">${ICON[b]}</div>
-  <div class="hero-tx"><div class="hero-k">${E(dt)}</div><h2>${g.t[li()]}</h2><p>${E(g.m[li()])}</p></div></div>`}
+  <div class="hero-ic"><span class="halo"></span>${ICON[b]}</div>
+  <div class="hero-tx"><div class="hero-k">${E(dt)}</div><h2>${wave(g.t[li()])}</h2><p>${E(g.m[li()])}</p></div></div>`}
 function drawOverview(){
  $('out').classList.toggle('enter',Date.now()<(S.enterUntil||0));
  setCtl('');
@@ -972,9 +1002,9 @@ function drawOverview(){
  const sub=x=>fill(T('jd_plus'),{a:x.base==null?'-':x.base,b:x.pend.length});
  $('out').innerHTML=`
  ${greetHTML()}
- <div class="sec-t"><h3>${T('ov_wo')} · ${k!=null?E(monLabel(k)):'-'}</h3></div>
+ <div class="sec-t"><h3>${T('ov_wo')}</h3><small>${k!=null?E(monLabel(k)):'-'}</small></div>
  <div class="grid kpis">
-  ${card(T('wo_total'),n,T('ov_click'),'var(--ac)',"go('wo')")}
+  ${card(T('wo_total'),W.length,T('ov_allmonths'),'var(--ac)',"go('wo')")}
   ${card(T('st_done'),pc('DONE'),c('DONE')+' WO','var(--ok)',"go('wo')")}
   ${card(T('st_pending'),c('PENDING'),pc('PENDING')+' '+T('wo_pctof'),'var(--wr)',"go('wo')")}
   ${card(T('st_cancel'),c('CANCEL'),pc('CANCEL')+' '+T('wo_pctof'),'var(--er)',"go('wo')")}
