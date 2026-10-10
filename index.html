@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+[hidden]{display:none!important}
 :root{--bg:#0a0f1f;--side:#0d1430;--panel:#121b3a;--panel2:#0b1431;--line:#1f2b52;--tx:#e8edfb;--mu:#8793b8;--ac:#5b8cff;--ac2:#8b5cf6;--ok:#22c55e;--wr:#f59e0b;--er:#ef4444;--glow:rgba(91,140,255,.35)}
 html[data-theme=light]{--bg:#eef2fa;--side:#ffffff;--panel:#ffffff;--panel2:#f5f7fd;--line:#dde4f3;--tx:#18213d;--mu:#65719a;--glow:rgba(91,140,255,.22)}
 *{box-sizing:border-box}html,body{margin:0}
@@ -18,32 +19,54 @@ aside{background:var(--side);border-right:1px solid var(--line);padding:24px 16p
 .brand b{display:block;font-family:'Orbitron',sans-serif;font-size:28px;font-weight:800;letter-spacing:.08em;line-height:1.15;background:linear-gradient(90deg,var(--ac),var(--ac2),#22d3ee,var(--ac));-webkit-background-clip:text;background-clip:text;color:transparent;background-size:300% auto;animation:shine 5s linear infinite}
 .brand span{display:block;color:var(--mu);font-size:14px;font-weight:500;letter-spacing:.02em;margin-top:12px}
 @keyframes shine{to{background-position:200% center}}
-.sect{font-size:11px;letter-spacing:.14em;color:var(--mu);padding:10px 10px 8px;text-transform:uppercase}
-nav a{position:relative;overflow:hidden;display:block;padding:11px 14px;border-radius:12px;color:var(--tx);cursor:pointer;margin-bottom:6px;font-weight:500;transition:transform .25s,background .25s,box-shadow .25s}
+nav a{position:relative;overflow:hidden;display:block;padding:11px 14px;border-radius:12px;color:var(--tx);cursor:pointer;margin-bottom:6px;font-weight:500;transition:transform .25s ease,background .3s ease,color .3s ease,box-shadow .3s ease}
 nav a:after{content:"";position:absolute;top:0;left:-70%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);transition:left .7s}
 nav a:hover{transform:translateX(5px);background:rgba(91,140,255,.1)}
 nav a:hover:after{left:130%}
+nav a:active{transform:scale(.97)}
 nav a.on{background:linear-gradient(90deg,var(--ac),var(--ac2));color:#fff;box-shadow:0 8px 22px var(--glow);font-weight:700}
+.grp{display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:10px 12px;margin:14px 0 6px;font-size:11px;letter-spacing:.14em;color:var(--mu);text-transform:uppercase;border-radius:10px;user-select:none;transition:background .3s ease,color .3s ease}
+.grp:hover{background:rgba(91,140,255,.08);color:var(--tx)}
+.arr{font-size:12px}
+.sub{padding-left:8px;border-left:2px solid var(--line);margin-left:12px}
+.sub.hide{display:none}
 main{padding:24px 28px;min-width:0}
 .head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px;align-items:flex-end;margin-bottom:20px}
+.hl{display:flex;flex-direction:column;gap:6px;min-width:0}
 .head h1{margin:0;font-size:24px;letter-spacing:.04em;text-transform:uppercase}
-.head p{margin:6px 0 0;color:var(--mu);font-size:13px}
+.head p{margin:0;color:var(--mu);font-size:13px}
+.back{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;background:linear-gradient(90deg,var(--ac),var(--ac2));color:#fff;border:0;font-weight:600;padding:7px 14px 7px 10px}
+.back svg{width:16px;height:16px}
 .ctl{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-select,input,button{font:inherit;color:var(--tx);background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 12px;transition:border-color .2s,box-shadow .2s}
-button{cursor:pointer}button:hover{border-color:var(--ac);box-shadow:0 0 0 3px var(--glow)}
+select,input,button,.disp{font:inherit;color:var(--tx);background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 12px;transition:border-color .3s,box-shadow .3s,transform .15s,background .3s,color .3s}
+button{cursor:pointer}
+button:hover,.disp:hover{border-color:var(--ac);box-shadow:0 0 0 3px var(--glow)}
+button:active,.disp:active,.kpi.clk:active{transform:scale(.96)}
 select:focus,input:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px var(--glow)}
-.clock{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-variant-numeric:tabular-nums;color:var(--ac);font-weight:600}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.12);margin-bottom:16px;min-width:0}
-@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.disp{display:inline-flex;align-items:center;gap:8px;text-decoration:none;background:linear-gradient(90deg,var(--ac),var(--ac2));color:#fff;border:0;font-weight:600}
+.disp svg{width:15px;height:15px}
+.lng{display:inline-flex;background:var(--panel2);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.lng button{border:0;border-radius:0;padding:7px 11px;background:transparent;font-size:12px;font-weight:700;color:var(--mu)}
+.lng button.on{background:linear-gradient(90deg,var(--ac),var(--ac2));color:#fff}
+.clock{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 11px;font-size:13px;font-variant-numeric:tabular-nums;color:var(--ac);font-weight:600}
+/* toggle siang/malam (kecil) */
+#thm{position:absolute;opacity:0;width:0;height:0;margin:0;padding:0;border:0}
+.tg{position:relative;display:inline-flex;align-items:center;cursor:pointer}
+.tr{position:relative;width:54px;height:28px;border-radius:999px;background:var(--line);transition:background .3s;flex-shrink:0;box-shadow:inset 0 0 0 1px var(--line)}
+.tr:after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .3s;box-shadow:0 2px 5px rgba(0,0,0,.3);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'%3E%3Cpath d='M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z'/%3E%3C/svg%3E");background-size:13px;background-repeat:no-repeat;background-position:center}
+#thm:checked+.tr{background:linear-gradient(90deg,var(--ac),var(--ac2))}
+#thm:checked+.tr:after{transform:translateX(26px);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f59e0b' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='4' fill='%23f59e0b'/%3E%3Cpath d='M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4'/%3E%3C/svg%3E")}
+#thm:focus-visible+.tr{box-shadow:0 0 0 3px var(--glow)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.12);margin-bottom:16px;min-width:0;transition:box-shadow .3s ease,transform .3s ease}
 .grid{display:grid;gap:16px}
 .kpis{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-bottom:16px}
-.kpi{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px;position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px;position:relative;overflow:hidden;transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s ease,opacity .3s ease}
 .kpi:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.18)}
 .kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c,var(--ac))}
+.kpi.clk{cursor:pointer}.kpi.act{box-shadow:0 0 0 2px var(--ac),0 14px 30px rgba(0,0,0,.15)}
 .kpi .l{color:var(--mu);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
 .kpi .v{font-size:26px;font-weight:700;margin-top:6px;font-variant-numeric:tabular-nums}
 .kpi .s{color:var(--mu);font-size:12px;margin-top:4px}
-@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .two{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
 .sec-t{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .sec-t h3{margin:0;font-size:15px;text-transform:uppercase;letter-spacing:.04em}.sec-t small{color:var(--mu)}
@@ -52,10 +75,9 @@ table{border-collapse:collapse;width:100%;font-size:13px}
 table.auto{width:auto}
 th,td{padding:10px 12px;border-bottom:1px solid #eef1f8;text-align:left;white-space:nowrap}
 th{position:sticky;top:0;background:#f1f4fb;color:#4a5680;font-size:11px;letter-spacing:.06em;text-transform:uppercase;z-index:1}
-table.auto{width:auto}
-.wrapc{display:inline-block;max-width:300px;white-space:normal;line-height:1.4}
 tr:nth-child(even) td{background:#fafbff}tr:hover td{background:#eef3ff;transition:background .2s}
 td.empty{text-align:center;color:#8a93b0;padding:24px}
+.wrapc{display:inline-block;max-width:300px;white-space:normal;line-height:1.4}
 .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600}
 .p-ok{background:#dcfce7;color:#166534}.p-wr{background:#fef3c7;color:#92400e}.p-er{background:#fee2e2;color:#991b1b}.p-in{background:#e0e7ff;color:#3730a3}
 .bar{height:6px;background:#e5e9f5;border-radius:999px;overflow:hidden;min-width:90px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--ac),var(--ac2));border-radius:999px}
@@ -63,16 +85,14 @@ td.empty{text-align:center;color:#8a93b0;padding:24px}
 .alert.red{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.5);color:#fecaca}
 .alert.amber{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.5);color:#fde68a}
 .alert b{display:block;letter-spacing:.04em;margin-bottom:4px;font-size:14px}
-.blink{animation:pulseRed 1.6s infinite}.blink-a{animation:pulseAmb 1.6s infinite}
-@keyframes pulseRed{0%{box-shadow:0 0 0 0 rgba(239,68,68,.6)}70%{box-shadow:0 0 0 14px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
-@keyframes pulseAmb{0%{box-shadow:0 0 0 0 rgba(245,158,11,.5)}70%{box-shadow:0 0 0 12px rgba(245,158,11,0)}100%{box-shadow:0 0 0 0 rgba(245,158,11,0)}}
-.err{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.5);color:#fecaca;border-radius:14px;padding:14px 16px}
 html[data-theme=light] .alert{color:#1f2937}
 html[data-theme=light] .alert.red{color:#7f1d1d;background:rgba(239,68,68,.14);border-color:rgba(220,38,38,.6)}
 html[data-theme=light] .alert.amber{color:#78350f;background:rgba(245,158,11,.2);border-color:rgba(217,119,6,.6)}
 html[data-theme=light] .err{color:#7f1d1d;background:rgba(239,68,68,.1)}
-.kpi.clk{cursor:pointer}.kpi.act{box-shadow:0 0 0 2px var(--ac),0 14px 30px rgba(0,0,0,.15)}
-.seg{display:flex;gap:8px;flex-wrap:wrap}.seg button.on{background:linear-gradient(90deg,var(--ac),var(--ac2));color:#fff;border-color:transparent}
+.blink{animation:pulseRed 1.6s infinite}.blink-a{animation:pulseAmb 1.6s infinite}
+@keyframes pulseRed{0%{box-shadow:0 0 0 0 rgba(239,68,68,.6)}70%{box-shadow:0 0 0 14px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
+@keyframes pulseAmb{0%{box-shadow:0 0 0 0 rgba(245,158,11,.5)}70%{box-shadow:0 0 0 12px rgba(245,158,11,0)}100%{box-shadow:0 0 0 0 rgba(245,158,11,0)}}
+.err{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.5);color:#fecaca;border-radius:14px;padding:14px 16px}
 .legend{display:flex;gap:14px;color:var(--mu);font-size:12px;margin-top:8px;flex-wrap:wrap}
 .legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
 .search{width:280px;max-width:100%;margin:0}
@@ -84,34 +104,16 @@ html[data-theme=light] .err{color:#7f1d1d;background:rgba(239,68,68,.1)}
 .kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
 .kv>div{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
 .big{font-size:34px;font-weight:800;font-variant-numeric:tabular-nums}
-.grp{display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:10px 12px;margin:14px 0 6px;font-size:11px;letter-spacing:.14em;color:var(--mu);text-transform:uppercase;border-radius:10px;user-select:none;transition:background .2s,color .2s}
-.grp:hover{background:rgba(91,140,255,.08);color:var(--tx)}
-.arr{font-size:12px}
-.sub{padding-left:8px;border-left:2px solid var(--line);margin-left:12px}
-#thm{position:absolute;opacity:0;width:0;height:0;margin:0;padding:0;border:0}
-.tg{position:relative;display:inline-flex;align-items:center;gap:10px;cursor:pointer;color:var(--tx);font-weight:600;font-size:13px;user-select:none}
-.tr{position:relative;width:78px;height:34px;border-radius:999px;background:var(--line);transition:background .3s;flex-shrink:0;box-shadow:inset 0 0 0 1px var(--line)}
-.tr:after{content:"";position:absolute;top:4px;left:4px;width:26px;height:26px;border-radius:50%;background:#fff;transition:transform .3s;box-shadow:0 2px 6px rgba(0,0,0,.3)}
-#thm:checked+.tr{background:linear-gradient(90deg,var(--ac),var(--ac2))}
-#thm:checked+.tr:after{transform:translateX(44px)}
-#thm:focus-visible+.tr{box-shadow:0 0 0 3px var(--glow)}
-.tr:after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'%3E%3Cpath d='M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z'/%3E%3C/svg%3E");background-size:16px;background-repeat:no-repeat;background-position:center}
-#thm:checked+.tr:after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f59e0b' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='4' fill='%23f59e0b'/%3E%3Cpath d='M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4'/%3E%3C/svg%3E")}
-.sub.hide{display:none}
+.seg{display:flex;gap:8px;flex-wrap:wrap}.seg button.on{background:linear-gradient(90deg,var(--ac),var(--ac2));color:#fff;border-color:transparent}
+/* transisi */
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 #out.enter>*{animation:fadeUp .55s cubic-bezier(.2,.7,.2,1) both}
 #out.enter>*:nth-child(2){animation-delay:.06s}#out.enter>*:nth-child(3){animation-delay:.12s}
 #out.enter>*:nth-child(4){animation-delay:.18s}#out.enter>*:nth-child(n+5){animation-delay:.24s}
 .reveal{animation:revealPanel .65s cubic-bezier(.2,.7,.2,1) both}
 @keyframes revealPanel{0%{opacity:0;transform:scale(.97) translateY(12px)}60%{box-shadow:0 0 0 8px var(--glow)}100%{opacity:1;transform:none;box-shadow:none}}
-button{transition:transform .15s ease,background .3s ease,border-color .3s ease,box-shadow .3s ease,color .3s ease}
-button:active,.kpi.clk:active{transform:scale(.96)}
-.kpi{transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s ease,opacity .3s ease}
-.panel{transition:box-shadow .3s ease,transform .3s ease}
-nav a{transition:transform .25s ease,background .3s ease,color .3s ease,box-shadow .3s ease}
-nav a:active{transform:scale(.97)}
-.grp,.sub{transition:background .3s ease,color .3s ease}
 .tw tr{transition:background .2s ease}
+/* responsif */
 @media(max-width:980px){
  .layout{grid-template-columns:1fr}
  aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:16px 14px 14px}
@@ -133,8 +135,7 @@ nav a:active{transform:scale(.97)}
  .two{grid-template-columns:1fr}
  .panel{padding:14px;border-radius:14px}
  .kpis{grid-template-columns:1fr 1fr;gap:10px}
- .kpi{padding:14px}
- .kpi .v{font-size:21px}
+ .kpi{padding:14px}.kpi .v{font-size:21px}
  .search{width:100%}
  .sec-t h3{font-size:14px}
 }
@@ -149,13 +150,22 @@ nav a:active{transform:scale(.97)}
 <div class="layout">
 <aside>
  <div class="brand"><b>APM DEPOK</b><span>PT Aksara Perdana Multimedia</span></div>
- <div class="sect">Menu</div>
  <nav id="nav"></nav>
 </aside>
 <main>
  <div class="head">
-  <div><h1 id="ttl">Overview</h1><p id="upd">Memuat data...</p></div>
-  <div class="ctl"><div id="ctl" class="ctl"></div><label class="tg" title="Mode siang / malam"><input type="checkbox" id="thm" aria-label="Mode siang" onchange="setTheme(this.checked?'light':'dark')"><span class="tr"></span></label><span class="clock" id="clk"></span></div>
+  <div class="hl">
+   <button id="back" class="back" onclick="goBack()" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg><span id="backT">Kembali</span></button>
+   <h1 id="ttl"></h1>
+   <p id="upd"></p>
+  </div>
+  <div class="ctl">
+   <div id="ctl" class="ctl"></div>
+   <a id="disp" class="disp" href="https://fieldsa.fiberstar.co.id/#/tasklist/assigntome" target="_blank" rel="noopener" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg><span id="dispT">Dispatch Now</span></a>
+   <div class="lng" role="group" aria-label="Language"><button id="lid" onclick="setLang('id')">ID</button><button id="len" onclick="setLang('en')">EN</button></div>
+   <label class="tg" title="Mode siang / malam"><input type="checkbox" id="thm" aria-label="Mode siang" onchange="setTheme(this.checked?'light':'dark')"><span class="tr"></span></label>
+   <span class="clock" id="clk"></span>
+  </div>
  </div>
  <div id="out"></div>
 </main>
@@ -163,20 +173,104 @@ nav a:active{transform:scale(.97)}
 
 <script>
 const API='https://script.google.com/macros/s/AKfycbxYqGVfbIui7v_WJaN-Ubu0YLZ3yZofNGsApLwdXJ6z6ePb2hssXeFtAeVChlb1oV0qqQ/exec';
-const BARANG_LIMIT=0.3;   // batas stok: Stok Akhir <= 30% dari Stok Awal
-const MN=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-const LBL={absensi:'ABSENSI',kpi:'KPI',wo:'WO APM',barang:'WAREHOUSE',jadwal:'JADWAL INSTALL',slip:'SLIP GAJI'};
+const BARANG_LIMIT=0.3;            // stok akhir <= 30% stok awal
+const DW='H-008';                  // DropWire 1 Core: satuan meter
 const $=i=>document.getElementById(i);
 const E=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const S={menu:localStorage.apmMenu||'',k:'',auto:1,q:'',D:{},wf:'ALL',bf:'ALL',bq:''};
+const S={menu:'',k:'',auto:1,q:'',D:{},wf:'ALL',bf:'ALL',bq:'',back:'',grpOpen:false,updAt:0};
 const R={};
 
+/* ---------- bahasa ---------- */
+// Setiap kunci: [Bahasa Indonesia, English]
+const TX={
+ dashboard:['DASHBOARD','DASHBOARD'], menu:['MENU','MENU'], back:['Kembali','Back'], dispatch:['Dispatch Now','Dispatch Now'],
+ lbl_absensi:['ABSENSI','ATTENDANCE'], lbl_kpi:['KPI','KPI'], lbl_wo:['WO APM','WO APM'], lbl_barang:['WAREHOUSE','WAREHOUSE'], lbl_jadwal:['JADWAL INSTALL','INSTALL SCHEDULE'], lbl_slip:['SLIP GAJI','PAYSLIP'],
+ loading:['Memuat data...','Loading data...'], nodata:['Belum ada data','No data yet'], notable:['Tidak ada data','No data'],
+ updated:['Diperbarui','Updated'], autoref:['otomatis setiap 1 menit','auto-refresh every minute'],
+ connfail:['Gagal terhubung ke Apps Script. Pastikan URL benar dan deploy: Execute as Me, akses Anyone.','Cannot reach Apps Script. Check the URL and deployment: Execute as Me, access Anyone.'],
+ connlost:['Koneksi terputus, dicoba lagi otomatis','Connection lost, retrying automatically'],
+ cfgmissing:['Isi URL Apps Script pada baris const API di index.html','Set the Apps Script URL in the const API line of index.html'],
+ period:['Periode','Period'], period_range:['Tanggal 20 s/d 19','Dates 20th to 19th'],
+ // overview
+ ov_wo:['Work Order','Work Orders'], ov_click:['Klik untuk detail','Click for details'], ov_wh:['Warehouse','Warehouse'],
+ ov_abs:['Absensi & KPI','Attendance & KPI'], ov_jadwal:['Jadwal Install','Install Schedule'],
+ ov_hadir:['Hadir · periode terbaru','Present · latest period'], ov_late:['Terlambat · periode terbaru','Late · latest period'],
+ ov_kpi_top:['KPI Tertinggi','Top KPI'], ov_pencapaian:['Pencapaian','Achievement'],
+ // WO
+ wo_title:['Work Order per Tanggal','Work Orders by Date'], wo_status:['Komposisi Status','Status Breakdown'], wo_total:['Total Work Order','Total Work Orders'],
+ wo_pctof:['dari total','of total'], wo_all:['Semua','All'], wo_cmp:['Perbandingan Semua Bulan','All-Month Comparison'],
+ wo_cmp_sum:['bulan · total','months · total'], wo_best:['Persentase Done tertinggi','Highest Done rate'],
+ wo_resched:['Jadwal Ulang (Pending)','Rescheduled (Pending)'], wo_detail:['Detail Work Order','Work Order Details'],
+ wo_search:['Cari WO, customer, teknisi...','Search WO, customer, technician...'],
+ wo_h:[['No','Tanggal','Work Order','Customer','District','Teknisi','Status','Keterangan','Update Remark'],['No','Date','Work Order','Customer','District','Technician','Status','Notes','Update Remark']],
+ wo_hc:[['Bulan','Total','Done','Done %','Pending','Pending %','Cancel','Cancel %','Lainnya','Selisih Total'],['Month','Total','Done','Done %','Pending','Pending %','Cancel','Cancel %','Other','Change in Total']],
+ wo_hr:[['Work Order','Customer','Teknisi','Jadwal Ulang','Sisa'],['Work Order','Customer','Technician','Reschedule','Remaining']],
+ wo_overdue:['Lewat jadwal','Overdue'], wo_today:['Hari ini','Today'],
+ st_done:['Done','Done'], st_pending:['Pending','Pending'], st_cancel:['Cancel','Cancel'], st_working:['Sedang Di Kerjakan Hari Ini','Being Worked On Today'],
+ // reminder
+ rem_now:['SEGERA – JADWAL ULANG HARI INI','URGENT – RESCHEDULE TODAY'], rem_tmr:['SEGERA – JADWAL ULANG BESOK 16.00','URGENT – RESCHEDULE TOMORROW 16:00'],
+ rem_h:['PENGINGAT JADWAL ULANG H-','RESCHEDULE REMINDER D-'], rem_sched:['Jadwal:','Schedule:'],
+ // KPI
+ kpi_title:['Rekap KPI','KPI Summary'], kpi_target:['Target 66 pemasangan / bulan','Target 66 installs / month'],
+ kpi_h:[['ID','Nama Karyawan','Target','Realisasi','Target Harian','Realisasi Harian','Pencapaian','Predikat'],['ID','Employee','Target','Actual','Daily Target','Daily Actual','Achievement','Rating']],
+ kpi_max:['Pencapaian Tertinggi','Highest Achievement'], kpi_min:['Pencapaian Terendah','Lowest Achievement'],
+ kpi_avg:['Rata-rata Tim','Team Average'], kpi_total:['Total Pemasangan','Total Installs'], kpi_of:['dari target','of target'],
+ year:['Tahun','Year'],
+ // warehouse
+ wh_alert:['STOK HAMPIR HABIS, SEGERA MELAKUKAN PERMINTAAN BARANG','LOW STOCK, REQUEST ITEMS NOW'],
+ wh_total:['TOTAL ITEMS','TOTAL ITEMS'], wh_jenis:['jenis barang','item types'], wh_rusakjenis:['jenis barang rusak','damaged item types'],
+ wh_lowrule:['Stok akhir ≤ 30% stok awal','Ending stock ≤ 30% of starting stock'], wh_unit_note:['tanpa DropWire (meter)','excl. DropWire (meters)'],
+ wh_rusak:['Barang Rusak','Damaged Items'], wh_req:['Perlu Request','Needs Request'], wh_units:['unit rusak','damaged units'],
+ wh_list:['Daftar Barang','Item List'], wh_search:['Cari nama atau kode barang...','Search item name or code...'],
+ wh_h:[['Kode','Nama Barang','Satuan','Stok Awal','Masuk','Keluar','Rusak','Stok Akhir','Status'],['Code','Item Name','Unit','Opening','In','Out','Damaged','Ending','Status']],
+ wh_pcs:['pcs','pcs'], wh_meter:['meter','meters'], wh_dw:['DropWire 1 Core','DropWire 1 Core'],
+ wh_segera:['Segera Request','Request Now'], wh_rusakst:['Rusak','Damaged'], wh_aman:['Aman','OK'],
+ // absensi
+ abs_karyawan:['Karyawan','Employees'], abs_tercatat:['Tercatat di periode ini','Recorded in this period'],
+ abs_hadir:['Total Hadir','Total Present'], abs_hadir_s:['Akumulasi hari hadir','Accumulated present days'],
+ abs_late:['Total Terlambat','Total Late'], abs_late_s:['Status "Terlambat"','Status "Terlambat"'],
+ abs_rekap:['Rekap Hadir per Karyawan','Attendance per Employee'], abs_top:['Sering Terlambat','Frequently Late'], top5:['Top 5','Top 5'],
+ abs_hadirhari:['Hadir {n} hari','Present {n} days'], abs_none:['Tidak ada keterlambatan tercatat.','No late arrivals recorded.'],
+ abs_h:[['Nama','Total Hadir','Terlambat'],['Name','Total Present','Late']],
+ abs_log:['Log Absensi','Attendance Log'], abs_logsub:['{n} catatan, terbaru di atas','{n} records, latest first'],
+ abs_nocol:['Kolom tanggal tidak ditemukan di sheet absensi','Date column not found in the attendance sheet'],
+ abs_nolate:['Kolom keterlambatan tidak ditemukan.','Late column not found.'],
+ orang:['orang','people'],
+ // jadwal
+ jd_hari:['JADWAL INSTALL · HARI INI','INSTALL SCHEDULE · TODAY'], jd_besok:['JADWAL INSTALL · BESOK','INSTALL SCHEDULE · TOMORROW'],
+ jd_plus:['{a} install + {b} pending dijadwalkan ulang','{a} installs + {b} pending rescheduled'],
+ pend_title:['PENDING YANG DIJADWALKAN ULANG','PENDING RESCHEDULED'],
+ pend_none_hari:['Tidak ada pending yang dijadwalkan ulang untuk hari ini.','No pending rescheduled for today.'],
+ pend_none_besok:['Tidak ada pending yang dijadwalkan ulang untuk besok.','No pending rescheduled for tomorrow.'],
+ pend_h:[['Work Order','Customer','District','Teknisi','Status','Keterangan'],['Work Order','Customer','District','Technician','Status','Notes']],
+ pend_wo:['WO','WOs'], pend_ret:['jadwal ulang','reschedule'],
+ hari_lbl:['Hari ini','Today'], besok_lbl:['Besok','Tomorrow'],
+ src:['Sumber Data','Data Source'], src_s:['Sheet Depok · baris Install Scheduled','Depok sheet · Install Scheduled row'],
+ src_note:['Jadwal install dihitung dari sheet Depok, lalu ditambah pending WO yang jadwal ulangnya jatuh pada tanggal yang sama. Diperbarui otomatis setiap 1 menit.','Install schedule comes from the Depok sheet, plus pending WOs rescheduled to the same date. Auto-refreshed every minute.'],
+ // slip
+ slip_title:['Cari Slip Gaji','Find Payslip'], slip_hint:['Ketik nama karyawan lalu pilih','Type an employee name and select'], slip_ph:['Nama karyawan...','Employee name...'],
+ // jam
+ pctSep:['','']
+};
+let LANG=localStorage.apmLang||'id';
+const li=()=>LANG==='en'?1:0;
+const T=k=>{const v=TX[k];return v?v[li()]:k};
+const fill=(s,o)=>Object.keys(o).reduce((a,k)=>a.replace('{'+k+'}',o[k]),s);
+const MONTHS=[['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'],['January','February','March','April','May','June','July','August','September','October','November','December']];
+const MON3=[['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'],['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']];
+const mName=m=>MONTHS[li()][m];
+const mShort=m=>MON3[li()][m];
+const monLabel=k=>mName(k%100)+' '+Math.floor(k/100);
+const locale=()=>LANG==='en'?'en-US':'id-ID';
+const predLabel=p=>{if(LANG!=='en')return p;const m={'BAIK':'GOOD','SANGAT KURANG':'VERY LOW','KURANG':'LOW','CUKUP':'FAIR','BAGUS':'GOOD'};return m[String(p).trim().toUpperCase()]||p};
+const stLabel=s=>({DONE:T('st_done'),PENDING:T('st_pending'),CANCEL:T('st_cancel'),LAIN:T('st_working')})[s]||s;
+
+/* ---------- koneksi ---------- */
 async function api(b){const r=await fetch(API,{method:'POST',body:JSON.stringify(b)});return r.json()}
 
 /* ---------- tema ---------- */
 function setTheme(t){document.documentElement.dataset.theme=t;localStorage.apmTheme=t;$('thm').checked=(t==='light')}
-function applyTheme(t){setTheme(t)}
-applyTheme(localStorage.apmTheme||'dark');
+setTheme(localStorage.apmTheme||'dark');
 
 /* ---------- tanggal ---------- */
 const MO={jan:0,feb:1,mar:2,apr:3,mei:4,may:4,jun:5,jul:6,agu:7,aug:7,sep:8,okt:9,oct:9,nov:10,des:11,dec:11};
@@ -187,138 +281,112 @@ function pd(s){s=String(s||'').trim();let a;
  return null}
 const ym=d=>d.getFullYear()*100+d.getMonth();
 const day0=d=>new Date(d.getFullYear(),d.getMonth(),d.getDate());
-// Periode absensi 20 s/d 19. Kunci = bulan tempat periode berakhir (tanggal 19).
 function perKey(d){let y=d.getFullYear(),m=d.getMonth();if(d.getDate()>=20){m++;if(m>11){m=0;y++}}return y*100+m}
 function perRange(k){const y=Math.floor(k/100),m=k%100;return [new Date(y,m-1,20),new Date(y,m,19,23,59,59)]}
-const sh=d=>d.getDate()+' '+MN[d.getMonth()].slice(0,3);
-function perLabel(k){const [a,b]=perRange(k);return `Periode ${MN[k%100]} ${Math.floor(k/100)} (${sh(a)} – ${sh(b)} ${b.getFullYear()})`}
-const monLabel=k=>MN[k%100]+' '+Math.floor(k/100);
+const sh=d=>d.getDate()+' '+mShort(d.getMonth());
+function perText(k){const [a,b]=perRange(k);return `${mName(k%100)} ${Math.floor(k/100)} (${sh(a)} – ${sh(b)} ${b.getFullYear()})`}
+function perLabel(k){return T('period')+' '+perText(k)}
+function fmtLong(x){return x?x.toLocaleDateString(locale(),{weekday:'long',day:'numeric',month:'long',year:'numeric'}):''}
 function keysOf(list,fn){return [...new Set(list.map(fn).filter(x=>x!=null))].sort((a,b)=>b-a)}
 function pick(keys){if(!keys.length)return null;if(!keys.includes(+S.k))S.k=String(keys[0]);return +S.k}
 const opts=(keys,cur,lab)=>keys.map(k=>`<option value="${k}" ${k==cur?'selected':''}>${E(lab(k))}</option>`).join('');
 const setCtl=h=>{$('ctl').innerHTML=h||''};
 
 /* ---------- komponen ---------- */
-const empty=t=>`<div class="panel" style="text-align:center;color:var(--mu);padding:40px">${E(t||'Belum ada data')}</div>`;
+const empty=t=>`<div class="panel" style="text-align:center;color:var(--mu);padding:40px">${E(t||T('nodata'))}</div>`;
 const card=(l,v,s,c,click,on)=>`<div class="kpi${click?' clk':''}${on?' act':''}" ${click?`onclick="${click}"`:''} style="--c:${c||'var(--ac)'}"><div class="l">${E(l)}</div><div class="v">${v}</div>${s?`<div class="s">${s}</div>`:''}</div>`;
 const pill=(t,k)=>({h:`<span class="pill p-${k}">${E(t)}</span>`});
 const bar=p=>({h:`<div style="display:flex;align-items:center;gap:8px"><div class="bar"><i style="width:${Math.max(0,Math.min(100,p))}%"></i></div><span>${p.toFixed(1)}%</span></div>`});
-const tbl=(h,rows,cls)=>`<div class="tw"><table class="${cls||''}"><thead><tr>${h.map(x=>`<th>${E(x)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c&&c.h!=null?c.h:E(c)}</td>`).join('')}</tr>`).join('')||`<tr><td class="empty" colspan="${h.length}">Tidak ada data</td></tr>`}</tbody></table></div>`;
-
+const tbl=(h,rows,cls)=>`<div class="tw"><table class="${cls||''}"><thead><tr>${h.map(x=>`<th>${E(x)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c&&c.h!=null?c.h:E(c)}</td>`).join('')}</tr>`).join('')||`<tr><td class="empty" colspan="${h.length}">${T('notable')}</td></tr>`}</tbody></table></div>`;
 function line(a,b){const W=720,H=240,P=34,mx=Math.max(4,...a);
  const x=i=>P+i*(W-2*P)/Math.max(1,a.length-1),y=v=>H-P-v/mx*(H-2*P);
  const path=s=>s.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
  const area=path(a)+` L${x(a.length-1).toFixed(1)},${H-P} L${x(0).toFixed(1)},${H-P} Z`;
  const grid=[0,.25,.5,.75,1].map(t=>{const v=Math.round(mx*t);return `<line x1="${P}" x2="${W-P}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${P-8}" y="${y(v)+4}" fill="var(--mu)" font-size="11" text-anchor="end">${v}</text>`}).join('');
  const xl=a.map((_,i)=>(i%2===0||a.length<=16)?`<text x="${x(i)}" y="${H-10}" fill="var(--mu)" font-size="11" text-anchor="middle">${i+1}</text>`:'').join('');
- const dots=a.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="3.5" fill="#5b8cff"><title>Tgl ${i+1}: ${v} WO</title></circle>`).join('');
+ const dots=a.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="3.5" fill="#5b8cff"><title>${i+1}: ${v}</title></circle>`).join('');
  return `<div style="overflow-x:auto"><svg viewBox="0 0 ${W} ${H}" style="width:100%;min-width:520px">
  <defs><linearGradient id="gA" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#5b8cff" stop-opacity=".45"/><stop offset="1" stop-color="#5b8cff" stop-opacity="0"/></linearGradient></defs>
  ${grid}<path d="${area}" fill="url(#gA)"/><path d="${path(a)}" fill="none" stroke="#5b8cff" stroke-width="2.5"/><path d="${path(b)}" fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="5 4"/>${dots}${xl}</svg></div>
- <div class="legend"><span><i style="background:#5b8cff"></i>Total WO</span><span><i style="background:#22c55e"></i>Done</span></div>`}
-
-/* ---------- alur data ---------- */
-async function start(){
- if(API.indexOf('GANTI')>=0){$('out').innerHTML=empty('Isi URL Apps Script pada baris const API di index.html');$('upd').textContent='Konfigurasi belum lengkap';return}
- let r;try{r=await api({a:'menus'})}catch(e){$('out').innerHTML='<div class="err">Gagal terhubung ke Apps Script. Pastikan URL benar dan deploy: Execute as Me, akses Anyone.</div>';return}
- if(!r.ok){$('out').innerHTML=`<div class="err">${E(r.err)}</div>`;return}
- S.menus=r.menus;
- $('nav').innerHTML='<a id="n_dashboard" onclick="go(\'dashboard\')">DASHBOARD</a>'
- +'<div class="grp" onclick="toggleGrp()"><span>MENU</span><span id="arr" class="arr">▸</span></div>'
- +'<div id="grp" class="sub hide">'+S.menus.map(m=>`<a id="n_${m}" onclick="go('${m}')">${E(LBL[m])}</a>`).join('')+'</div>';
- go((S.menu==='dashboard'||S.menus.includes(S.menu))?S.menu:'dashboard');
-}
-function go(m){S.enterUntil=Date.now()+2500;S.menu=m;S.k='';S.auto=1;S.q='';S.wf='ALL';S.bf='ALL';S.bq='';localStorage.apmMenu=m;
- if(m!=='dashboard')$('grp').classList.remove('hide'),$('arr').textContent='▾';
- document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.id==='n_'+m));
- $('ttl').textContent=m==='dashboard'?'DASHBOARD':LBL[m];setCtl('');
- if(m==='dashboard'){drawOverview();loadAll();return}
- if(m==='jadwal'){if(S.D.jadwal)draw();else $('out').innerHTML='<div class="panel" style="color:var(--mu)">Memuat data...</div>';loadAll();return}
- if(S.D[m])draw();else $('out').innerHTML='<div class="panel" style="color:var(--mu)">Memuat data...</div>';
- load()}
-function toggleGrp(){const g=$('grp');const open=g.classList.contains('hide');g.classList.toggle('hide',!open);$('arr').textContent=open?'▾':'▸'}
-async function loadAll(){if(!S.menus)return;
- const res=await Promise.all(S.menus.map(m=>api({menu:m,name:''}).then(r=>[m,r]).catch(()=>[m,null])));
- res.forEach(([m,r])=>{if(r&&r.ok)S.D[m]=r.d});
- $('upd').textContent='Diperbarui '+new Date().toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'})+' · otomatis setiap 1 menit';
- if(S.menu==='dashboard')drawOverview();else if(S.menu==='jadwal')draw()}
-function drawOverview(){$('out').classList.toggle('enter',Date.now()<(S.enterUntil||0));
- setCtl('');
- const W=S.D.wo?woNorm(S.D.wo):[];const keys=keysOf(W,r=>ym(r.d));const k=keys[0];
- const f=k!=null?W.filter(r=>ym(r.d)===k):[];const n=f.length,c=t=>f.filter(r=>r.s===t).length,pc=t=>n?(c(t)/n*100).toFixed(1)+'%':'0%';
- const B=S.D.barang;let low=0,rusakT=0,akhirT=0;
- if(B){low=B.rekap.filter(r=>{const aw=+r[2]||0;return aw>0&&(+r[6])<=aw*BARANG_LIMIT}).length;
-   rusakT=B.rekap.filter(r=>r[0]!=='H-008').reduce((s,r)=>s+(+r[5]||0),0);akhirT=B.rekap.filter(r=>r[0]!=='H-008').reduce((s,r)=>s+(+r[6]||0),0)}
- const pv=x=>parseFloat(String(x).replace('%','').replace(',','.'))||0;
- let topN='-',topP='';
- const KP=S.D.kpi;
- if(KP&&KP.months&&Object.keys(KP.months).length){const kk=Object.keys(KP.months).slice(-1)[0];
-   const best=KP.months[kk].rows.slice().sort((a,b)=>pv(b[6])-pv(a[6]))[0];if(best){topN=best[1];topP=best[6]}}
- let hadir='-',late='-',per='Belum ada data';
- const AB=S.D.absensi;
- if(AB&&AB.headers&&AB.headers.length){const H=AB.headers,f2=re=>H.find(h=>re.test(h));
-   const cd=f2(/tanggal|date/i),cs=f2(/status/i);
-   if(cd){const ds=AB.rows.map(r=>pd(r[cd])).filter(Boolean);const ks=keysOf(ds,x=>perKey(x));
-     if(ks.length){const kk=ks[0],[a,b]=perRange(kk);per=perLabel(kk).replace('Periode ','');let h=0,l=0;
-       AB.rows.forEach(r=>{const x=pd(r[cd]);if(!x||x<a||x>b)return;const st=cs?String(r[cs]||'').trim():'';
-         const ok=cs?(st!==''&&!/off|alpa|alpha|izin|cuti|sakit|libur/i.test(st)):true;if(ok)h++;if(/terlambat/i.test(st))l++});
-       hadir=h;late=l}}}
- const J=S.D.jadwal||{};const jHari=(J.hari&&J.hari.ok)?J.hari.val:'-';const jBesok=(J.besok&&J.besok.ok)?J.besok.val:'-';
- $('out').innerHTML=`
- <div class="sec-t"><h3>Work Order · ${k!=null?E(monLabel(k)):'-'}</h3></div>
- <div class="grid kpis">
-  ${card('Total Work Order',n,'Klik untuk detail','var(--ac)',"go('wo')")}
-  ${card('Done',pc('DONE'),c('DONE')+' WO','var(--ok)',"go('wo')")}
-  ${card('Pending',c('PENDING'),pc('PENDING')+' dari total','var(--wr)',"go('wo')")}
-  ${card('Cancel',c('CANCEL'),pc('CANCEL')+' dari total','var(--er)',"go('wo')")}
- </div>
- <div class="sec-t"><h3>Warehouse</h3></div>
- <div class="grid kpis">
-  ${card('Perlu Request',low,'Stok akhir ≤ 30% stok awal','var(--wr)',"go('barang')")}
-  ${card('Barang Rusak',rusakT,'Total unit rusak','var(--er)',"go('barang')")}
-  ${card('Total Items',akhirT,'Pcs, tanpa DropWire (meter)','var(--ac)',"go('barang')")}
- </div>
- <div class="sec-t"><h3>Absensi &amp; KPI</h3></div>
- <div class="grid kpis">
-  ${card('Hadir · periode terbaru',hadir,E(per),'var(--ok)',"go('absensi')")}
-  ${card('Terlambat · periode terbaru',late,E(per),'var(--wr)',"go('absensi')")}
-  ${card('KPI Tertinggi',`<span style="font-size:17px">${E(topN)}</span>`,topP?'Pencapaian '+E(topP):'','var(--ac2)',"go('kpi')")}
- </div>
- <div class="sec-t"><h3>Jadwal Install</h3></div>
- <div class="grid kpis">
-  ${card('JADWAL INSTALL · HARI INI',`<span class="big">${hariInfo().total}</span>`,(hariInfo().base==null?'-':hariInfo().base)+' + '+hariInfo().pend.length+' pending dijadwalkan ulang','var(--ac)',"go('jadwal')")}
-  ${card('JADWAL INSTALL · BESOK',`<span class="big">${besokInfo().total}</span>`,(besokInfo().base==null?'-':besokInfo().base)+' + '+besokInfo().pend.length+' pending dijadwalkan ulang','var(--ok)',"go('jadwal')")}
- </div>`}
-async function load(name){const m=S.menu;if(!m)return;let r;
- try{r=await api({menu:m,name:name||''})}catch(e){$('upd').textContent='Koneksi terputus, dicoba lagi otomatis';return}
- if(m!==S.menu)return;
- if(!r.ok){$('out').innerHTML=`<div class="err">${E(r.err)}</div>`;return}
- if(m==='slip'&&name)S.slipRow=r.d.row;else S.D[m]=r.d;
- $('upd').textContent='Diperbarui '+new Date().toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'})+' · otomatis setiap 1 menit';
- draw()}
-function draw(){$('out').classList.toggle('enter',Date.now()<(S.enterUntil||0));if(S.menu==='dashboard')return drawOverview();const m=S.menu,d=S.D[m];if(!d)return;if(m==='slip')return slipView(d);R[m](d)}
-
-/* ---------- WO APM ---------- */
-function parseSched(text){return pd(text)}
-function woNorm(rows){const mp=new Map();rows.forEach(r=>mp.set(r.wo,r));
- return [...mp.values()].map(r=>{const rm=String(r.rem||''),st=String(r.st||'').toUpperCase();let s;
-   if(/done|terinstal|installed/i.test(rm))s='DONE';else if(/cancel|batal/i.test(rm))s='CANCEL';
-   else if(/CANCEL/.test(st))s='CANCEL';else if(/PEND/.test(st))s='PENDING';else if(/DONE|COMPLETE/.test(st))s='DONE';else s='LAIN';
-   return{...r,s,d:pd(r.tgl),sched:s==='PENDING'?pd(rm+' '+(r.ket||'')):null}}).filter(r=>r.d)}
+ <div class="legend"><span><i style="background:#5b8cff"></i>Total WO</span><span><i style="background:#22c55e"></i>${T('st_done')}</span></div>`}
 function cmpChart(ms){if(!ms.length)return '';
  const W=Math.max(720,ms.length*120),H=280,P=40,mx=Math.max(4,...ms.map(m=>m.t));
  const x=i=>ms.length===1?W/2:P+i*(W-2*P)/(ms.length-1),y=v=>H-P-v/mx*(H-2*P);
- const cols=[['t','#5b8cff','Total',2.5,''],['done','#22c55e','Done',2.5,''],['pend','#f59e0b','Pending',2,'6 4'],['canc','#ef4444','Cancel',2,'6 4']];
+ const cols=[['t','#5b8cff','Total',2.5,''],['done','#22c55e',T('st_done'),2.5,''],['pend','#f59e0b',T('st_pending'),2,'6 4'],['canc','#ef4444',T('st_cancel'),2,'6 4']];
  const grid=[0,.25,.5,.75,1].map(t=>{const v=Math.round(mx*t);return `<line x1="${P}" x2="${W-P}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${P-8}" y="${y(v)+4}" fill="var(--mu)" font-size="11" text-anchor="end">${v}</text>`}).join('');
  const path=key=>ms.map((m,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(m[key]).toFixed(1)}`).join(' ');
  const area=path('t')+` L${x(ms.length-1).toFixed(1)},${H-P} L${x(0).toFixed(1)},${H-P} Z`;
  const lines=cols.map(c=>`<path d="${path(c[0])}" fill="none" stroke="${c[1]}" stroke-width="${c[3]}"${c[4]?` stroke-dasharray="${c[4]}"`:''}/>`
    +ms.map((m,i)=>`<circle cx="${x(i).toFixed(1)}" cy="${y(m[c[0]]).toFixed(1)}" r="4" fill="${c[1]}"><title>${monLabel(m.k)} · ${c[2]}: ${m[c[0]]}</title></circle>`).join('')).join('');
- const xl=ms.map((m,i)=>`<text x="${x(i).toFixed(1)}" y="${H-12}" fill="var(--mu)" font-size="11" text-anchor="middle">${MN[m.k%100].slice(0,3)} ${String(Math.floor(m.k/100)).slice(2)}</text>`).join('');
+ const xl=ms.map((m,i)=>`<text x="${x(i).toFixed(1)}" y="${H-12}" fill="var(--mu)" font-size="11" text-anchor="middle">${mShort(m.k%100)} ${String(Math.floor(m.k/100)).slice(2)}</text>`).join('');
  return `<div style="overflow-x:auto"><svg viewBox="0 0 ${W} ${H}" style="width:100%;min-width:${Math.min(W,ms.length*80+100)}px">
  <defs><linearGradient id="gB" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#5b8cff" stop-opacity=".35"/><stop offset="1" stop-color="#5b8cff" stop-opacity="0"/></linearGradient></defs>
  ${grid}<path d="${area}" fill="url(#gB)"/>${lines}${xl}</svg></div>
- <div class="legend">${cols.map(c=>`<span><i style="background:${c[1]}"></i>${c[2]}${c[4]?' (putus-putus)':''}</span>`).join('')}</div>`}
+ <div class="legend">${cols.map(c=>`<span><i style="background:${c[1]}"></i>${c[2]}${c[4]?' ('+(LANG==='en'?'dashed':'putus-putus')+')':''}</span>`).join('')}</div>`}
+
+/* ---------- navigasi & kerangka ---------- */
+function buildNav(){
+ $('nav').innerHTML=`<a id="n_dashboard" onclick="go('dashboard')">${T('dashboard')}</a>`
+  +`<div class="grp" onclick="toggleGrp()"><span>${T('menu')}</span><span id="arr" class="arr">${S.grpOpen?'▾':'▸'}</span></div>`
+  +`<div id="grp" class="sub ${S.grpOpen?'':'hide'}">${(S.menus||[]).map(m=>`<a id="n_${m}" onclick="go('${m}')">${T('lbl_'+m)}</a>`).join('')}</div>`;
+ markNav();
+}
+function markNav(){document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.id==='n_'+S.menu))}
+function toggleGrp(){S.grpOpen=!S.grpOpen;$('grp').classList.toggle('hide',!S.grpOpen);$('arr').textContent=S.grpOpen?'▾':'▸'}
+function updText(){return S.updAt?`${T('updated')} ${new Date(S.updAt).toLocaleString(locale(),{dateStyle:'medium',timeStyle:'short'})} · ${T('autoref')}`:T('loading')}
+function chrome(){
+ document.documentElement.lang=LANG;
+ $('ttl').textContent=S.menu==='dashboard'?T('dashboard'):(S.menu?T('lbl_'+S.menu):'');
+ $('back').hidden=S.menu!=='dashboard';$('backT').textContent=T('back');
+ $('disp').hidden=S.menu!=='jadwal';$('dispT').textContent=T('dispatch');
+ $('lid').classList.toggle('on',LANG==='id');$('len').classList.toggle('on',LANG==='en');
+ $('upd').textContent=updText();
+}
+function setLang(l){LANG=l;localStorage.apmLang=l;buildNav();chrome();if(S.menu)draw()}
+function goBack(){go(S.back&&S.back!=='dashboard'?S.back:(S.menus?S.menus[0]:'absensi'))}
+
+async function start(){
+ if(API.indexOf('GANTI')>=0){$('out').innerHTML=empty(T('cfgmissing'));return}
+ let r;try{r=await api({a:'menus'})}catch(e){$('out').innerHTML=`<div class="err">${T('connfail')}</div>`;return}
+ if(!r.ok){$('out').innerHTML=`<div class="err">${E(r.err)}</div>`;return}
+ S.menus=r.menus;
+ S.grpOpen=(S.menus.includes(localStorage.apmMenu));
+ buildNav();
+ go((localStorage.apmMenu==='dashboard'||S.menus.includes(localStorage.apmMenu))?localStorage.apmMenu:'dashboard');
+}
+function go(m){
+ if(m==='dashboard'&&S.menu&&S.menu!=='dashboard')S.back=S.menu;
+ S.enterUntil=Date.now()+2500;S.menu=m;S.k='';S.auto=1;S.q='';S.wf='ALL';S.bf='ALL';S.bq='';localStorage.apmMenu=m;
+ if(m!=='dashboard'&&!S.grpOpen){S.grpOpen=true;$('grp')&&$('grp').classList.remove('hide');$('arr')&&($('arr').textContent='▾')}
+ markNav();chrome();setCtl('');
+ const wait=()=>{$('out').innerHTML=`<div class="panel" style="color:var(--mu)">${T('loading')}</div>`};
+ if(m==='dashboard'){drawOverview();loadAll();return}
+ if(m==='jadwal'){if(S.D.jadwal)draw();else wait();loadAll();return}
+ if(S.D[m])draw();else wait();
+ load()}
+async function load(name){const m=S.menu;if(!m||m==='dashboard')return;let r;
+ try{r=await api({menu:m,name:name||''})}catch(e){$('upd').textContent=T('connlost');return}
+ if(m!==S.menu)return;
+ if(!r.ok){$('out').innerHTML=`<div class="err">${E(r.err)}</div>`;return}
+ if(m==='slip'&&name)S.slipRow=r.d.row;else S.D[m]=r.d;
+ S.updAt=Date.now();draw()}
+async function loadAll(){if(!S.menus)return;
+ const res=await Promise.all(S.menus.map(m=>api({menu:m,name:''}).then(r=>[m,r]).catch(()=>[m,null])));
+ res.forEach(([m,r])=>{if(r&&r.ok)S.D[m]=r.d});
+ S.updAt=Date.now();
+ if(S.menu==='dashboard')drawOverview();else if(S.menu==='jadwal')draw();else chrome()}
+function draw(){chrome();$('out').classList.toggle('enter',Date.now()<(S.enterUntil||0));
+ if(S.menu==='dashboard')return drawOverview();
+ const d=S.D[S.menu];if(!d)return;
+ if(S.menu==='slip')return slipView(d);
+ R[S.menu](d)}
+
+/* ---------- WO APM ---------- */
+function woNorm(rows){const mp=new Map();rows.forEach(r=>mp.set(r.wo,r));
+ return [...mp.values()].map(r=>{const rm=String(r.rem||''),st=String(r.st||'').toUpperCase();let s;
+   if(/done|terinstal|installed/i.test(rm))s='DONE';else if(/cancel|batal/i.test(rm))s='CANCEL';
+   else if(/CANCEL/.test(st))s='CANCEL';else if(/PEND/.test(st))s='PENDING';else if(/DONE|COMPLETE/.test(st))s='DONE';else s='LAIN';
+   return{...r,s,d:pd(r.tgl),sched:s==='PENDING'?pd(rm+' '+(r.ket||'')):null}}).filter(r=>r.d)}
 R.wo=function(rows){
  const all=woNorm(rows),now=new Date(),today=day0(now);
  const keys=keysOf(all,r=>ym(r.d));const k=pick(keys);
@@ -333,8 +401,7 @@ R.wo=function(rows){
  const a1=pc('DONE'),a2=a1+pc('PENDING');
  const pend=all.filter(r=>r.s==='PENDING'&&r.sched).map(r=>({...r,diff:Math.round((day0(r.sched)-today)/864e5)})).sort((a,b)=>a.diff-b.diff);
  const rem=pend.filter(r=>r.diff>=0&&r.diff<=3).map(r=>{const urgent=r.diff===0||(r.diff===1&&now.getHours()>=16);return{...r,urgent}});
- const remH=rem.length?`<div class="grid" style="margin-bottom:16px">${rem.map(r=>`<div class="alert ${r.urgent?'red blink':'amber blink-a'}"><div style="flex:1"><b>${r.urgent?'SEGERA – JADWAL ULANG '+(r.diff===0?'HARI INI':'BESOK 16.00'):'PENGINGAT JADWAL ULANG H-'+r.diff}</b>${E(r.wo)} · ${E(r.cust)} · ${E(r.tek)}<br><span style="opacity:.85">Jadwal: ${sh(r.sched)} ${r.sched.getFullYear()}</span></div></div>`).join('')}</div>`:'';
- // perbandingan semua bulan
+ const remH=rem.length?`<div class="grid" style="margin-bottom:16px">${rem.map(r=>`<div class="alert ${r.urgent?'red blink':'amber blink-a'}"><div style="flex:1"><b>${r.urgent?(r.diff===0?T('rem_now'):T('rem_tmr')):T('rem_h')+r.diff}</b>${E(r.wo)} · ${E(r.cust)} · ${E(r.tek)}<br><span style="opacity:.85">${T('rem_sched')} ${fmtLong(r.sched)}</span></div></div>`).join('')}</div>`:'';
  const ms=keys.slice().sort((a,b)=>a-b).map(kk=>{const g=all.filter(r=>ym(r.d)===kk),cn=s=>g.filter(r=>r.s===s).length;
    return{k:kk,t:g.length,done:cn('DONE'),pend:cn('PENDING'),canc:cn('CANCEL'),lain:cn('LAIN')}});
  const allT=all.length,allDone=all.filter(r=>r.s==='DONE').length;
@@ -344,45 +411,45 @@ R.wo=function(rows){
    const dh=dl==null?{h:'<span class="pill p-in">-</span>'}:{h:`<span class="pill ${dl>0?'p-ok':dl<0?'p-er':'p-in'}">${dl>0?'▲ +'+dl:dl<0?'▼ '+dl:'● 0'}</span>`};
    const lab=m.k===k?`<b style="color:var(--ac)">${E(monLabel(m.k))}</b>`:E(monLabel(m.k));
    return [{h:lab},m.t,m.done,pp(m.done),m.pend,pp(m.pend),m.canc,pp(m.canc),m.lain,dh]});
- const WL={ALL:'Semua Work Order',DONE:'Done',PENDING:'Pending',CANCEL:'Cancel',LAIN:'Sedang Di Kerjakan Hari Ini'};
- const seg=[['ALL','Semua',n],['DONE','Done',c('DONE')],['PENDING','Pending',c('PENDING')],['CANCEL','Cancel',c('CANCEL')],['LAIN','Sedang Di Kerjakan Hari Ini',c('LAIN')]]
+ const WL={ALL:T('wo_all'),DONE:T('st_done'),PENDING:T('st_pending'),CANCEL:T('st_cancel'),LAIN:T('st_working')};
+ const seg=[['ALL',T('wo_all'),n],['DONE',T('st_done'),c('DONE')],['PENDING',T('st_pending'),c('PENDING')],['CANCEL',T('st_cancel'),c('CANCEL')],['LAIN',T('st_working'),c('LAIN')]]
    .map(([v,t,q])=>`<button class="${S.wf===v?'on':''}" onclick="wfSet('${v}')">${E(t)} · ${q}</button>`).join('');
  $('out').innerHTML=`${remH}
  <div class="grid kpis">
-  ${card('Total Work Order',n,monLabel(k),'var(--ac)',"wfSet('ALL')",S.wf==='ALL')}
-  ${card('Done',c('DONE'),`<span style="color:#22a355">${pc('DONE').toFixed(1)}%</span> dari total`,'var(--ok)',"wfSet('DONE')",S.wf==='DONE')}
-  ${card('Pending',c('PENDING'),`<span style="color:#d97706">${pc('PENDING').toFixed(1)}%</span> dari total`,'var(--wr)',"wfSet('PENDING')",S.wf==='PENDING')}
-  ${card('Cancel',c('CANCEL'),`<span style="color:#dc2626">${pc('CANCEL').toFixed(1)}%</span> dari total`,'var(--er)',"wfSet('CANCEL')",S.wf==='CANCEL')}
-  ${card('Sedang Di Kerjakan Hari Ini',c('LAIN'),`<span>${pc('LAIN').toFixed(1)}%</span> dari total`,'var(--ac2)',"wfSet('LAIN')",S.wf==='LAIN')}
+  ${card(T('wo_total'),n,monLabel(k),'var(--ac)',"wfSet('ALL')",S.wf==='ALL')}
+  ${card(T('st_done'),c('DONE'),`<span style="color:#22a355">${pc('DONE').toFixed(1)}%</span> ${T('wo_pctof')}`,'var(--ok)',"wfSet('DONE')",S.wf==='DONE')}
+  ${card(T('st_pending'),c('PENDING'),`<span style="color:#d97706">${pc('PENDING').toFixed(1)}%</span> ${T('wo_pctof')}`,'var(--wr)',"wfSet('PENDING')",S.wf==='PENDING')}
+  ${card(T('st_cancel'),c('CANCEL'),`<span style="color:#dc2626">${pc('CANCEL').toFixed(1)}%</span> ${T('wo_pctof')}`,'var(--er)',"wfSet('CANCEL')",S.wf==='CANCEL')}
+  ${card(T('st_working'),c('LAIN'),`<span>${pc('LAIN').toFixed(1)}%</span> ${T('wo_pctof')}`,'var(--ac2)',"wfSet('LAIN')",S.wf==='LAIN')}
  </div>
  <div class="grid two">
-  <div class="panel"><div class="sec-t"><h3>Work Order per Tanggal</h3><small>${MN[mo]} ${y}</small></div>${line(tot,dn)}</div>
-  <div class="panel"><div class="sec-t"><h3>Komposisi Status</h3><small>Total ${n}</small></div>
+  <div class="panel"><div class="sec-t"><h3>${T('wo_title')}</h3><small>${mName(mo)} ${y}</small></div>${line(tot,dn)}</div>
+  <div class="panel"><div class="sec-t"><h3>${T('wo_status')}</h3><small>${T('wo_total')}: ${n}</small></div>
    <div style="display:grid;place-items:center;padding:6px 0"><div style="width:180px;height:180px;border-radius:50%;background:${n?`conic-gradient(#22c55e 0 ${a1}%,#f59e0b ${a1}% ${a2}%,#ef4444 ${a2}% 100%)`:'var(--line)'};display:grid;place-items:center"><div style="width:120px;height:120px;border-radius:50%;background:var(--panel);display:grid;place-items:center;text-align:center"><div><div class="big">${n}</div><small style="color:var(--mu)">Work Order</small></div></div></div></div>
-   <div class="legend"><span><i style="background:#22c55e"></i>Done</span><span><i style="background:#f59e0b"></i>Pending</span><span><i style="background:#ef4444"></i>Cancel</span></div></div>
+   <div class="legend"><span><i style="background:#22c55e"></i>${T('st_done')}</span><span><i style="background:#f59e0b"></i>${T('st_pending')}</span><span><i style="background:#ef4444"></i>${T('st_cancel')}</span></div></div>
  </div>
- <div class="panel"><div class="sec-t"><h3>Perbandingan Semua Bulan</h3><small>${ms.length} bulan · total ${allT} WO · Done ${allT?(allDone/allT*100).toFixed(1):'0'}%</small></div>
+ <div class="panel"><div class="sec-t"><h3>${T('wo_cmp')}</h3><small>${ms.length} ${T('wo_cmp_sum')} ${allT} WO · Done ${allT?(allDone/allT*100).toFixed(1):'0'}%</small></div>
   ${cmpChart(ms)}
   <div style="height:14px"></div>
-  ${tbl(['Bulan','Total','Done','Done %','Pending','Pending %','Cancel','Cancel %','Lainnya','Selisih Total'],cmpRows)}
-  ${best?`<p style="color:var(--mu);font-size:12px;margin:10px 0 0">Persentase Done tertinggi: <b>${E(monLabel(best.k))}</b> (${(best.done/best.t*100).toFixed(1)}%)</p>`:''}
+  ${tbl(T('wo_hc'),cmpRows)}
+  ${best?`<p style="color:var(--mu);font-size:12px;margin:10px 0 0">${T('wo_best')}: <b>${E(monLabel(best.k))}</b> (${(best.done/best.t*100).toFixed(1)}%)</p>`:''}
  </div>
- <div class="panel"><div class="sec-t"><h3>Jadwal Ulang (Pending)</h3><small>${pend.length} WO</small></div>
-  ${tbl(['Work Order','Customer','Teknisi','Jadwal Ulang','Sisa'],pend.map(r=>{const t=r.diff<0?'Lewat jadwal':r.diff===0?'Hari ini':'H-'+r.diff;return [r.wo,r.cust,r.tek,sh(r.sched)+' '+r.sched.getFullYear(),pill(t,r.diff<0?'er':r.diff<=1?'wr':'in')]}))}</div>
- <div class="panel" id="wdet"><div class="sec-t"><h3>Detail Work Order · ${E(WL[S.wf])}</h3><input id="wq" class="search" placeholder="Cari WO, customer, teknisi..." oninput="S.q=this.value;woTab()"></div>
+ <div class="panel"><div class="sec-t"><h3>${T('wo_resched')}</h3><small>${pend.length} WO</small></div>
+  ${tbl(T('wo_hr'),pend.map(r=>{const t=r.diff<0?T('wo_overdue'):r.diff===0?T('wo_today'):'H-'+r.diff;return [r.wo,r.cust,r.tek,fmtLong(r.sched),pill(t,r.diff<0?'er':r.diff<=1?'wr':'in')]}))}</div>
+ <div class="panel" id="wdet"><div class="sec-t"><h3>${T('wo_detail')} · ${E(WL[S.wf])}</h3><input id="wq" class="search" placeholder="${T('wo_search')}" oninput="S.q=this.value;woTab()"></div>
   <div class="seg" style="margin-bottom:14px">${seg}</div><div id="wt"></div></div>`;
  $('wq').value=S.q;woTab();
 };
 function wfSet(t){S.wf=t;S.q='';draw();const e=$('wdet');if(e){e.classList.add('reveal');setTimeout(()=>e.scrollIntoView({behavior:'smooth',block:'start'}),60)}}
 function woTab(){const q=S.q.toLowerCase();const f=(S.cache||[]).filter(r=>!q||JSON.stringify(r).toLowerCase().includes(q));
- const L={DONE:['Done','ok'],PENDING:['Pending','wr'],CANCEL:['Cancel','er'],LAIN:['Sedang Di Kerjakan Hari Ini','in']};
- $('wt').innerHTML=tbl(['No','Tanggal','Work Order','Customer','District','Teknisi','Status','Keterangan','Update Remark'],
-  f.map((r,i)=>[i+1,r.tgl,r.wo,r.cust,r.dist,r.tek,pill(L[r.s][0],L[r.s][1]),{h:`<span class="wrapc">${E(r.ket)}</span>`},{h:`<span class="wrapc">${E(r.rem)}</span>`}]),'auto')}
+ const C={DONE:'ok',PENDING:'wr',CANCEL:'er',LAIN:'in'};
+ $('wt').innerHTML=tbl(T('wo_h'),
+  f.map((r,i)=>[i+1,r.tgl,r.wo,r.cust,r.dist,r.tek,pill(stLabel(r.s),C[r.s]),{h:`<span class="wrapc">${E(r.ket)}</span>`},{h:`<span class="wrapc">${E(r.rem)}</span>`}]),'auto')}
 
-/* ---------- KPI Teknisi ---------- */
+/* ---------- KPI ---------- */
 R.kpi=function(d){const ks=Object.keys(d.months||{});if(!ks.length){$('out').innerHTML=empty();return}
  if(!ks.includes(S.k))S.k=ks[ks.length-1];
- setCtl(`<select onchange="S.k=this.value;draw()">${ks.map(k=>`<option ${k===S.k?'selected':''}>${E(k)}</option>`).join('')}</select><span class="clock">Tahun ${E(d.year)}</span>`);
+ setCtl(`<select onchange="S.k=this.value;draw()">${ks.map(k=>`<option ${k===S.k?'selected':''}>${E(k)}</option>`).join('')}</select><span class="clock">${T('year')} ${E(d.year)}</span>`);
  const m=d.months[S.k],rows=m.rows,val=r=>parseFloat(String(r[6]).replace('%','').replace(',','.'))||0;
  const v=rows.map(val),hi=Math.max(...v),lo=Math.min(...v);
  const names=x=>rows.filter((r,i)=>v[i]===x).map(r=>r[1]).join(', ');
@@ -390,16 +457,15 @@ R.kpi=function(d){const ks=Object.keys(d.months||{});if(!ks.length){$('out').inn
  const avg=m.avg?val(m.avg):0;
  const pred=p=>/KURANG/i.test(p)?'er':/BAIK|BAGUS|SANGAT/i.test(p)?'ok':'wr';
  $('out').innerHTML=`<div class="grid kpis">
-  ${card('Pencapaian Tertinggi',`<span style="font-size:17px">${E(names(hi))}</span>`,hi.toFixed(1)+'%','var(--ok)')}
-  ${card('Pencapaian Terendah',`<span style="font-size:17px">${E(names(lo))}</span>`,lo.toFixed(1)+'%','var(--er)')}
-  ${card('Rata-rata Tim',avg.toFixed(1)+'%','Realisasi '+rea+' dari target '+tgt,'var(--ac)')}
-  ${card('Total Pemasangan',rea,'Target '+tgt,'var(--ac2)')}
+  ${card(T('kpi_max'),`<span style="font-size:17px">${E(names(hi))}</span>`,hi.toFixed(1)+'%','var(--ok)')}
+  ${card(T('kpi_min'),`<span style="font-size:17px">${E(names(lo))}</span>`,lo.toFixed(1)+'%','var(--er)')}
+  ${card(T('kpi_avg'),avg.toFixed(1)+'%',`${rea} ${T('kpi_of')} ${tgt}`,'var(--ac)')}
+  ${card(T('kpi_total'),rea,`${T('kpi_of')} ${tgt}`,'var(--ac2)')}
  </div>
- <div class="panel"><div class="sec-t"><h3>Rekap KPI ${E(S.k)}</h3><small>Target 66 pemasangan / bulan</small></div>
- ${tbl(['ID','Nama Karyawan','Target','Realisasi','Target Harian','Realisasi Harian','Pencapaian','Predikat'],rows.map(r=>[r[0],r[1],r[2],r[3],r[4],r[5],bar(val(r)),pill(r[7],pred(r[7]))]))}</div>`};
+ <div class="panel"><div class="sec-t"><h3>${T('kpi_title')} ${E(S.k)}</h3><small>${T('kpi_target')}</small></div>
+ ${tbl(T('kpi_h'),rows.map(r=>[r[0],r[1],r[2],r[3],r[4],r[5],bar(val(r)),pill(predLabel(r[7]),pred(r[7]))]))}</div>`};
 
 /* ---------- WAREHOUSE ---------- */
-const DW='H-008';                                   // DropWire 1 Core: satuan meter
 const isM=r=>r[0]===DW;
 R.barang=function(d){
  const low=d.rekap.filter(r=>{const aw=+r[2]||0;return aw>0&&(+r[6])<=aw*BARANG_LIMIT});
@@ -408,31 +474,31 @@ R.barang=function(d){
  const totRusak=pcsRows.reduce((s,r)=>s+(+r[5]||0),0);
  const totItems=pcsRows.reduce((s,r)=>s+(+r[6]||0),0);
  const dw=d.rekap.find(isM),dwAkhir=dw?(+dw[6]||0):0;
- const WF={ALL:['Total Items',d.rekap],LOW:['Perlu Request',low],RUSAK:['Barang Rusak',rusak]};
+ const WF={ALL:[T('wh_total'),d.rekap],LOW:[T('wh_req'),low],RUSAK:[T('wh_rusak'),rusak]};
  if(!WF[S.bf])S.bf='ALL';
  S.bsrc=WF[S.bf][1];S.blow=low;
  setCtl('');
  $('out').innerHTML=`
- ${low.length?`<div class="alert red blink"><div><b>STOK HAMPIR HABIS, SEGERA MELAKUKAN PERMINTAAN BARANG</b>${low.map(r=>E(r[1].trim())+' (sisa '+r[6]+' dari awal '+r[2]+')').join(' · ')}</div></div>`:''}
+ ${low.length?`<div class="alert red blink"><div><b>${T('wh_alert')}</b>${low.map(r=>E(r[1].trim())+' (sisa '+r[6]+' dari awal '+r[2]+')').join(' · ')}</div></div>`:''}
  <div class="grid kpis">
-  ${card('Barang Rusak',totRusak,rusak.length+' jenis barang rusak','var(--er)',"bfSet('RUSAK')",S.bf==='RUSAK')}
-  ${card('Perlu Request',low.length,'Stok akhir ≤ 30% stok awal','var(--wr)',"bfSet('LOW')",S.bf==='LOW')}
-  ${card('TOTAL ITEMS',totItems,`${d.rekap.length} jenis barang · DropWire 1 Core ${dwAkhir} meter`,'var(--ac)',"bfSet('ALL')",S.bf==='ALL')}
+  ${card(T('wh_rusak'),totRusak,`${rusak.length} ${T('wh_rusakjenis')}`,'var(--er)',"bfSet('RUSAK')",S.bf==='RUSAK')}
+  ${card(T('wh_req'),low.length,T('wh_lowrule'),'var(--wr)',"bfSet('LOW')",S.bf==='LOW')}
+  ${card(T('wh_total'),totItems,`${d.rekap.length} ${T('wh_jenis')} · ${T('wh_dw')} ${dwAkhir} ${T('wh_meter')}`,'var(--ac)',"bfSet('ALL')",S.bf==='ALL')}
  </div>
- <div class="panel" id="bdet"><div class="sec-t"><h3>Daftar Barang · ${E(WF[S.bf][0])}</h3><input id="bq" class="search" placeholder="Cari nama atau kode barang..." oninput="S.bq=this.value;barTab()"></div><div id="bt"></div></div>`;
+ <div class="panel" id="bdet"><div class="sec-t"><h3>${T('wh_list')} · ${E(WF[S.bf][0])}</h3><input id="bq" class="search" placeholder="${T('wh_search')}" oninput="S.bq=this.value;barTab()"></div><div id="bt"></div></div>`;
  $('bq').value=S.bq||'';barTab();
 };
 function barTab(){const q=(S.bq||'').toLowerCase();const low=S.blow||[];
  const f=(S.bsrc||[]).filter(r=>!q||String(r[0]).toLowerCase().includes(q)||String(r[1]).toLowerCase().includes(q));
- $('bt').innerHTML=tbl(['Kode','Nama Barang','Satuan','Stok Awal','Masuk','Keluar','Rusak','Stok Akhir','Status'],
-  f.map(r=>[r[0],String(r[1]).trim(),isM(r)?'meter':'pcs',r[2],r[3],r[4],r[5],r[6],low.includes(r)?pill('Segera Request','er'):(+r[5]>0?pill('Rusak','wr'):pill('Aman','ok'))]))}
+ $('bt').innerHTML=tbl(T('wh_h'),
+  f.map(r=>[r[0],String(r[1]).trim(),isM(r)?T('wh_meter'):T('wh_pcs'),r[2],r[3],r[4],r[5],r[6],low.includes(r)?pill(T('wh_segera'),'er'):(+r[5]>0?pill(T('wh_rusakst'),'wr'):pill(T('wh_aman'),'ok'))]))}
 function bfSet(t){S.bf=t;S.bq='';draw();const e=$('bdet');if(e){e.classList.add('reveal');setTimeout(()=>e.scrollIntoView({behavior:'smooth',block:'start'}),60)}}
 
 /* ---------- ABSENSI (periode 20 - 19) ---------- */
 R.absensi=function(d){const H=d.headers,f=re=>H.find(h=>re.test(h));
  const cd=f(/tanggal|date/i),cn=f(/nama/i),cs=f(/status/i);
- const cl=H.filter(h=>/terlambat|telat|late|menit/i.test(h)&&h!==cs);   // kolom menit: tidak ditampilkan
- if(!cd){$('out').innerHTML=empty('Kolom tanggal tidak ditemukan di sheet absensi');return}
+ const cl=H.filter(h=>/terlambat|telat|late|menit/i.test(h)&&h!==cs);     // kolom menit: tidak ditampilkan
+ if(!cd){$('out').innerHTML=empty(T('abs_nocol'));return}
  const dated=d.rows.map(r=>({...r,_d:pd(r[cd])})).filter(r=>r._d);
  const keys=keysOf(dated,r=>perKey(r._d));const k=pick(keys);
  if(k==null){$('out').innerHTML=empty();return}
@@ -441,7 +507,7 @@ R.absensi=function(d){const H=d.headers,f=re=>H.find(h=>re.test(h));
  const rows=dated.filter(r=>r._d>=a&&r._d<=b).sort((x,y)=>y._d-x._d);
  const st=r=>cs?String(r[cs]||'').trim():'';
  const isHadir=r=>cs?(st(r)!==''&&!/off|alpa|alpha|izin|cuti|sakit|libur/i.test(st(r))):true;
- const isLate=r=>/terlambat/i.test(st(r));                                   // mengacu pada status "Terlambat"
+ const isLate=r=>/terlambat/i.test(st(r));
  const emp={};
  rows.forEach(r=>{const n=String(r[cn]||'-').trim();const e=emp[n]||(emp[n]={h:0,l:0});if(isHadir(r))e.h++;if(isLate(r))e.l++});
  const list=Object.entries(emp).sort((x,y)=>y[1].l-x[1].l||y[1].h-x[1].h);
@@ -451,21 +517,21 @@ R.absensi=function(d){const H=d.headers,f=re=>H.find(h=>re.test(h));
  const logH=H.filter(h=>!cl.includes(h));
  $('out').innerHTML=`
  <div class="grid kpis">
-  ${card('Periode',`<span style="font-size:15px">${E(perLabel(k).replace('Periode ',''))}</span>`,'Tanggal 20 s/d 19','var(--ac)')}
-  ${card('Karyawan',list.length,'Tercatat di periode ini','var(--ac2)')}
-  ${card('Total Hadir',hadir,'Akumulasi hari hadir','var(--ok)')}
-  ${card('Total Terlambat',late,'Status "Terlambat"','var(--wr)')}
+  ${card(T('period'),`<span style="font-size:15px">${E(perText(k))}</span>`,T('period_range'),'var(--ac)')}
+  ${card(T('abs_karyawan'),list.length,T('abs_tercatat'),'var(--ac2)')}
+  ${card(T('abs_hadir'),hadir,T('abs_hadir_s'),'var(--ok)')}
+  ${card(T('abs_late'),late,T('abs_late_s'),'var(--wr)')}
  </div>
  <div class="grid two">
-  <div class="panel"><div class="sec-t"><h3>Rekap Hadir per Karyawan</h3><small>${list.length} orang</small></div>
-   ${tbl(['Nama','Total Hadir','Terlambat'],list.map(([n,v])=>[n,v.h,v.l?pill(v.l+' kali','wr'):pill('0','ok')]))}</div>
-  <div class="panel"><div class="sec-t"><h3>Sering Terlambat</h3><small>Top 5</small></div>
-   ${top.length?`<ul class="rank">${top.map(([n,v])=>`<li><div class="who"><div class="avatar">${E(ini(n))}</div><div><b>${E(n)}</b><div style="color:var(--mu);font-size:12px">Hadir ${v.h} hari</div></div></div><span class="pill p-wr">${v.l}x</span></li>`).join('')}</ul>`:'<div style="color:var(--mu)">Tidak ada keterlambatan tercatat.</div>'}</div>
+  <div class="panel"><div class="sec-t"><h3>${T('abs_rekap')}</h3><small>${list.length} ${T('orang')}</small></div>
+   ${tbl(T('abs_h'),list.map(([n,v])=>[n,v.h,v.l?pill(v.l+' x','wr'):pill('0','ok')]))}</div>
+  <div class="panel"><div class="sec-t"><h3>${T('abs_top')}</h3><small>${T('top5')}</small></div>
+   ${top.length?`<ul class="rank">${top.map(([n,v])=>`<li><div class="who"><div class="avatar">${E(ini(n))}</div><div><b>${E(n)}</b><div style="color:var(--mu);font-size:12px">${fill(T('abs_hadirhari'),{n:v.h})}</div></div></div><span class="pill p-wr">${v.l}x</span></li>`).join('')}</ul>`:`<div style="color:var(--mu)">${T('abs_none')}</div>`}</div>
  </div>
- <div class="panel"><div class="sec-t"><h3>Log Absensi</h3><small>${rows.length} catatan, terbaru di atas</small></div>
+ <div class="panel"><div class="sec-t"><h3>${T('abs_log')}</h3><small>${fill(T('abs_logsub'),{n:rows.length})}</small></div>
   ${tbl(logH,rows.slice(0,400).map(r=>logH.map(h=>r[h])))}</div>`};
 
-/* ---------- JADWAL INSTALL (sheet Depok) ---------- */
+/* ---------- JADWAL INSTALL ---------- */
 function dayInfo(off){
  const J=S.D.jadwal||{},B=(off?J.besok:J.hari)||{};
  const t0=day0(new Date()),tm=new Date(t0.getFullYear(),t0.getMonth(),t0.getDate()+off);
@@ -477,41 +543,90 @@ function dayInfo(off){
 }
 function besokInfo(){return dayInfo(1)}
 function hariInfo(){return dayInfo(0)}
-function fmtLong(x){return x?x.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):''}
 function pendPanel(bi,label){
- const rows=bi.pend.map(r=>[r.wo,r.cust,r.dist,r.tek,pill('Pending','wr'),{h:`<span class="wrapc">${E(r.ket||r.rem||'')}</span>`}]);
- return `<div class="panel"><div class="sec-t"><h3>PENDING YANG DIJADWALKAN ULANG · ${label}</h3><small>${bi.pend.length} WO · jadwal ulang ${fmtLong(bi.tm)}</small></div>
-  ${bi.pend.length?tbl(['Work Order','Customer','District','Teknisi','Status','Keterangan'],rows,'auto'):`<div style="color:var(--mu)">Tidak ada pending yang dijadwalkan ulang untuk ${label==='HARI INI'?'hari ini':'besok'}.</div>`}</div>`}
-
+ const rows=bi.pend.map(r=>[r.wo,r.cust,r.dist,r.tek,pill(T('st_pending'),'wr'),{h:`<span class="wrapc">${E(r.ket||r.rem||'')}</span>`}]);
+ return `<div class="panel"><div class="sec-t"><h3>${T('pend_title')} · ${label}</h3><small>${bi.pend.length} ${T('pend_wo')} · ${T('pend_ret')} ${fmtLong(bi.tm)}</small></div>
+  ${tbl(T('pend_h'),rows,'auto')}</div>`}
+const jdSub=x=>`${fmtLong(x.tm)}<br>${fill(T('jd_plus'),{a:x.base==null?'-':x.base,b:x.pend.length})}`;
 R.jadwal=function(d){
  if(d.err){$('out').innerHTML=`<div class="err">${E(d.err)}</div>`;return}
  setCtl('');
  const H=d.hari||{},B=d.besok||{},hi=hariInfo(),bi=besokInfo();
- const sub=x=>`${fmtLong(x.tm)}<br>${x.base==null?'-':x.base} + ${x.pend.length} pending dijadwalkan ulang`;
  $('out').innerHTML=`<div class="grid kpis">
-  ${card('JADWAL INSTALL · HARI INI',`<span class="big">${hi.total}</span>`,sub(hi),'var(--ac)')}
-  ${card('JADWAL INSTALL · BESOK',`<span class="big">${bi.total}</span>`,sub(bi),'var(--ok)')}
+  ${card(T('jd_hari'),`<span class="big">${hi.total}</span>`,jdSub(hi),'var(--ac)')}
+  ${card(T('jd_besok'),`<span class="big">${bi.total}</span>`,jdSub(bi),'var(--ok)')}
  </div>
- ${hi.pend.length?pendPanel(hi,'HARI INI'):''}
- ${bi.pend.length?pendPanel(bi,'BESOK'):''}
- <div class="panel"><div class="sec-t"><h3>Sumber Data</h3><small>Sheet Depok · baris Install Scheduled</small></div>
+ ${hi.pend.length?pendPanel(hi,T('hari_lbl').toUpperCase()):''}
+ ${bi.pend.length?pendPanel(bi,T('besok_lbl').toUpperCase()):''}
+ <div class="panel"><div class="sec-t"><h3>${T('src')}</h3><small>${T('src_s')}</small></div>
   <div class="kv">
-   <div><div style="color:var(--mu);font-size:11px;text-transform:uppercase">Hari ini</div><b>${E(H.tgl||'-')}</b>${H.ok?'':`<div style="color:var(--wr);font-size:12px">${E(H.why||'')}</div>`}</div>
-   <div><div style="color:var(--mu);font-size:11px;text-transform:uppercase">Besok</div><b>${E(B.tgl||'-')}</b>${B.ok?'':`<div style="color:var(--wr);font-size:12px">${E(B.why||'')}</div>`}</div>
+   <div><div style="color:var(--mu);font-size:11px;text-transform:uppercase">${T('hari_lbl')}</div><b>${E(H.tgl||'-')}</b>${H.ok?'':`<div style="color:var(--wr);font-size:12px">${E(H.why||'')}</div>`}</div>
+   <div><div style="color:var(--mu);font-size:11px;text-transform:uppercase">${T('besok_lbl')}</div><b>${E(B.tgl||'-')}</b>${B.ok?'':`<div style="color:var(--wr);font-size:12px">${E(B.why||'')}</div>`}</div>
   </div>
-  <p style="color:var(--mu);font-size:12px;margin-bottom:0">Jadwal install dihitung dari sheet Depok, lalu ditambah pending WO yang jadwal ulangnya jatuh pada tanggal yang sama. Diperbarui otomatis setiap 1 menit.</p></div>`};
+  <p style="color:var(--mu);font-size:12px;margin-bottom:0">${T('src_note')}</p></div>`};
 
-/* ---------- Slip gaji (opsional, dimatikan di Code.gs) ---------- */
+/* ---------- OVERVIEW ---------- */
+function drawOverview(){
+ $('out').classList.toggle('enter',Date.now()<(S.enterUntil||0));
+ setCtl('');
+ const W=S.D.wo?woNorm(S.D.wo):[];const keys=keysOf(W,r=>ym(r.d));const k=keys[0];
+ const f=k!=null?W.filter(r=>ym(r.d)===k):[];const n=f.length,c=t=>f.filter(r=>r.s===t).length,pc=t=>n?(c(t)/n*100).toFixed(1)+'%':'0%';
+ const B=S.D.barang;let low=0,rusakT=0,akhirT=0;
+ if(B){const pcs=B.rekap.filter(r=>r[0]!==DW);low=B.rekap.filter(r=>{const aw=+r[2]||0;return aw>0&&(+r[6])<=aw*BARANG_LIMIT}).length;
+   rusakT=pcs.reduce((s,r)=>s+(+r[5]||0),0);akhirT=pcs.reduce((s,r)=>s+(+r[6]||0),0)}
+ const pv=x=>parseFloat(String(x).replace('%','').replace(',','.'))||0;
+ let topN='-',topP='';
+ const KP=S.D.kpi;
+ if(KP&&KP.months&&Object.keys(KP.months).length){const kk=Object.keys(KP.months).slice(-1)[0];
+   const best=KP.months[kk].rows.slice().sort((a,b)=>pv(b[6])-pv(a[6]))[0];if(best){topN=best[1];topP=best[6]}}
+ let hadir='-',late='-',per=T('nodata');
+ const AB=S.D.absensi;
+ if(AB&&AB.headers&&AB.headers.length){const H=AB.headers,f2=re=>H.find(h=>re.test(h));
+   const cd=f2(/tanggal|date/i),cs=f2(/status/i);
+   if(cd){const ds=AB.rows.map(r=>pd(r[cd])).filter(Boolean);const ks=keysOf(ds,x=>perKey(x));
+     if(ks.length){const kk=ks[0],[a,b]=perRange(kk);per=perText(kk);let h=0,l=0;
+       AB.rows.forEach(r=>{const x=pd(r[cd]);if(!x||x<a||x>b)return;const st=cs?String(r[cs]||'').trim():'';
+         const ok=cs?(st!==''&&!/off|alpa|alpha|izin|cuti|sakit|libur/i.test(st)):true;if(ok)h++;if(/terlambat/i.test(st))l++});
+       hadir=h;late=l}}}
+ const hi=hariInfo(),bi=besokInfo();
+ const sub=x=>fill(T('jd_plus'),{a:x.base==null?'-':x.base,b:x.pend.length});
+ $('out').innerHTML=`
+ <div class="sec-t"><h3>${T('ov_wo')} · ${k!=null?E(monLabel(k)):'-'}</h3></div>
+ <div class="grid kpis">
+  ${card(T('wo_total'),n,T('ov_click'),'var(--ac)',"go('wo')")}
+  ${card(T('st_done'),pc('DONE'),c('DONE')+' WO','var(--ok)',"go('wo')")}
+  ${card(T('st_pending'),c('PENDING'),pc('PENDING')+' '+T('wo_pctof'),'var(--wr)',"go('wo')")}
+  ${card(T('st_cancel'),c('CANCEL'),pc('CANCEL')+' '+T('wo_pctof'),'var(--er)',"go('wo')")}
+ </div>
+ <div class="sec-t"><h3>${T('ov_wh')}</h3></div>
+ <div class="grid kpis">
+  ${card(T('wh_req'),low,T('wh_lowrule'),'var(--wr)',"go('barang')")}
+  ${card(T('wh_rusak'),rusakT,T('wh_units'),'var(--er)',"go('barang')")}
+  ${card(T('wh_total'),akhirT,T('wh_unit_note'),'var(--ac)',"go('barang')")}
+ </div>
+ <div class="sec-t"><h3>${T('ov_abs')}</h3></div>
+ <div class="grid kpis">
+  ${card(T('ov_hadir'),hadir,E(per),'var(--ok)',"go('absensi')")}
+  ${card(T('ov_late'),late,E(per),'var(--wr)',"go('absensi')")}
+  ${card(T('ov_kpi_top'),`<span style="font-size:17px">${E(topN)}</span>`,topP?T('ov_pencapaian')+' '+E(topP):'','var(--ac2)',"go('kpi')")}
+ </div>
+ <div class="sec-t"><h3>${T('ov_jadwal')}</h3></div>
+ <div class="grid kpis">
+  ${card(T('jd_hari'),`<span class="big">${hi.total}</span>`,sub(hi),'var(--ac)',"go('jadwal')")}
+  ${card(T('jd_besok'),`<span class="big">${bi.total}</span>`,sub(bi),'var(--ok)',"go('jadwal')")}
+ </div>`}
+
+/* ---------- SLIP GAJI (opsional, dimatikan di Code.gs) ---------- */
 function slipView(d){setCtl('');
- $('out').innerHTML=`<div class="panel" style="max-width:720px"><div class="sec-t"><h3>Cari Slip Gaji</h3><small>Ketik nama karyawan lalu pilih</small></div>
- <input list="nl" class="search" style="width:100%" placeholder="Nama karyawan..." value="${E(S.slipName||'')}" onchange="S.slipName=this.value;S.slipRow=null;load(this.value)">
+ $('out').innerHTML=`<div class="panel" style="max-width:720px"><div class="sec-t"><h3>${T('slip_title')}</h3><small>${T('slip_hint')}</small></div>
+ <input list="nl" class="search" style="width:100%" placeholder="${T('slip_ph')}" value="${E(S.slipName||'')}" onchange="S.slipName=this.value;S.slipRow=null;load(this.value)">
  <datalist id="nl">${(d.names||[]).map(n=>`<option value="${E(n)}">`).join('')}</datalist></div>
  ${S.slipRow?`<div class="panel" style="max-width:720px"><h3 style="margin-top:0">${E(S.slipName)}</h3><div class="kv">${Object.entries(S.slipRow).filter(x=>x[1]!=='').map(([k,v])=>`<div><div style="color:var(--mu);font-size:11px;text-transform:uppercase">${E(k)}</div><b>${E(v)}</b></div>`).join('')}</div></div>`:''}`}
 
 /* ---------- jam & refresh ---------- */
-const tick=()=>{$('clk').textContent=new Date().toLocaleString('id-ID',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'})};
+const tick=()=>{$('clk').textContent=new Date().toLocaleString(locale(),{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'})};
 tick();setInterval(tick,1000);
-setInterval(()=>{if(!S.menus)return;if(S.menu==='dashboard'||S.menu==='jadwal')loadAll();else if(S.menu!=='slip')load()},60000);
+setInterval(()=>{if(!S.menus)return;if(S.menu==='dashboard'||S.menu==='jadwal')loadAll();else if(S.menu&&S.menu!=='slip')load()},60000);
 start();
 </script>
 </body>
