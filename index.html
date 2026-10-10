@@ -49,8 +49,11 @@ select:focus,input:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3p
 .sec-t h3{margin:0;font-size:15px;text-transform:uppercase;letter-spacing:.04em}.sec-t small{color:var(--mu)}
 .tw{overflow:auto;border:1px solid #dfe5f5;border-radius:14px;max-height:520px;background:#fff;color:#1c2540}
 table{border-collapse:collapse;width:100%;font-size:13px}
+table.auto{width:auto}
 th,td{padding:10px 12px;border-bottom:1px solid #eef1f8;text-align:left;white-space:nowrap}
 th{position:sticky;top:0;background:#f1f4fb;color:#4a5680;font-size:11px;letter-spacing:.06em;text-transform:uppercase;z-index:1}
+table.auto{width:auto}
+.wrapc{display:inline-block;max-width:300px;white-space:normal;line-height:1.4}
 tr:nth-child(even) td{background:#fafbff}tr:hover td{background:#eef3ff;transition:background .2s}
 td.empty{text-align:center;color:#8a93b0;padding:24px}
 .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600}
@@ -200,7 +203,7 @@ const empty=t=>`<div class="panel" style="text-align:center;color:var(--mu);padd
 const card=(l,v,s,c,click,on)=>`<div class="kpi${click?' clk':''}${on?' act':''}" ${click?`onclick="${click}"`:''} style="--c:${c||'var(--ac)'}"><div class="l">${E(l)}</div><div class="v">${v}</div>${s?`<div class="s">${s}</div>`:''}</div>`;
 const pill=(t,k)=>({h:`<span class="pill p-${k}">${E(t)}</span>`});
 const bar=p=>({h:`<div style="display:flex;align-items:center;gap:8px"><div class="bar"><i style="width:${Math.max(0,Math.min(100,p))}%"></i></div><span>${p.toFixed(1)}%</span></div>`});
-const tbl=(h,rows)=>`<div class="tw"><table><thead><tr>${h.map(x=>`<th>${E(x)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c&&c.h!=null?c.h:E(c)}</td>`).join('')}</tr>`).join('')||`<tr><td class="empty" colspan="${h.length}">Tidak ada data</td></tr>`}</tbody></table></div>`;
+const tbl=(h,rows,cls)=>`<div class="tw"><table class="${cls||''}"><thead><tr>${h.map(x=>`<th>${E(x)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c&&c.h!=null?c.h:E(c)}</td>`).join('')}</tr>`).join('')||`<tr><td class="empty" colspan="${h.length}">Tidak ada data</td></tr>`}</tbody></table></div>`;
 
 function line(a,b){const W=720,H=240,P=34,mx=Math.max(4,...a);
  const x=i=>P+i*(W-2*P)/Math.max(1,a.length-1),y=v=>H-P-v/mx*(H-2*P);
@@ -230,6 +233,7 @@ function go(m){S.enterUntil=Date.now()+2500;S.menu=m;S.k='';S.auto=1;S.q='';S.wf
  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.id==='n_'+m));
  $('ttl').textContent=m==='dashboard'?'DASHBOARD':LBL[m];setCtl('');
  if(m==='dashboard'){drawOverview();loadAll();return}
+ if(m==='jadwal'){if(S.D.jadwal)draw();else $('out').innerHTML='<div class="panel" style="color:var(--mu)">Memuat data...</div>';loadAll();return}
  if(S.D[m])draw();else $('out').innerHTML='<div class="panel" style="color:var(--mu)">Memuat data...</div>';
  load()}
 function toggleGrp(){const g=$('grp');const open=g.classList.contains('hide');g.classList.toggle('hide',!open);$('arr').textContent=open?'▾':'▸'}
@@ -237,7 +241,7 @@ async function loadAll(){if(!S.menus)return;
  const res=await Promise.all(S.menus.map(m=>api({menu:m,name:''}).then(r=>[m,r]).catch(()=>[m,null])));
  res.forEach(([m,r])=>{if(r&&r.ok)S.D[m]=r.d});
  $('upd').textContent='Diperbarui '+new Date().toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'})+' · otomatis setiap 1 menit';
- if(S.menu==='dashboard')drawOverview()}
+ if(S.menu==='dashboard')drawOverview();else if(S.menu==='jadwal')draw()}
 function drawOverview(){$('out').classList.toggle('enter',Date.now()<(S.enterUntil||0));
  setCtl('');
  const W=S.D.wo?woNorm(S.D.wo):[];const keys=keysOf(W,r=>ym(r.d));const k=keys[0];
@@ -282,8 +286,8 @@ function drawOverview(){$('out').classList.toggle('enter',Date.now()<(S.enterUnt
  </div>
  <div class="sec-t"><h3>Install Megavision</h3></div>
  <div class="grid kpis">
-  ${card('Install Scheduled · Hari Ini',`<span class="big">${E(jHari)}</span>`,'','var(--ac)',"go('jadwal')")}
-  ${card('Install Scheduled · Besok',`<span class="big">${E(jBesok)}</span>`,'','var(--ok)',"go('jadwal')")}
+  ${card('Total Install Hari Ini',`<span class="big">${hariInfo().total}</span>`,(hariInfo().base==null?'-':hariInfo().base)+' + '+hariInfo().pend.length+' pending dijadwalkan ulang','var(--ac)',"go('jadwal')")}
+  ${card('Total Install Besok',`<span class="big">${besokInfo().total}</span>`,(besokInfo().base==null?'-':besokInfo().base)+' + '+besokInfo().pend.length+' pending dijadwalkan ulang','var(--ok)',"go('jadwal')")}
  </div>`}
 async function load(name){const m=S.menu;if(!m)return;let r;
  try{r=await api({menu:m,name:name||''})}catch(e){$('upd').textContent='Koneksi terputus, dicoba lagi otomatis';return}
@@ -373,7 +377,7 @@ function wfSet(t){S.wf=t;S.q='';draw();const e=$('wdet');if(e){e.classList.add('
 function woTab(){const q=S.q.toLowerCase();const f=(S.cache||[]).filter(r=>!q||JSON.stringify(r).toLowerCase().includes(q));
  const L={DONE:['Done','ok'],PENDING:['Pending','wr'],CANCEL:['Cancel','er'],LAIN:['Sedang Di Kerjakan Hari Ini','in']};
  $('wt').innerHTML=tbl(['No','Tanggal','Work Order','Customer','District','Teknisi','Status','Keterangan','Update Remark'],
-  f.map((r,i)=>[i+1,r.tgl,r.wo,r.cust,r.dist,r.tek,pill(L[r.s][0],L[r.s][1]),r.ket,r.rem]))}
+  f.map((r,i)=>[i+1,r.tgl,r.wo,r.cust,r.dist,r.tek,pill(L[r.s][0],L[r.s][1]),{h:`<span class="wrapc">${E(r.ket)}</span>`},{h:`<span class="wrapc">${E(r.rem)}</span>`}]),'auto')}
 
 /* ---------- KPI Teknisi ---------- */
 R.kpi=function(d){const ks=Object.keys(d.months||{});if(!ks.length){$('out').innerHTML=empty();return}
@@ -462,21 +466,41 @@ R.absensi=function(d){const H=d.headers,f=re=>H.find(h=>re.test(h));
   ${tbl(logH,rows.slice(0,400).map(r=>logH.map(h=>r[h])))}</div>`};
 
 /* ---------- JADWAL INSTALL (sheet Depok) ---------- */
+function dayInfo(off){
+ const J=S.D.jadwal||{},B=(off?J.besok:J.hari)||{};
+ const t0=day0(new Date()),tm=new Date(t0.getFullYear(),t0.getMonth(),t0.getDate()+off);
+ const W=S.D.wo?woNorm(S.D.wo):[];
+ const pend=W.filter(r=>r.s==='PENDING'&&r.sched&&+day0(r.sched)===+tm);
+ const b=parseFloat(String(B.val||'').replace(/[^0-9.\-]/g,''));
+ const base=isNaN(b)?null:b;
+ return {tm,val:B.ok?B.val:'-',base,pend,total:(base||0)+pend.length};
+}
+function besokInfo(){return dayInfo(1)}
+function hariInfo(){return dayInfo(0)}
+function fmtLong(x){return x?x.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):''}
+function pendPanel(bi,label){
+ const rows=bi.pend.map(r=>[r.wo,r.cust,r.dist,r.tek,pill('Pending','wr'),{h:`<span class="wrapc">${E(r.ket||r.rem||'')}</span>`}]);
+ return `<div class="panel"><div class="sec-t"><h3>PENDING YANG DIJADWALKAN ULANG · ${label}</h3><small>${bi.pend.length} WO · jadwal ulang ${fmtLong(bi.tm)}</small></div>
+  ${bi.pend.length?tbl(['Work Order','Customer','District','Teknisi','Status','Keterangan'],rows,'auto'):`<div style="color:var(--mu)">Tidak ada pending yang dijadwalkan ulang untuk ${label==='HARI INI'?'hari ini':'besok'}.</div>`}</div>`}
+
 R.jadwal=function(d){
  if(d.err){$('out').innerHTML=`<div class="err">${E(d.err)}</div>`;return}
  setCtl('');
- const H=d.hari||{},B=d.besok||{},dh=pd(H.tgl),db=pd(B.tgl);
- const fl=x=>x?x.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'';
+ const H=d.hari||{},B=d.besok||{},hi=hariInfo(),bi=besokInfo();
  $('out').innerHTML=`<div class="grid kpis">
-  ${card('Install Scheduled · Hari Ini',`<span class="big">${E(H.val||'-')}</span>`,fl(dh),'var(--ac)')}
-  ${card('Install Scheduled · Besok',`<span class="big">${E(B.val||'-')}</span>`,fl(db),'var(--ok)')}
+  ${card('Install Scheduled · Hari Ini',`<span class="big">${E(hi.val)}</span>`,fmtLong(hi.tm),'var(--ac)')}
+  ${card('Total Hari Ini',`<span class="big">${hi.total}</span>`,`${hi.base==null?'-':hi.base} + ${hi.pend.length} pending dijadwalkan ulang`,'var(--ac)')}
+  ${card('Install Scheduled · Besok',`<span class="big">${E(bi.val)}</span>`,fmtLong(bi.tm),'var(--ok)')}
+  ${card('Total Besok',`<span class="big">${bi.total}</span>`,`${bi.base==null?'-':bi.base} + ${bi.pend.length} pending dijadwalkan ulang`,'var(--ac2)')}
  </div>
+ ${pendPanel(hi,'HARI INI')}
+ ${pendPanel(bi,'BESOK')}
  <div class="panel"><div class="sec-t"><h3>Sumber Data</h3><small>Sheet Depok · baris Install Scheduled</small></div>
   <div class="kv">
    <div><div style="color:var(--mu);font-size:11px;text-transform:uppercase">Hari ini</div><b>${E(H.tgl||'-')}</b>${H.ok?'':`<div style="color:var(--wr);font-size:12px">${E(H.why||'')}</div>`}</div>
    <div><div style="color:var(--mu);font-size:11px;text-transform:uppercase">Besok</div><b>${E(B.tgl||'-')}</b>${B.ok?'':`<div style="color:var(--wr);font-size:12px">${E(B.why||'')}</div>`}</div>
   </div>
-  <p style="color:var(--mu);font-size:12px;margin-bottom:0">Data diambil dari kolom tanggal 1–31 pada blok bulan di sheet Depok, lalu baris Install Scheduled. Diperbarui otomatis setiap 1 menit.</p></div>`};
+  <p style="color:var(--mu);font-size:12px;margin-bottom:0">Install dihitung dari sheet Depok, lalu ditambah pending WO yang jadwal ulangnya jatuh pada tanggal yang sama. Diperbarui otomatis setiap 1 menit.</p></div>`};
 
 /* ---------- Slip gaji (opsional, dimatikan di Code.gs) ---------- */
 function slipView(d){setCtl('');
@@ -488,7 +512,7 @@ function slipView(d){setCtl('');
 /* ---------- jam & refresh ---------- */
 const tick=()=>{$('clk').textContent=new Date().toLocaleString('id-ID',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'})};
 tick();setInterval(tick,1000);
-setInterval(()=>{if(!S.menus)return;if(S.menu==='dashboard')loadAll();else if(S.menu!=='slip')load()},60000);
+setInterval(()=>{if(!S.menus)return;if(S.menu==='dashboard'||S.menu==='jadwal')loadAll();else if(S.menu!=='slip')load()},60000);
 start();
 </script>
 </body>
