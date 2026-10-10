@@ -81,6 +81,19 @@ html[data-theme=light] .err{color:#7f1d1d;background:rgba(239,68,68,.1)}
 .kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
 .kv>div{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
 .big{font-size:34px;font-weight:800;font-variant-numeric:tabular-nums}
+.grp{display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:10px 12px;margin:14px 0 6px;font-size:11px;letter-spacing:.14em;color:var(--mu);text-transform:uppercase;border-radius:10px;user-select:none;transition:background .2s,color .2s}
+.grp:hover{background:rgba(91,140,255,.08);color:var(--tx)}
+.arr{font-size:12px}
+.sub{padding-left:8px;border-left:2px solid var(--line);margin-left:12px}
+#thm{position:absolute;opacity:0;width:0;height:0;margin:0;padding:0;border:0}
+.tg{position:relative;display:inline-flex;align-items:center;gap:10px;cursor:pointer;color:var(--tx);font-weight:600;font-size:13px;user-select:none}
+.tr{position:relative;width:78px;height:34px;border-radius:999px;background:var(--line);transition:background .3s;flex-shrink:0;box-shadow:inset 0 0 0 1px var(--line)}
+.tr:after{content:"";position:absolute;top:4px;left:4px;width:26px;height:26px;border-radius:50%;background:#fff;transition:transform .3s;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.tr:before{content:"OFF";position:absolute;right:9px;top:9px;font-size:11px;font-weight:700;color:var(--mu)}
+#thm:checked+.tr{background:linear-gradient(90deg,var(--ac),var(--ac2))}
+#thm:checked+.tr:after{transform:translateX(44px)}
+#thm:checked+.tr:before{content:"ON";right:auto;left:10px;color:#fff}
+#thm:focus-visible+.tr{box-shadow:0 0 0 3px var(--glow)}
 @media(max-width:980px){
  .layout{grid-template-columns:1fr}
  aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:14px}
@@ -100,7 +113,7 @@ html[data-theme=light] .err{color:#7f1d1d;background:rgba(239,68,68,.1)}
 <main>
  <div class="head">
   <div><h1 id="ttl">Overview</h1><p id="upd">Memuat data...</p></div>
-  <div class="ctl"><div id="ctl" class="ctl"></div><button id="thm" onclick="toggleTheme()">Mode Siang</button><span class="clock" id="clk"></span></div>
+  <div class="ctl"><div id="ctl" class="ctl"></div><label class="tg"><span>Mode Siang</span><input type="checkbox" id="thm" onchange="setTheme(this.checked?'light':'dark')"><span class="tr"></span></label><span class="clock" id="clk"></span></div>
  </div>
  <div id="out"></div>
 </main>
@@ -119,8 +132,8 @@ const R={};
 async function api(b){const r=await fetch(API,{method:'POST',body:JSON.stringify(b)});return r.json()}
 
 /* ---------- tema ---------- */
-function applyTheme(t){document.documentElement.dataset.theme=t;$('thm').textContent=t==='light'?'Mode Malam':'Mode Siang'}
-function toggleTheme(){const t=document.documentElement.dataset.theme==='light'?'dark':'light';localStorage.apmTheme=t;applyTheme(t)}
+function setTheme(t){document.documentElement.dataset.theme=t;localStorage.apmTheme=t;$('thm').checked=(t==='light')}
+function applyTheme(t){setTheme(t)}
 applyTheme(localStorage.apmTheme||'dark');
 
 /* ---------- tanggal ---------- */
@@ -168,13 +181,72 @@ async function start(){
  let r;try{r=await api({a:'menus'})}catch(e){$('out').innerHTML='<div class="err">Gagal terhubung ke Apps Script. Pastikan URL benar dan deploy: Execute as Me, akses Anyone.</div>';return}
  if(!r.ok){$('out').innerHTML=`<div class="err">${E(r.err)}</div>`;return}
  S.menus=r.menus;
- $('nav').innerHTML='<div class="sect">Dashboard</div>'+S.menus.map(m=>`<a id="n_${m}" onclick="go('${m}')">${E(LBL[m])}</a>`).join('');
- go(S.menus.includes(S.menu)?S.menu:S.menus[0]);
+ $('nav').innerHTML='<a id="n_dashboard" onclick="go(\'dashboard\')">DASHBOARD</a>'
+ +'<div class="grp" onclick="toggleGrp()"><span>MENU</span><span id="arr" class="arr">▸</span></div>'
+ +'<div id="grp" class="sub" style="display:none">'+S.menus.map(m=>`<a id="n_${m}" onclick="go('${m}')">${E(LBL[m])}</a>`).join('')+'</div>';
+ go((S.menu==='dashboard'||S.menus.includes(S.menu))?S.menu:'dashboard');
 }
-function go(m){S.menu=m;S.k='';S.auto=1;S.q='';S.wf='ALL';S.bf='ALL';S.bq='';S.D[m]=null;localStorage.apmMenu=m;
+function go(m){S.menu=m;S.k='';S.auto=1;S.q='';S.wf='ALL';S.bf='ALL';S.bq='';localStorage.apmMenu=m;
+ if(m!=='dashboard')$('grp').style.display='block',$('arr').textContent='▾';
  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.id==='n_'+m));
- $('ttl').textContent=LBL[m];setCtl('');
- $('out').innerHTML='<div class="panel" style="color:var(--mu)">Memuat data...</div>';load()}
+ $('ttl').textContent=m==='dashboard'?'DASHBOARD':LBL[m];setCtl('');
+ if(m==='dashboard'){drawOverview();loadAll();return}
+ if(S.D[m])draw();else $('out').innerHTML='<div class="panel" style="color:var(--mu)">Memuat data...</div>';
+ load()}
+function toggleGrp(){const g=$('grp');const open=g.style.display==='none';g.style.display=open?'block':'none';$('arr').textContent=open?'▾':'▸'}
+async function loadAll(){if(!S.menus)return;
+ const res=await Promise.all(S.menus.map(m=>api({menu:m,name:''}).then(r=>[m,r]).catch(()=>[m,null])));
+ res.forEach(([m,r])=>{if(r&&r.ok)S.D[m]=r.d});
+ $('upd').textContent='Diperbarui '+new Date().toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'})+' · otomatis setiap 1 menit';
+ if(S.menu==='dashboard')drawOverview()}
+function drawOverview(){
+ setCtl('');
+ const W=S.D.wo?woNorm(S.D.wo):[];const keys=keysOf(W,r=>ym(r.d));const k=keys[0];
+ const f=k!=null?W.filter(r=>ym(r.d)===k):[];const n=f.length,c=t=>f.filter(r=>r.s===t).length,pc=t=>n?(c(t)/n*100).toFixed(1)+'%':'0%';
+ const B=S.D.barang;let low=0,rusakT=0,akhirT=0;
+ if(B){low=B.rekap.filter(r=>{const aw=+r[2]||0;return aw>0&&(+r[6])<=aw*BARANG_LIMIT}).length;
+   rusakT=B.rekap.reduce((s,r)=>s+(+r[5]||0),0);akhirT=B.rekap.reduce((s,r)=>s+(+r[6]||0),0)}
+ const pv=x=>parseFloat(String(x).replace('%','').replace(',','.'))||0;
+ let topN='-',topP='';
+ const KP=S.D.kpi;
+ if(KP&&KP.months&&Object.keys(KP.months).length){const kk=Object.keys(KP.months).slice(-1)[0];
+   const best=KP.months[kk].rows.slice().sort((a,b)=>pv(b[6])-pv(a[6]))[0];if(best){topN=best[1];topP=best[6]}}
+ let hadir='-',late='-',per='Belum ada data';
+ const AB=S.D.absensi;
+ if(AB&&AB.headers&&AB.headers.length){const H=AB.headers,f2=re=>H.find(h=>re.test(h));
+   const cd=f2(/tanggal|date/i),cs=f2(/status/i);
+   if(cd){const ds=AB.rows.map(r=>pd(r[cd])).filter(Boolean);const ks=keysOf(ds,x=>perKey(x));
+     if(ks.length){const kk=ks[0],[a,b]=perRange(kk);per=perLabel(kk).replace('Periode ','');let h=0,l=0;
+       AB.rows.forEach(r=>{const x=pd(r[cd]);if(!x||x<a||x>b)return;const st=cs?String(r[cs]||'').trim():'';
+         const ok=cs?(st!==''&&!/off|alpa|alpha|izin|cuti|sakit|libur/i.test(st)):true;if(ok)h++;if(/terlambat/i.test(st))l++});
+       hadir=h;late=l}}}
+ const J=S.D.jadwal||{};const now=new Date(),t0=day0(now),t1=new Date(t0.getFullYear(),t0.getMonth(),t0.getDate()+1);
+ const jd=pd(J.tgl);const jHari=jd&&+day0(jd)===+t0?(J.val||'-'):'Belum tersedia';const jBesok=jd&&+day0(jd)===+t1?(J.val||'-'):'Belum tersedia';
+ $('out').innerHTML=`
+ <div class="sec-t"><h3>Work Order · ${k!=null?E(monLabel(k)):'-'}</h3></div>
+ <div class="grid kpis">
+  ${card('Total Work Order',n,'Klik untuk detail','var(--ac)',"go('wo')")}
+  ${card('Done',pc('DONE'),c('DONE')+' WO','var(--ok)',"go('wo')")}
+  ${card('Pending',c('PENDING'),pc('PENDING')+' dari total','var(--wr)',"go('wo')")}
+  ${card('Cancel',c('CANCEL'),pc('CANCEL')+' dari total','var(--er)',"go('wo')")}
+ </div>
+ <div class="sec-t"><h3>Warehouse</h3></div>
+ <div class="grid kpis">
+  ${card('Perlu Request',low,'Stok akhir ≤ 30% stok awal','var(--wr)',"go('barang')")}
+  ${card('Barang Rusak',rusakT,'Total unit rusak','var(--er)',"go('barang')")}
+  ${card('Total Stok Akhir',akhirT,'Seluruh barang','var(--ac)',"go('barang')")}
+ </div>
+ <div class="sec-t"><h3>Absensi &amp; KPI</h3></div>
+ <div class="grid kpis">
+  ${card('Hadir · periode terbaru',hadir,E(per),'var(--ok)',"go('absensi')")}
+  ${card('Terlambat · periode terbaru',late,E(per),'var(--wr)',"go('absensi')")}
+  ${card('KPI Tertinggi',`<span style="font-size:17px">${E(topN)}</span>`,topP?'Pencapaian '+E(topP):'','var(--ac2)',"go('kpi')")}
+ </div>
+ <div class="sec-t"><h3>Install Megavision</h3></div>
+ <div class="grid kpis">
+  ${card('Install Scheduled · Hari Ini',`<span class="big">${E(jHari)}</span>`,'','var(--ac)',"go('jadwal')")}
+  ${card('Install Scheduled · Besok',`<span class="big">${E(jBesok)}</span>`,'','var(--ok)',"go('jadwal')")}
+ </div>`}
 async function load(name){const m=S.menu;if(!m)return;let r;
  try{r=await api({menu:m,name:name||''})}catch(e){$('upd').textContent='Koneksi terputus, dicoba lagi otomatis';return}
  if(m!==S.menu)return;
@@ -182,17 +254,28 @@ async function load(name){const m=S.menu;if(!m)return;let r;
  if(m==='slip'&&name)S.slipRow=r.d.row;else S.D[m]=r.d;
  $('upd').textContent='Diperbarui '+new Date().toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'})+' · otomatis setiap 1 menit';
  draw()}
-function draw(){const m=S.menu,d=S.D[m];if(!d)return;if(m==='slip')return slipView(d);R[m](d)}
+function draw(){if(S.menu==='dashboard')return drawOverview();const m=S.menu,d=S.D[m];if(!d)return;if(m==='slip')return slipView(d);R[m](d)}
 
 /* ---------- WO APM ---------- */
 function parseSched(text){return pd(text)}
-R.wo=function(rows){
- const mp=new Map();rows.forEach(r=>mp.set(r.wo,r));              // WO kembar: data terbaru menang
- const all=[...mp.values()].map(r=>{const rm=String(r.rem||''),st=String(r.st||'').toUpperCase();let s;
+function woNorm(rows){const mp=new Map();rows.forEach(r=>mp.set(r.wo,r));
+ return [...mp.values()].map(r=>{const rm=String(r.rem||''),st=String(r.st||'').toUpperCase();let s;
    if(/done|terinstal|installed/i.test(rm))s='DONE';else if(/cancel|batal/i.test(rm))s='CANCEL';
    else if(/CANCEL/.test(st))s='CANCEL';else if(/PEND/.test(st))s='PENDING';else if(/DONE|COMPLETE/.test(st))s='DONE';else s='LAIN';
-   return{...r,s,d:pd(r.tgl),sched:s==='PENDING'?pd(rm+' '+(r.ket||'')):null}}).filter(r=>r.d);
- const now=new Date(),today=day0(now);
+   return{...r,s,d:pd(r.tgl),sched:s==='PENDING'?pd(rm+' '+(r.ket||'')):null}}).filter(r=>r.d)}
+function cmpChart(ms){if(!ms.length)return '';
+ const W=Math.max(720,ms.length*96),H=260,P=36,mx=Math.max(4,...ms.map(m=>m.t));
+ const gw=(W-2*P)/ms.length,bw=Math.min(18,gw/5);
+ const y=v=>H-P-v/mx*(H-2*P);
+ const cols=[['t','#5b8cff','Total'],['done','#22c55e','Done'],['pend','#f59e0b','Pending'],['canc','#ef4444','Cancel']];
+ const grid=[0,.25,.5,.75,1].map(t=>{const v=Math.round(mx*t);return `<line x1="${P}" x2="${W-P}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${P-8}" y="${y(v)+4}" fill="var(--mu)" font-size="11" text-anchor="end">${v}</text>`}).join('');
+ const bars=ms.map((m,i)=>{const gx=P+i*gw+gw/2-(cols.length*bw)/2;
+   return cols.map((c,j)=>{const v=m[c[0]];return `<rect x="${(gx+j*bw).toFixed(1)}" y="${y(v).toFixed(1)}" width="${(bw-2).toFixed(1)}" height="${Math.max(0,H-P-y(v)).toFixed(1)}" rx="3" fill="${c[1]}"><title>${monLabel(m.k)} · ${c[2]}: ${v}</title></rect>`}).join('')
+   +`<text x="${(P+i*gw+gw/2).toFixed(1)}" y="${H-12}" fill="var(--mu)" font-size="11" text-anchor="middle">${MN[m.k%100].slice(0,3)} ${String(Math.floor(m.k/100)).slice(2)}</text>`}).join('');
+ return `<div style="overflow-x:auto"><svg viewBox="0 0 ${W} ${H}" style="width:100%;min-width:${Math.min(W,ms.length*70+90)}px">${grid}${bars}</svg></div>
+ <div class="legend">${cols.map(c=>`<span><i style="background:${c[1]}"></i>${c[2]}</span>`).join('')}</div>`}
+R.wo=function(rows){
+ const all=woNorm(rows),now=new Date(),today=day0(now);
  const keys=keysOf(all,r=>ym(r.d));const k=pick(keys);
  if(k==null){$('out').innerHTML=empty();return}
  setCtl(`<select onchange="S.k=this.value;draw()">${opts(keys,k,monLabel)}</select>`);
@@ -203,10 +286,19 @@ R.wo=function(rows){
  const tot=Array(days).fill(0),dn=Array(days).fill(0);
  f.forEach(r=>{const i=r.d.getDate()-1;tot[i]++;if(r.s==='DONE')dn[i]++});
  const a1=pc('DONE'),a2=a1+pc('PENDING');
- // Reminder jadwal ulang: tampil H-3; H-1 jam 16.00 atau hari H berubah jadi mendesak (berdenyut)
  const pend=all.filter(r=>r.s==='PENDING'&&r.sched).map(r=>({...r,diff:Math.round((day0(r.sched)-today)/864e5)})).sort((a,b)=>a.diff-b.diff);
  const rem=pend.filter(r=>r.diff>=0&&r.diff<=3).map(r=>{const urgent=r.diff===0||(r.diff===1&&now.getHours()>=16);return{...r,urgent}});
  const remH=rem.length?`<div class="grid" style="margin-bottom:16px">${rem.map(r=>`<div class="alert ${r.urgent?'red blink':'amber blink-a'}"><div style="flex:1"><b>${r.urgent?'SEGERA – JADWAL ULANG '+(r.diff===0?'HARI INI':'BESOK 16.00'):'PENGINGAT JADWAL ULANG H-'+r.diff}</b>${E(r.wo)} · ${E(r.cust)} · ${E(r.tek)}<br><span style="opacity:.85">Jadwal: ${sh(r.sched)} ${r.sched.getFullYear()}</span></div></div>`).join('')}</div>`:'';
+ // perbandingan semua bulan
+ const ms=keys.slice().sort((a,b)=>a-b).map(kk=>{const g=all.filter(r=>ym(r.d)===kk),cn=s=>g.filter(r=>r.s===s).length;
+   return{k:kk,t:g.length,done:cn('DONE'),pend:cn('PENDING'),canc:cn('CANCEL'),lain:cn('LAIN')}});
+ const allT=all.length,allDone=all.filter(r=>r.s==='DONE').length;
+ const best=ms.filter(m=>m.t>0).sort((a,b)=>b.done/b.t-a.done/a.t)[0];
+ const cmpRows=ms.map((m,i)=>{const prev=i?ms[i-1].t:null,dl=prev==null?null:m.t-prev;
+   const pp=v=>m.t?(v/m.t*100).toFixed(1)+'%':'0%';
+   const dh=dl==null?{h:'<span class="pill p-in">-</span>'}:{h:`<span class="pill ${dl>0?'p-ok':dl<0?'p-er':'p-in'}">${dl>0?'▲ +'+dl:dl<0?'▼ '+dl:'● 0'}</span>`};
+   const lab=m.k===k?`<b style="color:var(--ac)">${E(monLabel(m.k))}</b>`:E(monLabel(m.k));
+   return [{h:lab},m.t,m.done,pp(m.done),m.pend,pp(m.pend),m.canc,pp(m.canc),m.lain,dh]});
  const WL={ALL:'Semua Work Order',DONE:'Done',PENDING:'Pending',CANCEL:'Cancel',LAIN:'Sedang Di Kerjakan Hari Ini'};
  const seg=[['ALL','Semua',n],['DONE','Done',c('DONE')],['PENDING','Pending',c('PENDING')],['CANCEL','Cancel',c('CANCEL')],['LAIN','Sedang Di Kerjakan Hari Ini',c('LAIN')]]
    .map(([v,t,q])=>`<button class="${S.wf===v?'on':''}" onclick="wfSet('${v}')">${E(t)} · ${q}</button>`).join('');
@@ -223,6 +315,12 @@ R.wo=function(rows){
   <div class="panel"><div class="sec-t"><h3>Komposisi Status</h3><small>Total ${n}</small></div>
    <div style="display:grid;place-items:center;padding:6px 0"><div style="width:180px;height:180px;border-radius:50%;background:${n?`conic-gradient(#22c55e 0 ${a1}%,#f59e0b ${a1}% ${a2}%,#ef4444 ${a2}% 100%)`:'var(--line)'};display:grid;place-items:center"><div style="width:120px;height:120px;border-radius:50%;background:var(--panel);display:grid;place-items:center;text-align:center"><div><div class="big">${n}</div><small style="color:var(--mu)">Work Order</small></div></div></div></div>
    <div class="legend"><span><i style="background:#22c55e"></i>Done</span><span><i style="background:#f59e0b"></i>Pending</span><span><i style="background:#ef4444"></i>Cancel</span></div></div>
+ </div>
+ <div class="panel"><div class="sec-t"><h3>Perbandingan Semua Bulan</h3><small>${ms.length} bulan · total ${allT} WO · Done ${allT?(allDone/allT*100).toFixed(1):'0'}%</small></div>
+  ${cmpChart(ms)}
+  <div style="height:14px"></div>
+  ${tbl(['Bulan','Total','Done','Done %','Pending','Pending %','Cancel','Cancel %','Lainnya','Selisih Total'],cmpRows)}
+  ${best?`<p style="color:var(--mu);font-size:12px;margin:10px 0 0">Persentase Done tertinggi: <b>${E(monLabel(best.k))}</b> (${(best.done/best.t*100).toFixed(1)}%)</p>`:''}
  </div>
  <div class="panel"><div class="sec-t"><h3>Jadwal Ulang (Pending)</h3><small>${pend.length} WO</small></div>
   ${tbl(['Work Order','Customer','Teknisi','Jadwal Ulang','Sisa'],pend.map(r=>{const t=r.diff<0?'Lewat jadwal':r.diff===0?'Hari ini':'H-'+r.diff;return [r.wo,r.cust,r.tek,sh(r.sched)+' '+r.sched.getFullYear(),pill(t,r.diff<0?'er':r.diff<=1?'wr':'in')]}))}</div>
@@ -344,7 +442,7 @@ function slipView(d){setCtl('');
 /* ---------- jam & refresh ---------- */
 const tick=()=>{$('clk').textContent=new Date().toLocaleString('id-ID',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'})};
 tick();setInterval(tick,1000);
-setInterval(()=>{if(S.menu&&S.menu!=='slip'&&S.menus)load()},60000);
+setInterval(()=>{if(!S.menus)return;if(S.menu==='dashboard')loadAll();else if(S.menu!=='slip')load()},60000);
 start();
 </script>
 </body>
