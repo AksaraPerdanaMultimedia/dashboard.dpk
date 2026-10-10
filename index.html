@@ -1,57 +1,67 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dashboard APM Depok</title>
+<title>APM DEPOK</title>
 <style>
-:root{--bg:#0a0f1f;--side:#0d1430;--panel:#121b3a;--line:#1f2b52;--tx:#e8edfb;--mu:#8793b8;--ac:#5b8cff;--ac2:#8b5cf6;--ok:#22c55e;--wr:#f59e0b;--er:#ef4444}
+:root{--bg:#0a0f1f;--side:#0d1430;--panel:#121b3a;--panel2:#0b1431;--line:#1f2b52;--tx:#e8edfb;--mu:#8793b8;--ac:#5b8cff;--ac2:#8b5cf6;--ok:#22c55e;--wr:#f59e0b;--er:#ef4444;--glow:rgba(91,140,255,.35)}
+html[data-theme=light]{--bg:#eef2fa;--side:#ffffff;--panel:#ffffff;--panel2:#f5f7fd;--line:#dde4f3;--tx:#18213d;--mu:#65719a;--glow:rgba(91,140,255,.22)}
 *{box-sizing:border-box}html,body{margin:0}
-body{font:14px/1.45 Inter,"Segoe UI",system-ui,sans-serif;color:var(--tx);min-height:100vh;background:radial-gradient(1200px 600px at 0% 100%,rgba(139,92,246,.18),transparent 60%),radial-gradient(900px 500px at 100% 0%,rgba(91,140,255,.16),transparent 60%),var(--bg);background-attachment:fixed}
-.layout{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
-aside{background:var(--side);border-right:1px solid var(--line);padding:22px 16px;position:sticky;top:0;height:100vh;overflow:auto}
-.brand{display:flex;align-items:center;gap:12px;padding:4px 8px 20px}
-.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--ac),var(--ac2));display:grid;place-items:center;font-weight:800}
-.brand b{display:block;font-size:15px}.brand span{color:var(--mu);font-size:12px}
-.sect{font-size:11px;letter-spacing:.12em;color:var(--mu);padding:14px 10px 6px;text-transform:uppercase}
-nav a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:#c7d0ee;cursor:pointer;margin-bottom:2px;transition:background .2s,color .2s}
-nav a:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--line)}
-nav a:hover{background:rgba(255,255,255,.05)}
-nav a.on{background:linear-gradient(90deg,rgba(91,140,255,.25),rgba(139,92,246,.12));color:#fff;box-shadow:inset 3px 0 0 var(--ac)}
-nav a.on:before{background:var(--ac)}
+body{font:14px/1.45 Inter,"Segoe UI",system-ui,sans-serif;color:var(--tx);min-height:100vh;background:var(--bg);transition:background .4s,color .4s}
+body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.9;background:radial-gradient(900px 500px at 0% 100%,rgba(139,92,246,.18),transparent 60%),radial-gradient(800px 480px at 100% 0%,rgba(91,140,255,.16),transparent 60%)}
+.layout{display:grid;grid-template-columns:252px 1fr;min-height:100vh}
+aside{background:var(--side);border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow:auto;transition:background .4s}
+.brand{padding:4px 8px 22px;text-align:right}
+.brand b{display:block;font-size:20px;letter-spacing:.14em;background:linear-gradient(90deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite;background-size:200% auto}
+.brand span{display:block;color:var(--mu);font-size:12px;margin-top:4px}
+@keyframes shine{to{background-position:200% center}}
+.sect{font-size:11px;letter-spacing:.14em;color:var(--mu);padding:10px 10px 8px;text-transform:uppercase}
+nav a{position:relative;overflow:hidden;display:block;padding:11px 14px;border-radius:12px;color:var(--tx);cursor:pointer;margin-bottom:6px;font-weight:500;transition:transform .25s,background .25s,box-shadow .25s}
+nav a:after{content:"";position:absolute;top:0;left:-70%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);transition:left .7s}
+nav a:hover{transform:translateX(5px);background:rgba(91,140,255,.1)}
+nav a:hover:after{left:130%}
+nav a.on{background:linear-gradient(90deg,var(--ac),var(--ac2));color:#fff;box-shadow:0 8px 22px var(--glow);font-weight:700}
 main{padding:24px 28px;min-width:0}
 .head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px;align-items:flex-end;margin-bottom:20px}
-.head h1{margin:0;font-size:22px;font-weight:700}.head p{margin:4px 0 0;color:var(--mu);font-size:13px}
+.head h1{margin:0;font-size:24px;letter-spacing:.04em;text-transform:uppercase}
+.head p{margin:6px 0 0;color:var(--mu);font-size:13px}
 .ctl{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-select,input,button{font:inherit;color:var(--tx);background:#0b1431;border:1px solid var(--line);border-radius:10px;padding:9px 12px}
-button{cursor:pointer}button:hover{border-color:var(--ac)}
-select:focus,input:focus{outline:2px solid rgba(91,140,255,.5);outline-offset:1px}
-.clock{background:#0b1431;border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-variant-numeric:tabular-nums;color:#b9c8ff;font-weight:600}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.25);margin-bottom:16px;min-width:0}
+select,input,button{font:inherit;color:var(--tx);background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 12px;transition:border-color .2s,box-shadow .2s}
+button{cursor:pointer}button:hover{border-color:var(--ac);box-shadow:0 0 0 3px var(--glow)}
+select:focus,input:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px var(--glow)}
+.clock{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-variant-numeric:tabular-nums;color:var(--ac);font-weight:600}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.12);margin-bottom:16px;min-width:0;animation:fade .5s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .grid{display:grid;gap:16px}
 .kpis{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-bottom:16px}
-.kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;position:relative;overflow:hidden;animation:rise .4s ease both}
-.kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c,var(--ac))}
-.kpi .l{color:var(--mu);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px;position:relative;overflow:hidden;animation:rise .45s ease both;transition:transform .25s,box-shadow .25s}
+.kpi:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.18)}
+.kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c,var(--ac))}
+.kpi .l{color:var(--mu);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
 .kpi .v{font-size:26px;font-weight:700;margin-top:6px;font-variant-numeric:tabular-nums}
 .kpi .s{color:var(--mu);font-size:12px;margin-top:4px}
-@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.two{grid-template-columns:minmax(0,2fr) minmax(0,1fr);margin-bottom:16px}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.two{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
 .sec-t{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
-.sec-t h3{margin:0;font-size:15px}.sec-t small{color:var(--mu)}
-.tw{overflow:auto;border:1px solid #dfe5f5;border-radius:12px;max-height:520px;background:#fff;color:#1c2540}
+.sec-t h3{margin:0;font-size:15px;text-transform:uppercase;letter-spacing:.04em}.sec-t small{color:var(--mu)}
+.tw{overflow:auto;border:1px solid #dfe5f5;border-radius:14px;max-height:520px;background:#fff;color:#1c2540}
 table{border-collapse:collapse;width:100%;font-size:13px}
 th,td{padding:10px 12px;border-bottom:1px solid #eef1f8;text-align:left;white-space:nowrap}
-th{position:sticky;top:0;background:#f1f4fb;color:#4a5680;font-size:11px;letter-spacing:.05em;text-transform:uppercase;z-index:1}
-tr:nth-child(even) td{background:#fafbff}tr:hover td{background:#eef3ff}
+th{position:sticky;top:0;background:#f1f4fb;color:#4a5680;font-size:11px;letter-spacing:.06em;text-transform:uppercase;z-index:1}
+tr:nth-child(even) td{background:#fafbff}tr:hover td{background:#eef3ff;transition:background .2s}
 td.empty{text-align:center;color:#8a93b0;padding:24px}
 .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600}
 .p-ok{background:#dcfce7;color:#166534}.p-wr{background:#fef3c7;color:#92400e}.p-er{background:#fee2e2;color:#991b1b}.p-in{background:#e0e7ff;color:#3730a3}
 .bar{height:6px;background:#e5e9f5;border-radius:999px;overflow:hidden;min-width:90px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--ac),var(--ac2));border-radius:999px}
-.alert{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.45);color:#fde68a;border-radius:12px;padding:12px 16px;margin-bottom:16px;animation:pulse 2s infinite}
-.alert b{color:#fcd34d}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(245,158,11,.35)}100%{box-shadow:0 0 0 8px rgba(245,158,11,0)}}
-.err{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.5);color:#fecaca;border-radius:12px;padding:14px 16px}
+.alert{border-radius:14px;padding:14px 18px;margin-bottom:16px;display:flex;gap:14px;align-items:flex-start}
+.alert.red{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.5);color:#fecaca}
+.alert.amber{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.5);color:#fde68a}
+.alert b{display:block;letter-spacing:.04em;margin-bottom:4px;font-size:14px}
+.blink{animation:pulseRed 1.6s infinite}.blink-a{animation:pulseAmb 1.6s infinite}
+@keyframes pulseRed{0%{box-shadow:0 0 0 0 rgba(239,68,68,.6)}70%{box-shadow:0 0 0 14px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
+@keyframes pulseAmb{0%{box-shadow:0 0 0 0 rgba(245,158,11,.5)}70%{box-shadow:0 0 0 12px rgba(245,158,11,0)}100%{box-shadow:0 0 0 0 rgba(245,158,11,0)}}
+.err{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.5);color:#fecaca;border-radius:14px;padding:14px 16px}
 .legend{display:flex;gap:14px;color:var(--mu);font-size:12px;margin-top:8px;flex-wrap:wrap}
 .legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
 .search{width:280px;max-width:100%;margin:0}
@@ -59,13 +69,15 @@ td.empty{text-align:center;color:#8a93b0;padding:24px}
 .rank li{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
 .rank li:last-child{border:0}
 .who{display:flex;align-items:center;gap:10px}
-.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--ac2));display:grid;place-items:center;font-weight:700;font-size:12px;flex-shrink:0}
+.avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--ac2));display:grid;place-items:center;font-weight:700;font-size:12px;color:#fff;flex-shrink:0}
 .kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
-.kv>div{background:#0b1431;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.kv>div{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.big{font-size:34px;font-weight:800;font-variant-numeric:tabular-nums}
 @media(max-width:980px){
  .layout{grid-template-columns:1fr}
  aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:14px}
- nav{display:flex;gap:6px;overflow:auto}nav a{white-space:nowrap;margin:0}nav .sect,nav a:before{display:none}
+ .brand{text-align:left;padding:0 0 10px}
+ nav{display:flex;gap:6px;overflow:auto}nav a{white-space:nowrap;margin:0}nav .sect{display:none}
  .two{grid-template-columns:1fr}main{padding:16px}
 }
 </style>
@@ -73,22 +85,24 @@ td.empty{text-align:center;color:#8a93b0;padding:24px}
 <body>
 <div class="layout">
 <aside>
- <div class="brand"><div class="logo">AP</div><div><b>APM Depok</b><span>PT Aksara Perdana Multimedia</span></div></div>
+ <div class="brand"><b>APM DEPOK</b><span>PT Aksara Perdana Multimedia</span></div>
+ <div class="sect">Menu</div>
  <nav id="nav"></nav>
 </aside>
 <main>
  <div class="head">
   <div><h1 id="ttl">Overview</h1><p id="upd">Memuat data...</p></div>
-  <div class="ctl"><div id="ctl" class="ctl"></div><span class="clock" id="clk"></span></div>
+  <div class="ctl"><div id="ctl" class="ctl"></div><button id="thm" onclick="toggleTheme()">Mode Siang</button><span class="clock" id="clk"></span></div>
  </div>
  <div id="out"></div>
 </main>
 </div>
 
 <script>
-const API='https://script.google.com/macros/s/AKfycbye3ozpqKWfnLTgBbll3Ai78-zThlXNbfzzB64ay7HSzxbN5cCWyKezfdj62GyWQyV7sg/exec';
+const API='https://script.google.com/macros/s/AKfycby-9g5_OCHczxadP9p3zi3jbxMlege6misl7EmYXTlFtRwujwlXZc84ZY7HLfZ25zCQqA/exec';
+const BARANG_LIMIT=0.3;   // batas stok: Stok Akhir <= 30% dari Stok Awal
 const MN=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-const LBL={wo:'WO APM',kpi:'Format KPI Teknisi',barang:'Form APM Keluar & Masuk Barang',absensi:'Rekap Absensi',jadwal:'Jadwal Install Megavision',slip:'Database Slip Gaji'};
+const LBL={absensi:'ABSENSI',kpi:'KPI',wo:'WO APM',barang:'WAREHOUSE',jadwal:'JADWAL INSTALL',slip:'SLIP GAJI'};
 const $=i=>document.getElementById(i);
 const E=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const S={menu:localStorage.apmMenu||'',k:'',auto:1,q:'',D:{}};
@@ -96,15 +110,21 @@ const R={};
 
 async function api(b){const r=await fetch(API,{method:'POST',body:JSON.stringify(b)});return r.json()}
 
+/* ---------- tema ---------- */
+function applyTheme(t){document.documentElement.dataset.theme=t;$('thm').textContent=t==='light'?'Mode Malam':'Mode Siang'}
+function toggleTheme(){const t=document.documentElement.dataset.theme==='light'?'dark':'light';localStorage.apmTheme=t;applyTheme(t)}
+applyTheme(localStorage.apmTheme||'dark');
+
 /* ---------- tanggal ---------- */
-const BM={jan:0,feb:1,mar:2,apr:3,mei:4,may:4,jun:5,jul:6,agu:7,aug:7,sep:8,okt:9,oct:9,nov:10,des:11,dec:11};
+const MO={jan:0,feb:1,mar:2,apr:3,mei:4,may:4,jun:5,jul:6,agu:7,aug:7,sep:8,okt:9,oct:9,nov:10,des:11,dec:11};
 function pd(s){s=String(s||'').trim();let a;
- if(a=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/))return new Date(+a[3],a[2]-1,+a[1]);
- if(a=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))return new Date(+a[1],a[2]-1,+a[3]);
- if(a=s.match(/^(\d{1,2})[- ]([A-Za-z]{3})[a-z]*[- ](\d{4})/)){const m=BM[a[2].toLowerCase()];if(m!=null)return new Date(+a[3],m,+a[1])}
+ if(a=s.match(/(\d{4})-(\d{1,2})-(\d{1,2})/))return new Date(+a[1],a[2]-1,+a[3]);
+ if(a=s.match(/(\d{1,2})\/(\d{1,2})\/(\d{2,4})/)){let y=+a[3];if(y<100)y+=2000;return new Date(y,a[2]-1,+a[1])}
+ if(a=s.match(/(\d{1,2})[\s-]+([A-Za-z]{3})[A-Za-z]*[\s,-]+(\d{4})/)){const m=MO[a[2].toLowerCase()];if(m!=null)return new Date(+a[3],m,+a[1])}
  return null}
 const ym=d=>d.getFullYear()*100+d.getMonth();
-// Periode absensi: 20 bulan sebelumnya s/d 19 bulan ini. Kunci = bulan akhir (19).
+const day0=d=>new Date(d.getFullYear(),d.getMonth(),d.getDate());
+// Periode absensi 20 s/d 19. Kunci = bulan tempat periode berakhir (tanggal 19).
 function perKey(d){let y=d.getFullYear(),m=d.getMonth();if(d.getDate()>=20){m++;if(m>11){m=0;y++}}return y*100+m}
 function perRange(k){const y=Math.floor(k/100),m=k%100;return [new Date(y,m-1,20),new Date(y,m,19,23,59,59)]}
 const sh=d=>d.getDate()+' '+MN[d.getMonth()].slice(0,3);
@@ -126,8 +146,8 @@ function line(a,b){const W=720,H=240,P=34,mx=Math.max(4,...a);
  const x=i=>P+i*(W-2*P)/Math.max(1,a.length-1),y=v=>H-P-v/mx*(H-2*P);
  const path=s=>s.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
  const area=path(a)+` L${x(a.length-1).toFixed(1)},${H-P} L${x(0).toFixed(1)},${H-P} Z`;
- const grid=[0,.25,.5,.75,1].map(t=>{const v=Math.round(mx*t);return `<line x1="${P}" x2="${W-P}" y1="${y(v)}" y2="${y(v)}" stroke="#1f2b52"/><text x="${P-8}" y="${y(v)+4}" fill="#8793b8" font-size="11" text-anchor="end">${v}</text>`}).join('');
- const xl=a.map((_,i)=>(i%2===0||a.length<=16)?`<text x="${x(i)}" y="${H-10}" fill="#8793b8" font-size="11" text-anchor="middle">${i+1}</text>`:'').join('');
+ const grid=[0,.25,.5,.75,1].map(t=>{const v=Math.round(mx*t);return `<line x1="${P}" x2="${W-P}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${P-8}" y="${y(v)+4}" fill="var(--mu)" font-size="11" text-anchor="end">${v}</text>`}).join('');
+ const xl=a.map((_,i)=>(i%2===0||a.length<=16)?`<text x="${x(i)}" y="${H-10}" fill="var(--mu)" font-size="11" text-anchor="middle">${i+1}</text>`:'').join('');
  const dots=a.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="3.5" fill="#5b8cff"><title>Tgl ${i+1}: ${v} WO</title></circle>`).join('');
  return `<div style="overflow-x:auto"><svg viewBox="0 0 ${W} ${H}" style="width:100%;min-width:520px">
  <defs><linearGradient id="gA" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#5b8cff" stop-opacity=".45"/><stop offset="1" stop-color="#5b8cff" stop-opacity="0"/></linearGradient></defs>
@@ -157,12 +177,14 @@ async function load(name){const m=S.menu;if(!m)return;let r;
 function draw(){const m=S.menu,d=S.D[m];if(!d)return;if(m==='slip')return slipView(d);R[m](d)}
 
 /* ---------- WO APM ---------- */
+function parseSched(text){return pd(text)}
 R.wo=function(rows){
- const mp=new Map();rows.forEach(r=>mp.set(r.wo,r));              // WO kembar: baris terbaru menang
+ const mp=new Map();rows.forEach(r=>mp.set(r.wo,r));              // WO kembar: data terbaru menang
  const all=[...mp.values()].map(r=>{const rm=String(r.rem||''),st=String(r.st||'').toUpperCase();let s;
    if(/done|terinstal|installed/i.test(rm))s='DONE';else if(/cancel|batal/i.test(rm))s='CANCEL';
    else if(/CANCEL/.test(st))s='CANCEL';else if(/PEND/.test(st))s='PENDING';else if(/DONE|COMPLETE/.test(st))s='DONE';else s='LAIN';
-   return{...r,s,d:pd(r.tgl)}}).filter(r=>r.d);
+   return{...r,s,d:pd(r.tgl),sched:s==='PENDING'?parseSched(rm+' '+(r.ket||'')):null}}).filter(r=>r.d);
+ const now=new Date(),today=day0(now);
  const keys=keysOf(all,r=>ym(r.d));const k=pick(keys);
  if(k==null){$('out').innerHTML=empty();return}
  setCtl(`<select onchange="S.k=this.value;draw()">${opts(keys,k,monLabel)}</select>`);
@@ -172,24 +194,31 @@ R.wo=function(rows){
  const tot=Array(days).fill(0),dn=Array(days).fill(0);
  f.forEach(r=>{const i=r.d.getDate()-1;tot[i]++;if(r.s==='DONE')dn[i]++});
  const a1=pc('DONE'),a2=a1+pc('PENDING');
- $('out').innerHTML=`
+ // Reminder jadwal ulang: tampil H-3, H-1 jam 16.00 berubah jadi mendesak (berdenyut)
+ const pend=all.filter(r=>r.s==='PENDING'&&r.sched).map(r=>({...r,diff:Math.round((day0(r.sched)-today)/864e5)})).sort((a,b)=>a.diff-b.diff);
+ const rem=pend.filter(r=>r.diff>=0&&r.diff<=3).map(r=>{const urgent=r.diff===0||(r.diff===1&&now.getHours()>=16);return{...r,urgent}});
+ const remH=rem.length?`<div class="grid" style="margin-bottom:16px">${rem.map(r=>`<div class="alert ${r.urgent?'red blink':'amber blink-a'}"><div style="flex:1"><b>${r.urgent?'SEGERA – JADWAL ULANG '+(r.diff===0?'HARI INI':'BESOK 16.00'):'PENGINGAT JADWAL ULANG H-'+r.diff}</b>${E(r.wo)} · ${E(r.cust)} · ${E(r.tek)}<br><span style="opacity:.8">Jadwal: ${sh(r.sched)} ${r.sched.getFullYear()}</span></div></div>`).join('')}</div>`:'';
+ $('out').innerHTML=`${remH}
  <div class="grid kpis">
   ${card('Total Work Order',n,monLabel(k),'var(--ac)')}
   ${card('Done',c('DONE'),`<span style="color:#4ade80">${pc('DONE').toFixed(1)}%</span> dari total`,'var(--ok)')}
   ${card('Pending',c('PENDING'),`<span style="color:#fbbf24">${pc('PENDING').toFixed(1)}%</span> dari total`,'var(--wr)')}
   ${card('Cancel',c('CANCEL'),`<span style="color:#f87171">${pc('CANCEL').toFixed(1)}%</span> dari total`,'var(--er)')}
+  ${card('Sedang Di Kerjakan Hari Ini',c('LAIN'),`<span>${pc('LAIN').toFixed(1)}%</span> dari total`,'var(--ac2)')}
  </div>
  <div class="grid two">
   <div class="panel"><div class="sec-t"><h3>Work Order per Tanggal</h3><small>${MN[mo]} ${y}</small></div>${line(tot,dn)}</div>
   <div class="panel"><div class="sec-t"><h3>Komposisi Status</h3><small>Total ${n}</small></div>
-   <div style="display:grid;place-items:center;padding:6px 0"><div style="width:180px;height:180px;border-radius:50%;background:${n?`conic-gradient(#22c55e 0 ${a1}%,#f59e0b ${a1}% ${a2}%,#ef4444 ${a2}% 100%)`:'#1f2b52'};display:grid;place-items:center"><div style="width:120px;height:120px;border-radius:50%;background:var(--panel);display:grid;place-items:center;text-align:center"><div><div style="font-size:24px;font-weight:700">${n}</div><small style="color:var(--mu)">Work Order</small></div></div></div></div>
+   <div style="display:grid;place-items:center;padding:6px 0"><div style="width:180px;height:180px;border-radius:50%;background:${n?`conic-gradient(#22c55e 0 ${a1}%,#f59e0b ${a1}% ${a2}%,#ef4444 ${a2}% 100%)`:'var(--line)'};display:grid;place-items:center"><div style="width:120px;height:120px;border-radius:50%;background:var(--panel);display:grid;place-items:center;text-align:center"><div><div class="big">${n}</div><small style="color:var(--mu)">Work Order</small></div></div></div></div>
    <div class="legend"><span><i style="background:#22c55e"></i>Done</span><span><i style="background:#f59e0b"></i>Pending</span><span><i style="background:#ef4444"></i>Cancel</span></div></div>
  </div>
+ <div class="panel"><div class="sec-t"><h3>Jadwal Ulang (Pending)</h3><small>${pend.length} WO</small></div>
+  ${tbl(['Work Order','Customer','Teknisi','Jadwal Ulang','Sisa'],pend.map(r=>{const t=r.diff<0?'Lewat jadwal':r.diff===0?'Hari ini':'H-'+r.diff;return [r.wo,r.cust,r.tek,sh(r.sched)+' '+r.sched.getFullYear(),pill(t,r.diff<0?'er':r.diff<=1?'wr':'in')]}))}</div>
  <div class="panel"><div class="sec-t"><h3>Daftar Work Order</h3><input id="wq" class="search" placeholder="Cari WO, customer, teknisi..." oninput="S.q=this.value;woTab()"></div><div id="wt"></div></div>`;
  $('wq').value=S.q;woTab();
 };
 function woTab(){const q=S.q.toLowerCase();const f=(S.cache||[]).filter(r=>!q||JSON.stringify(r).toLowerCase().includes(q));
- const L={DONE:['Done','ok'],PENDING:['Pending','wr'],CANCEL:['Cancel','er'],LAIN:['Lainnya','in']};
+ const L={DONE:['Done','ok'],PENDING:['Pending','wr'],CANCEL:['Cancel','er'],LAIN:['Sedang Di Kerjakan Hari Ini','in']};
  $('wt').innerHTML=tbl(['No','Tanggal','Work Order','Customer','District','Teknisi','Status','Keterangan','Update Remark'],
   f.map((r,i)=>[i+1,r.tgl,r.wo,r.cust,r.dist,r.tek,pill(L[r.s][0],L[r.s][1]),r.ket,r.rem]))}
 
@@ -212,31 +241,33 @@ R.kpi=function(d){const ks=Object.keys(d.months||{});if(!ks.length){$('out').inn
  <div class="panel"><div class="sec-t"><h3>Rekap KPI ${E(S.k)}</h3><small>Target 66 pemasangan / bulan</small></div>
  ${tbl(['ID','Nama Karyawan','Target','Realisasi','Target Harian','Realisasi Harian','Pencapaian','Predikat'],rows.map(r=>[r[0],r[1],r[2],r[3],r[4],r[5],bar(val(r)),pill(r[7],pred(r[7]))]))}</div>`};
 
-/* ---------- Barang ---------- */
+/* ---------- WAREHOUSE (Form Keluar & Masuk Barang) ---------- */
 R.barang=function(d){
  const all=d.masuk.concat(d.keluar);
  const keys=keysOf(all,r=>{const x=pd(r[0]);return x?ym(x):null});const k=pick(keys);
  setCtl(k!=null?`<select onchange="S.k=this.value;draw()">${opts(keys,k,monLabel)}</select>`:'');
  const inM=r=>{const x=pd(r[0]);return k!=null&&!!x&&ym(x)===k};
  const sumM=(a,code)=>a.filter(r=>r[1]===code&&inM(r)).reduce((s,r)=>s+(+r[3]||0),0);
- const low=d.rekap.filter(r=>{const base=(+r[2]||0)+(+r[3]||0);return base>0&&(+r[6])<=base*0.3});
+ // Stok Akhir <= 30% Stok Awal (item dengan stok awal 0 tidak dihitung)
+ const low=d.rekap.filter(r=>{const aw=+r[2]||0;return aw>0&&(+r[6])<=aw*BARANG_LIMIT});
  const totAkhir=d.rekap.reduce((s,r)=>s+(+r[6]||0),0);
  const mIn=d.masuk.filter(inM).reduce((s,r)=>s+(+r[3]||0),0),mOut=d.keluar.filter(inM).reduce((s,r)=>s+(+r[3]||0),0);
  $('out').innerHTML=`
- ${low.length?`<div class="alert"><b>Stok hampir Habis, Segera Request</b><br>${low.map(r=>E(r[1].trim())+' (sisa '+r[6]+')').join(' · ')}</div>`:''}
+ ${low.length?`<div class="alert red blink"><div><b>STOK HAMPIR HABIS, SEGERA MELAKUKAN PERMINTAAN BARANG</b>${low.map(r=>E(r[1].trim())+' (sisa '+r[6]+' dari awal '+r[2]+')').join(' · ')}</div></div>`:''}
  <div class="grid kpis">
   ${card('Total Stok Akhir',totAkhir,'Semua barang','var(--ac)')}
   ${card('Barang Masuk',mIn,k!=null?monLabel(k):'','var(--ok)')}
   ${card('Barang Keluar',mOut,k!=null?monLabel(k):'','var(--wr)')}
-  ${card('Perlu Request',low.length,'Stok ≤ 30%','var(--er)')}
+  ${card('Perlu Request',low.length,'Stok akhir ≤ 30% stok awal','var(--er)')}
  </div>
  <div class="panel"><div class="sec-t"><h3>Rekap Barang</h3><small>Kolom bulan mengikuti pilihan bulan</small></div>
  ${tbl(['Kode','Nama Barang','Stok Awal','Masuk','Keluar','Rusak','Stok Akhir','Masuk Bulan','Keluar Bulan','Status'],
-  d.rekap.map(r=>{const isLow=low.includes(r);return [r[0],r[1].trim(),r[2],r[3],r[4],r[5],r[6],sumM(d.masuk,r[0]),sumM(d.keluar,r[0]),isLow?pill('Segera Request','er'):pill('Aman','ok')]}))}</div>`};
+  d.rekap.map(r=>[r[0],r[1].trim(),r[2],r[3],r[4],r[5],r[6],sumM(d.masuk,r[0]),sumM(d.keluar,r[0]),low.includes(r)?pill('Segera Request','er'):pill('Aman','ok')]))}</div>`};
 
-/* ---------- Absensi (periode 20 - 19) ---------- */
+/* ---------- ABSENSI (periode 20 - 19) ---------- */
 R.absensi=function(d){const H=d.headers,f=re=>H.find(h=>re.test(h));
- const cd=f(/tanggal|date/i),cn=f(/nama/i),cs=f(/status/i),cl=f(/terlambat|telat|late/i);
+ const cd=f(/tanggal|date/i),cn=f(/nama/i),cs=f(/status/i);
+ const cl=H.filter(h=>/terlambat|telat|late|menit/i.test(h)&&h!==cs);   // kolom menit: tidak ditampilkan
  if(!cd){$('out').innerHTML=empty('Kolom tanggal tidak ditemukan di sheet absensi');return}
  const dated=d.rows.map(r=>({...r,_d:pd(r[cd])})).filter(r=>r._d);
  const keys=keysOf(dated,r=>perKey(r._d));const k=pick(keys);
@@ -244,20 +275,22 @@ R.absensi=function(d){const H=d.headers,f=re=>H.find(h=>re.test(h));
  setCtl(`<select onchange="S.k=this.value;draw()">${opts(keys,k,perLabel)}</select>`);
  const [a,b]=perRange(k);
  const rows=dated.filter(r=>r._d>=a&&r._d<=b).sort((x,y)=>y._d-x._d);
- const isOff=r=>!!cs&&/off|alpa|alpha|izin|cuti|sakit|libur/i.test(r[cs]||'');
- const isLate=r=>{if(!cl||isOff(r))return false;const v=String(r[cl]||'').trim();return !!v&&!/^(0|-|00:?00(:00)?|tidak|no|tepat.*)$/i.test(v)};
+ const st=r=>cs?String(r[cs]||'').trim():'';
+ const isHadir=r=>cs?(st(r)!==''&&!/off|alpa|alpha|izin|cuti|sakit|libur/i.test(st(r))):true;
+ const isLate=r=>/terlambat/i.test(st(r));                                   // mengacu pada status "Terlambat"
  const emp={};
- rows.forEach(r=>{const n=String(r[cn]||'-').trim();const e=emp[n]||(emp[n]={h:0,l:0});if(!isOff(r))e.h++;if(isLate(r))e.l++});
+ rows.forEach(r=>{const n=String(r[cn]||'-').trim();const e=emp[n]||(emp[n]={h:0,l:0});if(isHadir(r))e.h++;if(isLate(r))e.l++});
  const list=Object.entries(emp).sort((x,y)=>y[1].l-x[1].l||y[1].h-x[1].h);
  const hadir=list.reduce((s,x)=>s+x[1].h,0),late=list.reduce((s,x)=>s+x[1].l,0);
  const top=list.filter(x=>x[1].l>0).slice(0,5);
  const ini=n=>n.split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
+ const logH=H.filter(h=>!cl.includes(h));
  $('out').innerHTML=`
  <div class="grid kpis">
   ${card('Periode',`<span style="font-size:15px">${E(perLabel(k).replace('Periode ',''))}</span>`,'Tanggal 20 s/d 19','var(--ac)')}
   ${card('Karyawan',list.length,'Tercatat di periode ini','var(--ac2)')}
   ${card('Total Hadir',hadir,'Akumulasi hari hadir','var(--ok)')}
-  ${card('Total Terlambat',late,'Kejadian keterlambatan','var(--wr)')}
+  ${card('Total Terlambat',late,'Status "Terlambat"','var(--wr)')}
  </div>
  <div class="grid two">
   <div class="panel"><div class="sec-t"><h3>Rekap Hadir per Karyawan</h3><small>${list.length} orang</small></div>
@@ -266,27 +299,23 @@ R.absensi=function(d){const H=d.headers,f=re=>H.find(h=>re.test(h));
    ${top.length?`<ul class="rank">${top.map(([n,v])=>`<li><div class="who"><div class="avatar">${E(ini(n))}</div><div><b>${E(n)}</b><div style="color:var(--mu);font-size:12px">Hadir ${v.h} hari</div></div></div><span class="pill p-wr">${v.l}x</span></li>`).join('')}</ul>`:'<div style="color:var(--mu)">Tidak ada keterlambatan tercatat.</div>'}</div>
  </div>
  <div class="panel"><div class="sec-t"><h3>Log Absensi</h3><small>${rows.length} catatan, terbaru di atas</small></div>
-  ${tbl(H,rows.slice(0,400).map(r=>H.map(h=>r[h])))}</div>
- ${cl?'':'<p style="color:var(--mu);font-size:12px">Kolom keterlambatan tidak ditemukan. Sebutkan nama kolomnya agar bisa dihitung.</p>'}`};
+  ${tbl(logH,rows.slice(0,400).map(r=>logH.map(h=>r[h])))}</div>`};
 
-/* ---------- Jadwal Install Megavision ---------- */
-R.jadwal=function(d){const H=d.headers,f=re=>H.find(h=>re.test(h));
- const cd=f(/tanggal|tgl|date|jadwal/i),cv=f(/nilai|poin|score|total/i);
- if(!cd){$('out').innerHTML=tbl(H,d.rows.map(r=>H.map(h=>r[h])));return}
- const now=new Date(),after=now.getHours()>=17;
- const tg=new Date(now.getFullYear(),now.getMonth(),now.getDate()+(after?1:0));
- const dated=d.rows.map(r=>({...r,_d:pd(r[cd])})).filter(r=>r._d);
- const keys=keysOf(dated,r=>ym(r._d));const k=pick(keys);
- const sel=S.auto?dated.filter(r=>+r._d===+tg):dated.filter(r=>k!=null&&ym(r._d)===k);
- const val=r=>parseFloat(String(r[cv]||'0').replace(/[^0-9,.-]/g,'').replace(',','.'))||0;
- const total=cv?sel.reduce((s,r)=>s+val(r),0):0;
- const lbl=S.auto?(after?'Jadwal esok hari':'Jadwal hari ini')+' · '+tg.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'Jadwal '+(k!=null?monLabel(k):'');
- setCtl(`<select onchange="S.k=this.value;S.auto=0;draw()">${opts(keys,k,monLabel)}</select><button onclick="S.auto=S.auto?0:1;draw()">${S.auto?'Tampilkan satu bulan':'Kembali ke jadwal harian'}</button>`);
+/* ---------- JADWAL INSTALL (sheet Depok) ---------- */
+R.jadwal=function(d){
+ if(d.err){$('out').innerHTML=`<div class="err">${E(d.err)}</div>`;return}
+ const now=new Date(),today=day0(now),tm=new Date(today.getFullYear(),today.getMonth(),today.getDate()+1);
+ const tgl=pd(d.tgl),sameT=tgl&&+day0(tgl)===+today,sameM=tgl&&+day0(tgl)===+tm;
+ const hariIni=sameT?d.val:'Belum tersedia',besok=sameM?d.val:'Belum tersedia';
+ setCtl('');
  $('out').innerHTML=`<div class="grid kpis">
-  ${card('Install Scheduled',sel.length,lbl,'var(--ac)')}
-  ${cv?card('Total Nilai',total.toLocaleString('id-ID'),'Dari kolom '+E(cv),'var(--ok)'):''}
+  ${card('Install Scheduled · Hari Ini',`<span class="big">${E(hariIni)}</span>`,today.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}),'var(--ac)')}
+  ${card('Install Scheduled · Besok',`<span class="big">${E(besok)}</span>`,tm.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}),'var(--ok)')}
  </div>
- <div class="panel"><div class="sec-t"><h3>Detail Install</h3><small>Otomatis berganti ke esok hari pukul 17.00</small></div>${tbl(H,sel.map(r=>H.map(h=>r[h])))}</div>`};
+ <div class="panel"><div class="sec-t"><h3>Sumber Data</h3><small>Sheet Depok · tanggal pada sel B12</small></div>
+  <div class="kv"><div><div style="color:var(--mu);font-size:11px;text-transform:uppercase">Tanggal di sheet (B12)</div><b>${E(d.tgl||'-')}</b></div>
+  <div><div style="color:var(--mu);font-size:11px;text-transform:uppercase">Nilai Install Scheduled</div><b>${E(d.val||'-')}</b></div></div>
+  <p style="color:var(--mu);font-size:12px;margin-bottom:0">Nilai diperbarui otomatis setiap 1 menit. Setelah pukul 17.00 sheet berisi data esok hari.</p></div>`};
 
 /* ---------- Slip gaji (opsional, dimatikan di Code.gs) ---------- */
 function slipView(d){setCtl('');
