@@ -443,7 +443,7 @@ const TX={
  wo_hc:[['Bulan','Total','Done','Done %','Pending','Pending %','Cancel','Cancel %','Lainnya','Selisih Total'],['Month','Total','Done','Done %','Pending','Pending %','Cancel','Cancel %','Other','Change in Total']],
  wo_hr:[['Work Order','Customer','Teknisi','Jadwal Ulang','Sisa'],['Work Order','Customer','Technician','Reschedule','Remaining']],
  wo_overdue:['Lewat jadwal','Overdue'], wo_today:['Hari ini','Today'],
- st_done:['Done','Done'], st_pending:['Pending','Pending'], st_cancel:['Cancel','Cancel'], st_working:['Sedang Di Kerjakan Hari Ini','Being Worked On Today'], st_belum:['Belum Dikerjakan','Not Started Yet'],
+ st_done:['Done','Done'], st_pending:['Pending','Pending'], st_cancel:['Cancel','Cancel'], st_working:['Sedang Di Kerjakan Hari Ini','Being Worked On Today'], st_belum:['Belum Dikerjakan','Not Started Yet'], card_resched:['JADWAL ULANG PENDINGAN','RESCHEDULED PENDING'], sd_besok:['Sudah Dijadwalkan Besok','Scheduled for Tomorrow'], sd_hari:['Sudah Dijadwalkan Hari Ini','Scheduled for Today'], sd_tgl:['Sudah Dijadwalkan {tgl}','Scheduled for {tgl}'],
  // reminder
  rem_now:['SEGERA – JADWAL ULANG HARI INI','URGENT – RESCHEDULE TODAY'], rem_tmr:['SEGERA – JADWAL ULANG BESOK 16.00','URGENT – RESCHEDULE TOMORROW 16:00'],
  rem_h:['PENGINGAT JADWAL ULANG H-','RESCHEDULE REMINDER D-'], rem_sched:['Jadwal:','Schedule:'],
@@ -629,6 +629,7 @@ function draw(){chrome();$('out').classList.toggle('enter',Date.now()<(S.enterUn
  R[S.menu](d)}
 
 /* ---------- WO APM ---------- */
+let WOH=null;   // riwayat pending per WO (tersimpan di browser): {wo:{tgl,rs}}
 function woNorm(rows){
  // Duplikat (nomor WO sama ATAU nama pelanggan sama) dihitung 1: baris paling bawah (update terakhir) yang dipakai
  const seenW=new Set(),seenC=new Set(),keep=[];
@@ -637,12 +638,38 @@ function woNorm(rows){
    if(seenW.has(wk)||(ck&&seenC.has(ck)))continue;
    seenW.add(wk);if(ck)seenC.add(ck);keep.push(r)}
  keep.reverse();
- const todayT=+day0(new Date());
- return keep.map(r=>{const rm=String(r.rem||''),st=String(r.st||'').toUpperCase(),d=pd(r.tgl);let s;
+ if(WOH===null){try{WOH=JSON.parse(localStorage.getItem('apmWoHist')||'{}')}catch(e){WOH={}}}
+ let hchg=false;
+ const todayT=+day0(new Date()),tomT=todayT+864e5;
+ const out=keep.map(r=>{
+   const rm=String(r.rem||''),st=String(r.st||'').toUpperCase(),d=pd(r.tgl),tg=d?isoJS(d):'';
+   const prev=WOH[r.wo];
+   let s=null,resched=false,sched=null;
    if(/done|terinstal|installed/i.test(rm))s='DONE';else if(/cancel|batal/i.test(rm))s='CANCEL';
    else if(/CANCEL/.test(st))s='CANCEL';else if(/PEND/.test(st))s='PENDING';else if(/DONE|COMPLETE/.test(st))s='DONE';
-   else s=(d&&+day0(d)===todayT)?'LAIN':'BELUM';
-   return{...r,s,d,sched:s==='PENDING'?pd(rm+' '+(r.ket||'')):null}}).filter(r=>r.d)}
+   if(s==='DONE'||s==='CANCEL'){if(prev){delete WOH[r.wo];hchg=true}}
+   else if(s==='PENDING'){
+     sched=pd(rm+' '+(r.ket||''));
+     const rs=!!(prev&&prev.rs)||!!(prev&&prev.tgl&&prev.tgl!==tg);
+     if(!prev||prev.tgl!==tg||!!prev.rs!==rs){WOH[r.wo]={tgl:tg,rs};hchg=true}
+     resched=rs;
+   }else{
+     // Status kosong: jika sebelumnya pending dan tanggalnya berubah -> tetap Pending (riwayat lama dibiarkan)
+     if(prev&&prev.rs){s='PENDING';resched=true}
+     else if(prev&&prev.tgl&&prev.tgl!==tg&&d){s='PENDING';resched=true;WOH[r.wo]={tgl:prev.tgl,rs:true};hchg=true}
+     else s=(d&&+day0(d)===todayT)?'LAIN':'BELUM';
+   }
+   if(resched&&d)sched=d;
+   let rem=r.rem;
+   if(resched&&d){
+     const dd=+day0(d);
+     rem=dd===todayT?T('sd_hari'):dd===tomT?T('sd_besok'):fill(T('sd_tgl'),{tgl:d.toLocaleDateString(locale(),{day:'numeric',month:'short',year:'numeric'})});
+   }
+   return{...r,s,d,sched:s==='PENDING'?sched:null,resched,rem}
+ }).filter(r=>r.d);
+ if(hchg){try{localStorage.setItem('apmWoHist',JSON.stringify(WOH))}catch(e){}}
+ return out;
+}
 R.wo=function(rows){
  const all=woNorm(rows),now=new Date(),today=day0(now),curK=ym(today);
  const keys=keysOf(all,r=>ym(r.d));
@@ -653,7 +680,8 @@ R.wo=function(rows){
  setCtl(`<select onchange="S.k=this.value;draw()"><option value="all" ${isAll?'selected':''}>${E(T('wo_allmonths'))}</option>${opts(keys,k,monLabel)}</select>`);
  const f=isAll?all:all.filter(r=>ym(r.d)===k);
  const n=f.length,c=t=>f.filter(r=>r.s===t).length,pc=t=>n?c(t)/n*100:0;
- S.cache=S.wf==='ALL'?f:f.filter(r=>r.s===S.wf);
+ const cR=f.filter(r=>r.resched).length;
+ S.cache=S.wf==='ALL'?f:(S.wf==='RESCHED'?f.filter(r=>r.resched):f.filter(r=>r.s===S.wf));
  const a1=pc('DONE'),a2=a1+pc('PENDING');
  const periodTxt=isAll?T('wo_allmonths'):monLabel(k);
  const ms=keys.slice().sort((a,b)=>a-b).map(kk=>{const g=all.filter(r=>ym(r.d)===kk),cn=s=>g.filter(r=>r.s===s).length;
@@ -677,8 +705,8 @@ R.wo=function(rows){
    const dh=dl==null?{h:'<span class="pill p-in">-</span>'}:{h:`<span class="pill ${dl>0?'p-ok':dl<0?'p-er':'p-in'}">${dl>0?'▲ +'+dl:dl<0?'▼ '+dl:'● 0'}</span>`};
    const lab=m.k===k?`<b style="color:var(--ac)">${E(monLabel(m.k))}</b>`:E(monLabel(m.k));
    return [{h:lab},m.t,m.done,pp(m.done),m.pend,pp(m.pend),m.canc,pp(m.canc),m.lain,dh]});
- const WL={ALL:T('wo_all'),DONE:T('st_done'),PENDING:T('st_pending'),CANCEL:T('st_cancel'),LAIN:T('st_working'),BELUM:T('st_belum')};
- const seg=[['ALL',T('wo_all'),n],['DONE',T('st_done'),c('DONE')],['PENDING',T('st_pending'),c('PENDING')],['CANCEL',T('st_cancel'),c('CANCEL')],['LAIN',T('st_working'),c('LAIN')],['BELUM',T('st_belum'),c('BELUM')]]
+ const WL={ALL:T('wo_all'),DONE:T('st_done'),PENDING:T('st_pending'),CANCEL:T('st_cancel'),LAIN:T('st_working'),BELUM:T('st_belum'),RESCHED:T('card_resched')};
+ const seg=[['ALL',T('wo_all'),n],['DONE',T('st_done'),c('DONE')],['PENDING',T('st_pending'),c('PENDING')],['CANCEL',T('st_cancel'),c('CANCEL')],['LAIN',T('st_working'),c('LAIN')],['RESCHED',T('card_resched'),cR]]
    .map(([v,t,q])=>`<button class="${S.wf===v?'on':''}" onclick="wfSet('${v}')">${E(t)} · ${q}</button>`).join('');
  $('out').innerHTML=`${remH}
  <div class="grid kpis">
@@ -687,7 +715,7 @@ R.wo=function(rows){
   ${card(T('st_pending'),c('PENDING'),`<span style="color:#d97706">${pc('PENDING').toFixed(1)}%</span> ${T('wo_pctof')}`,'var(--wr)',"wfSet('PENDING')",S.wf==='PENDING')}
   ${card(T('st_cancel'),c('CANCEL'),`<span style="color:#dc2626">${pc('CANCEL').toFixed(1)}%</span> ${T('wo_pctof')}`,'var(--er)',"wfSet('CANCEL')",S.wf==='CANCEL')}
   ${card(T('st_working'),c('LAIN'),`<span>${pc('LAIN').toFixed(1)}%</span> ${T('wo_pctof')}`,'var(--ac2)',"wfSet('LAIN')",S.wf==='LAIN')}
-  ${card(T('st_belum'),c('BELUM'),`<span>${pc('BELUM').toFixed(1)}%</span> ${T('wo_pctof')}`,'var(--ac)',"wfSet('BELUM')",S.wf==='BELUM')}
+  ${card(T('card_resched'),cR,`<span>${n?(cR/n*100).toFixed(1):'0.0'}%</span> ${T('wo_pctof')}`,'var(--ac)',"wfSet('RESCHED')",S.wf==='RESCHED')}
  </div>
  <div class="grid two">
   ${lineP}
