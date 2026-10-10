@@ -33,11 +33,11 @@ select,input,button{font:inherit;color:var(--tx);background:var(--panel2);border
 button{cursor:pointer}button:hover{border-color:var(--ac);box-shadow:0 0 0 3px var(--glow)}
 select:focus,input:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px var(--glow)}
 .clock{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-variant-numeric:tabular-nums;color:var(--ac);font-weight:600}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.12);margin-bottom:16px;min-width:0;animation:fade .5s ease both}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.12);margin-bottom:16px;min-width:0}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .grid{display:grid;gap:16px}
 .kpis{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-bottom:16px}
-.kpi{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px;position:relative;overflow:hidden;animation:rise .45s ease both;transition:transform .25s,box-shadow .25s}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px;position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s}
 .kpi:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.18)}
 .kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c,var(--ac))}
 .kpi .l{color:var(--mu);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
@@ -95,6 +95,20 @@ html[data-theme=light] .err{color:#7f1d1d;background:rgba(239,68,68,.1)}
 .tr:after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'%3E%3Cpath d='M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z'/%3E%3C/svg%3E");background-size:16px;background-repeat:no-repeat;background-position:center}
 #thm:checked+.tr:after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f59e0b' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='4' fill='%23f59e0b'/%3E%3Cpath d='M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4'/%3E%3C/svg%3E")}
 .sub.hide{display:none}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#out.enter>*{animation:fadeUp .55s cubic-bezier(.2,.7,.2,1) both}
+#out.enter>*:nth-child(2){animation-delay:.06s}#out.enter>*:nth-child(3){animation-delay:.12s}
+#out.enter>*:nth-child(4){animation-delay:.18s}#out.enter>*:nth-child(n+5){animation-delay:.24s}
+.reveal{animation:revealPanel .65s cubic-bezier(.2,.7,.2,1) both}
+@keyframes revealPanel{0%{opacity:0;transform:scale(.97) translateY(12px)}60%{box-shadow:0 0 0 8px var(--glow)}100%{opacity:1;transform:none;box-shadow:none}}
+button{transition:transform .15s ease,background .3s ease,border-color .3s ease,box-shadow .3s ease,color .3s ease}
+button:active,.kpi.clk:active{transform:scale(.96)}
+.kpi{transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s ease,opacity .3s ease}
+.panel{transition:box-shadow .3s ease,transform .3s ease}
+nav a{transition:transform .25s ease,background .3s ease,color .3s ease,box-shadow .3s ease}
+nav a:active{transform:scale(.97)}
+.grp,.sub{transition:background .3s ease,color .3s ease}
+.tw tr{transition:background .2s ease}
 @media(max-width:980px){
  .layout{grid-template-columns:1fr}
  aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:16px 14px 14px}
@@ -145,7 +159,7 @@ html[data-theme=light] .err{color:#7f1d1d;background:rgba(239,68,68,.1)}
 </div>
 
 <script>
-const API='https://script.google.com/macros/s/AKfycby-9g5_OCHczxadP9p3zi3jbxMlege6misl7EmYXTlFtRwujwlXZc84ZY7HLfZ25zCQqA/exec';
+const API='https://script.google.com/macros/s/AKfycbxYqGVfbIui7v_WJaN-Ubu0YLZ3yZofNGsApLwdXJ6z6ePb2hssXeFtAeVChlb1oV0qqQ/exec';
 const BARANG_LIMIT=0.3;   // batas stok: Stok Akhir <= 30% dari Stok Awal
 const MN=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 const LBL={absensi:'ABSENSI',kpi:'KPI',wo:'WO APM',barang:'WAREHOUSE',jadwal:'JADWAL INSTALL',slip:'SLIP GAJI'};
@@ -211,7 +225,7 @@ async function start(){
  +'<div id="grp" class="sub hide">'+S.menus.map(m=>`<a id="n_${m}" onclick="go('${m}')">${E(LBL[m])}</a>`).join('')+'</div>';
  go((S.menu==='dashboard'||S.menus.includes(S.menu))?S.menu:'dashboard');
 }
-function go(m){S.menu=m;S.k='';S.auto=1;S.q='';S.wf='ALL';S.bf='ALL';S.bq='';localStorage.apmMenu=m;
+function go(m){S.enterUntil=Date.now()+2500;S.menu=m;S.k='';S.auto=1;S.q='';S.wf='ALL';S.bf='ALL';S.bq='';localStorage.apmMenu=m;
  if(m!=='dashboard')$('grp').classList.remove('hide'),$('arr').textContent='▾';
  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.id==='n_'+m));
  $('ttl').textContent=m==='dashboard'?'DASHBOARD':LBL[m];setCtl('');
@@ -224,13 +238,13 @@ async function loadAll(){if(!S.menus)return;
  res.forEach(([m,r])=>{if(r&&r.ok)S.D[m]=r.d});
  $('upd').textContent='Diperbarui '+new Date().toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'})+' · otomatis setiap 1 menit';
  if(S.menu==='dashboard')drawOverview()}
-function drawOverview(){
+function drawOverview(){$('out').classList.toggle('enter',Date.now()<(S.enterUntil||0));
  setCtl('');
  const W=S.D.wo?woNorm(S.D.wo):[];const keys=keysOf(W,r=>ym(r.d));const k=keys[0];
  const f=k!=null?W.filter(r=>ym(r.d)===k):[];const n=f.length,c=t=>f.filter(r=>r.s===t).length,pc=t=>n?(c(t)/n*100).toFixed(1)+'%':'0%';
  const B=S.D.barang;let low=0,rusakT=0,akhirT=0;
  if(B){low=B.rekap.filter(r=>{const aw=+r[2]||0;return aw>0&&(+r[6])<=aw*BARANG_LIMIT}).length;
-   rusakT=B.rekap.reduce((s,r)=>s+(+r[5]||0),0);akhirT=B.rekap.reduce((s,r)=>s+(+r[6]||0),0)}
+   rusakT=B.rekap.filter(r=>r[0]!=='H-008').reduce((s,r)=>s+(+r[5]||0),0);akhirT=B.rekap.filter(r=>r[0]!=='H-008').reduce((s,r)=>s+(+r[6]||0),0)}
  const pv=x=>parseFloat(String(x).replace('%','').replace(',','.'))||0;
  let topN='-',topP='';
  const KP=S.D.kpi;
@@ -245,8 +259,7 @@ function drawOverview(){
        AB.rows.forEach(r=>{const x=pd(r[cd]);if(!x||x<a||x>b)return;const st=cs?String(r[cs]||'').trim():'';
          const ok=cs?(st!==''&&!/off|alpa|alpha|izin|cuti|sakit|libur/i.test(st)):true;if(ok)h++;if(/terlambat/i.test(st))l++});
        hadir=h;late=l}}}
- const J=S.D.jadwal||{};const now=new Date(),t0=day0(now),t1=new Date(t0.getFullYear(),t0.getMonth(),t0.getDate()+1);
- const jd=pd(J.tgl);const jHari=jd&&+day0(jd)===+t0?(J.val||'-'):'Belum tersedia';const jBesok=jd&&+day0(jd)===+t1?(J.val||'-'):'Belum tersedia';
+ const J=S.D.jadwal||{};const jHari=(J.hari&&J.hari.ok)?J.hari.val:'-';const jBesok=(J.besok&&J.besok.ok)?J.besok.val:'-';
  $('out').innerHTML=`
  <div class="sec-t"><h3>Work Order · ${k!=null?E(monLabel(k)):'-'}</h3></div>
  <div class="grid kpis">
@@ -259,7 +272,7 @@ function drawOverview(){
  <div class="grid kpis">
   ${card('Perlu Request',low,'Stok akhir ≤ 30% stok awal','var(--wr)',"go('barang')")}
   ${card('Barang Rusak',rusakT,'Total unit rusak','var(--er)',"go('barang')")}
-  ${card('Total Stok Akhir',akhirT,'Seluruh barang','var(--ac)',"go('barang')")}
+  ${card('Total Items',akhirT,'Pcs, tanpa DropWire (meter)','var(--ac)',"go('barang')")}
  </div>
  <div class="sec-t"><h3>Absensi &amp; KPI</h3></div>
  <div class="grid kpis">
@@ -279,7 +292,7 @@ async function load(name){const m=S.menu;if(!m)return;let r;
  if(m==='slip'&&name)S.slipRow=r.d.row;else S.D[m]=r.d;
  $('upd').textContent='Diperbarui '+new Date().toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'})+' · otomatis setiap 1 menit';
  draw()}
-function draw(){if(S.menu==='dashboard')return drawOverview();const m=S.menu,d=S.D[m];if(!d)return;if(m==='slip')return slipView(d);R[m](d)}
+function draw(){$('out').classList.toggle('enter',Date.now()<(S.enterUntil||0));if(S.menu==='dashboard')return drawOverview();const m=S.menu,d=S.D[m];if(!d)return;if(m==='slip')return slipView(d);R[m](d)}
 
 /* ---------- WO APM ---------- */
 function parseSched(text){return pd(text)}
@@ -356,7 +369,7 @@ R.wo=function(rows){
   <div class="seg" style="margin-bottom:14px">${seg}</div><div id="wt"></div></div>`;
  $('wq').value=S.q;woTab();
 };
-function wfSet(t){S.wf=t;S.q='';draw();setTimeout(()=>{const e=$('wdet');if(e)e.scrollIntoView({behavior:'smooth',block:'start'})},60)}
+function wfSet(t){S.wf=t;S.q='';draw();const e=$('wdet');if(e){e.classList.add('reveal');setTimeout(()=>e.scrollIntoView({behavior:'smooth',block:'start'}),60)}}
 function woTab(){const q=S.q.toLowerCase();const f=(S.cache||[]).filter(r=>!q||JSON.stringify(r).toLowerCase().includes(q));
  const L={DONE:['Done','ok'],PENDING:['Pending','wr'],CANCEL:['Cancel','er'],LAIN:['Sedang Di Kerjakan Hari Ini','in']};
  $('wt').innerHTML=tbl(['No','Tanggal','Work Order','Customer','District','Teknisi','Status','Keterangan','Update Remark'],
@@ -382,30 +395,34 @@ R.kpi=function(d){const ks=Object.keys(d.months||{});if(!ks.length){$('out').inn
  ${tbl(['ID','Nama Karyawan','Target','Realisasi','Target Harian','Realisasi Harian','Pencapaian','Predikat'],rows.map(r=>[r[0],r[1],r[2],r[3],r[4],r[5],bar(val(r)),pill(r[7],pred(r[7]))]))}</div>`};
 
 /* ---------- WAREHOUSE ---------- */
+const DW='H-008';                                   // DropWire 1 Core: satuan meter
+const isM=r=>r[0]===DW;
 R.barang=function(d){
- const low=d.rekap.filter(r=>{const aw=+r[2]||0;return aw>0&&(+r[6])<=aw*BARANG_LIMIT});   // stok akhir <= 30% stok awal
+ const low=d.rekap.filter(r=>{const aw=+r[2]||0;return aw>0&&(+r[6])<=aw*BARANG_LIMIT});
  const rusak=d.rekap.filter(r=>(+r[5]||0)>0);
- const totRusak=rusak.reduce((s,r)=>s+(+r[5]||0),0);
- const totAkhir=d.rekap.reduce((s,r)=>s+(+r[6]||0),0);
- const WF={ALL:['Semua Barang',d.rekap],LOW:['Perlu Request',low],RUSAK:['Barang Rusak',rusak]};
+ const pcsRows=d.rekap.filter(r=>!isM(r));
+ const totRusak=pcsRows.reduce((s,r)=>s+(+r[5]||0),0);
+ const totItems=pcsRows.reduce((s,r)=>s+(+r[6]||0),0);
+ const dw=d.rekap.find(isM),dwAkhir=dw?(+dw[6]||0):0;
+ const WF={ALL:['Total Items',d.rekap],LOW:['Perlu Request',low],RUSAK:['Barang Rusak',rusak]};
  if(!WF[S.bf])S.bf='ALL';
  S.bsrc=WF[S.bf][1];S.blow=low;
  setCtl('');
  $('out').innerHTML=`
  ${low.length?`<div class="alert red blink"><div><b>STOK HAMPIR HABIS, SEGERA MELAKUKAN PERMINTAAN BARANG</b>${low.map(r=>E(r[1].trim())+' (sisa '+r[6]+' dari awal '+r[2]+')').join(' · ')}</div></div>`:''}
  <div class="grid kpis">
-  ${card('Barang Rusak',totRusak,rusak.length+' jenis barang','var(--er)',"bfSet('RUSAK')",S.bf==='RUSAK')}
+  ${card('Barang Rusak',totRusak,rusak.length+' jenis barang rusak','var(--er)',"bfSet('RUSAK')",S.bf==='RUSAK')}
   ${card('Perlu Request',low.length,'Stok akhir ≤ 30% stok awal','var(--wr)',"bfSet('LOW')",S.bf==='LOW')}
-  ${card('Semua Barang',totAkhir,d.rekap.length+' jenis barang · stok akhir','var(--ac)',"bfSet('ALL')",S.bf==='ALL')}
+  ${card('TOTAL ITEMS',totItems,`${d.rekap.length} jenis barang · DropWire 1 Core ${dwAkhir} meter`,'var(--ac)',"bfSet('ALL')",S.bf==='ALL')}
  </div>
  <div class="panel" id="bdet"><div class="sec-t"><h3>Daftar Barang · ${E(WF[S.bf][0])}</h3><input id="bq" class="search" placeholder="Cari nama atau kode barang..." oninput="S.bq=this.value;barTab()"></div><div id="bt"></div></div>`;
  $('bq').value=S.bq||'';barTab();
 };
 function barTab(){const q=(S.bq||'').toLowerCase();const low=S.blow||[];
  const f=(S.bsrc||[]).filter(r=>!q||String(r[0]).toLowerCase().includes(q)||String(r[1]).toLowerCase().includes(q));
- $('bt').innerHTML=tbl(['Kode','Nama Barang','Stok Awal','Masuk','Keluar','Rusak','Stok Akhir','Status'],
-  f.map(r=>[r[0],String(r[1]).trim(),r[2],r[3],r[4],r[5],r[6],low.includes(r)?pill('Segera Request','er'):(+r[5]>0?pill('Rusak','wr'):pill('Aman','ok'))]))}
-function bfSet(t){S.bf=t;S.bq='';draw();setTimeout(()=>{const e=$('bdet');if(e)e.scrollIntoView({behavior:'smooth',block:'start'})},60)}
+ $('bt').innerHTML=tbl(['Kode','Nama Barang','Satuan','Stok Awal','Masuk','Keluar','Rusak','Stok Akhir','Status'],
+  f.map(r=>[r[0],String(r[1]).trim(),isM(r)?'meter':'pcs',r[2],r[3],r[4],r[5],r[6],low.includes(r)?pill('Segera Request','er'):(+r[5]>0?pill('Rusak','wr'):pill('Aman','ok'))]))}
+function bfSet(t){S.bf=t;S.bq='';draw();const e=$('bdet');if(e){e.classList.add('reveal');setTimeout(()=>e.scrollIntoView({behavior:'smooth',block:'start'}),60)}}
 
 /* ---------- ABSENSI (periode 20 - 19) ---------- */
 R.absensi=function(d){const H=d.headers,f=re=>H.find(h=>re.test(h));
@@ -447,18 +464,19 @@ R.absensi=function(d){const H=d.headers,f=re=>H.find(h=>re.test(h));
 /* ---------- JADWAL INSTALL (sheet Depok) ---------- */
 R.jadwal=function(d){
  if(d.err){$('out').innerHTML=`<div class="err">${E(d.err)}</div>`;return}
- const now=new Date(),today=day0(now),tm=new Date(today.getFullYear(),today.getMonth(),today.getDate()+1);
- const tgl=pd(d.tgl),sameT=tgl&&+day0(tgl)===+today,sameM=tgl&&+day0(tgl)===+tm;
- const hariIni=sameT?d.val:'Belum tersedia',besok=sameM?d.val:'Belum tersedia';
  setCtl('');
+ const H=d.hari||{},B=d.besok||{},dh=pd(H.tgl),db=pd(B.tgl);
+ const fl=x=>x?x.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'';
  $('out').innerHTML=`<div class="grid kpis">
-  ${card('Install Scheduled · Hari Ini',`<span class="big">${E(hariIni)}</span>`,today.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}),'var(--ac)')}
-  ${card('Install Scheduled · Besok',`<span class="big">${E(besok)}</span>`,tm.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}),'var(--ok)')}
+  ${card('Install Scheduled · Hari Ini',`<span class="big">${E(H.val||'-')}</span>`,fl(dh),'var(--ac)')}
+  ${card('Install Scheduled · Besok',`<span class="big">${E(B.val||'-')}</span>`,fl(db),'var(--ok)')}
  </div>
- <div class="panel"><div class="sec-t"><h3>Sumber Data</h3><small>Sheet Depok · tanggal pada sel B12</small></div>
-  <div class="kv"><div><div style="color:var(--mu);font-size:11px;text-transform:uppercase">Tanggal di sheet (B12)</div><b>${E(d.tgl||'-')}</b></div>
-  <div><div style="color:var(--mu);font-size:11px;text-transform:uppercase">Nilai Install Scheduled</div><b>${E(d.val||'-')}</b></div></div>
-  <p style="color:var(--mu);font-size:12px;margin-bottom:0">Nilai diperbarui otomatis setiap 1 menit. Setelah pukul 17.00 sheet berisi data esok hari.</p></div>`};
+ <div class="panel"><div class="sec-t"><h3>Sumber Data</h3><small>Sheet Depok · baris Install Scheduled</small></div>
+  <div class="kv">
+   <div><div style="color:var(--mu);font-size:11px;text-transform:uppercase">Hari ini</div><b>${E(H.tgl||'-')}</b>${H.ok?'':`<div style="color:var(--wr);font-size:12px">${E(H.why||'')}</div>`}</div>
+   <div><div style="color:var(--mu);font-size:11px;text-transform:uppercase">Besok</div><b>${E(B.tgl||'-')}</b>${B.ok?'':`<div style="color:var(--wr);font-size:12px">${E(B.why||'')}</div>`}</div>
+  </div>
+  <p style="color:var(--mu);font-size:12px;margin-bottom:0">Data diambil dari kolom tanggal 1–31 pada blok bulan di sheet Depok, lalu baris Install Scheduled. Diperbarui otomatis setiap 1 menit.</p></div>`};
 
 /* ---------- Slip gaji (opsional, dimatikan di Code.gs) ---------- */
 function slipView(d){setCtl('');
