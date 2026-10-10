@@ -430,7 +430,7 @@ const TX={
  wo_hc:[['Bulan','Total','Done','Done %','Pending','Pending %','Cancel','Cancel %','Lainnya','Selisih Total'],['Month','Total','Done','Done %','Pending','Pending %','Cancel','Cancel %','Other','Change in Total']],
  wo_hr:[['Work Order','Customer','Teknisi','Jadwal Ulang','Sisa'],['Work Order','Customer','Technician','Reschedule','Remaining']],
  wo_overdue:['Lewat jadwal','Overdue'], wo_today:['Hari ini','Today'],
- st_done:['Done','Done'], st_pending:['Pending','Pending'], st_cancel:['Cancel','Cancel'], st_working:['Sedang Di Kerjakan Hari Ini','Being Worked On Today'],
+ st_done:['Done','Done'], st_pending:['Pending','Pending'], st_cancel:['Cancel','Cancel'], st_working:['Sedang Di Kerjakan Hari Ini','Being Worked On Today'], st_belum:['Belum Dikerjakan','Not Started Yet'],
  // reminder
  rem_now:['SEGERA – JADWAL ULANG HARI INI','URGENT – RESCHEDULE TODAY'], rem_tmr:['SEGERA – JADWAL ULANG BESOK 16.00','URGENT – RESCHEDULE TOMORROW 16:00'],
  rem_h:['PENGINGAT JADWAL ULANG H-','RESCHEDULE REMINDER D-'], rem_sched:['Jadwal:','Schedule:'],
@@ -488,7 +488,7 @@ const mShort=m=>MON3[li()][m];
 const monLabel=k=>mName(k%100)+' '+Math.floor(k/100);
 const locale=()=>LANG==='en'?'en-US':'id-ID';
 const predLabel=p=>{if(LANG!=='en')return p;const m={'BAIK':'GOOD','SANGAT KURANG':'VERY LOW','KURANG':'LOW','CUKUP':'FAIR','BAGUS':'GOOD'};return m[String(p).trim().toUpperCase()]||p};
-const stLabel=s=>({DONE:T('st_done'),PENDING:T('st_pending'),CANCEL:T('st_cancel'),LAIN:T('st_working')})[s]||s;
+const stLabel=s=>({DONE:T('st_done'),PENDING:T('st_pending'),CANCEL:T('st_cancel'),LAIN:T('st_working'),BELUM:T('st_belum')})[s]||s;
 
 /* ---------- koneksi ---------- */
 async function api(b){const r=await fetch(API,{method:'POST',body:JSON.stringify(b)});return r.json()}
@@ -624,10 +624,12 @@ function woNorm(rows){
    if(seenW.has(wk)||(ck&&seenC.has(ck)))continue;
    seenW.add(wk);if(ck)seenC.add(ck);keep.push(r)}
  keep.reverse();
- return keep.map(r=>{const rm=String(r.rem||''),st=String(r.st||'').toUpperCase();let s;
+ const todayT=+day0(new Date());
+ return keep.map(r=>{const rm=String(r.rem||''),st=String(r.st||'').toUpperCase(),d=pd(r.tgl);let s;
    if(/done|terinstal|installed/i.test(rm))s='DONE';else if(/cancel|batal/i.test(rm))s='CANCEL';
-   else if(/CANCEL/.test(st))s='CANCEL';else if(/PEND/.test(st))s='PENDING';else if(/DONE|COMPLETE/.test(st))s='DONE';else s='LAIN';
-   return{...r,s,d:pd(r.tgl),sched:s==='PENDING'?pd(rm+' '+(r.ket||'')):null}}).filter(r=>r.d)}
+   else if(/CANCEL/.test(st))s='CANCEL';else if(/PEND/.test(st))s='PENDING';else if(/DONE|COMPLETE/.test(st))s='DONE';
+   else s=(d&&+day0(d)===todayT)?'LAIN':'BELUM';
+   return{...r,s,d,sched:s==='PENDING'?pd(rm+' '+(r.ket||'')):null}}).filter(r=>r.d)}
 R.wo=function(rows){
  const all=woNorm(rows),now=new Date(),today=day0(now),curK=ym(today);
  const keys=keysOf(all,r=>ym(r.d));
@@ -642,7 +644,7 @@ R.wo=function(rows){
  const a1=pc('DONE'),a2=a1+pc('PENDING');
  const periodTxt=isAll?T('wo_allmonths'):monLabel(k);
  const ms=keys.slice().sort((a,b)=>a-b).map(kk=>{const g=all.filter(r=>ym(r.d)===kk),cn=s=>g.filter(r=>r.s===s).length;
-   return{k:kk,t:g.length,done:cn('DONE'),pend:cn('PENDING'),canc:cn('CANCEL'),lain:cn('LAIN')}});
+   return{k:kk,t:g.length,done:cn('DONE'),pend:cn('PENDING'),canc:cn('CANCEL'),lain:cn('LAIN')+cn('BELUM')}});
  let lineP;
  if(isAll){
    lineP=`<div class="panel"><div class="sec-t"><h3>${T('wo_cmp')}</h3><small>${ms.length} ${T('wo_cmp_sum')} ${all.length} WO</small></div>${cmpChart(ms)}</div>`;
@@ -662,8 +664,8 @@ R.wo=function(rows){
    const dh=dl==null?{h:'<span class="pill p-in">-</span>'}:{h:`<span class="pill ${dl>0?'p-ok':dl<0?'p-er':'p-in'}">${dl>0?'▲ +'+dl:dl<0?'▼ '+dl:'● 0'}</span>`};
    const lab=m.k===k?`<b style="color:var(--ac)">${E(monLabel(m.k))}</b>`:E(monLabel(m.k));
    return [{h:lab},m.t,m.done,pp(m.done),m.pend,pp(m.pend),m.canc,pp(m.canc),m.lain,dh]});
- const WL={ALL:T('wo_all'),DONE:T('st_done'),PENDING:T('st_pending'),CANCEL:T('st_cancel'),LAIN:T('st_working')};
- const seg=[['ALL',T('wo_all'),n],['DONE',T('st_done'),c('DONE')],['PENDING',T('st_pending'),c('PENDING')],['CANCEL',T('st_cancel'),c('CANCEL')],['LAIN',T('st_working'),c('LAIN')]]
+ const WL={ALL:T('wo_all'),DONE:T('st_done'),PENDING:T('st_pending'),CANCEL:T('st_cancel'),LAIN:T('st_working'),BELUM:T('st_belum')};
+ const seg=[['ALL',T('wo_all'),n],['DONE',T('st_done'),c('DONE')],['PENDING',T('st_pending'),c('PENDING')],['CANCEL',T('st_cancel'),c('CANCEL')],['LAIN',T('st_working'),c('LAIN')],['BELUM',T('st_belum'),c('BELUM')]]
    .map(([v,t,q])=>`<button class="${S.wf===v?'on':''}" onclick="wfSet('${v}')">${E(t)} · ${q}</button>`).join('');
  $('out').innerHTML=`${remH}
  <div class="grid kpis">
@@ -672,6 +674,7 @@ R.wo=function(rows){
   ${card(T('st_pending'),c('PENDING'),`<span style="color:#d97706">${pc('PENDING').toFixed(1)}%</span> ${T('wo_pctof')}`,'var(--wr)',"wfSet('PENDING')",S.wf==='PENDING')}
   ${card(T('st_cancel'),c('CANCEL'),`<span style="color:#dc2626">${pc('CANCEL').toFixed(1)}%</span> ${T('wo_pctof')}`,'var(--er)',"wfSet('CANCEL')",S.wf==='CANCEL')}
   ${card(T('st_working'),c('LAIN'),`<span>${pc('LAIN').toFixed(1)}%</span> ${T('wo_pctof')}`,'var(--ac2)',"wfSet('LAIN')",S.wf==='LAIN')}
+  ${card(T('st_belum'),c('BELUM'),`<span>${pc('BELUM').toFixed(1)}%</span> ${T('wo_pctof')}`,'var(--ac)',"wfSet('BELUM')",S.wf==='BELUM')}
  </div>
  <div class="grid two">
   ${lineP}
@@ -693,7 +696,7 @@ R.wo=function(rows){
 };
 function wfSet(t){S.wf=t;S.q='';draw();const e=$('wdet');if(e){e.classList.add('reveal');setTimeout(()=>e.scrollIntoView({behavior:'smooth',block:'start'}),60)}}
 function woTab(){const q=S.q.toLowerCase();const f=(S.cache||[]).filter(r=>!q||JSON.stringify(r).toLowerCase().includes(q));
- const C={DONE:'ok',PENDING:'wr',CANCEL:'er',LAIN:'in'};
+ const C={DONE:'ok',PENDING:'wr',CANCEL:'er',LAIN:'in',BELUM:'in'};
  $('wt').innerHTML=tbl(T('wo_h'),
   f.map((r,i)=>[i+1,r.tgl,r.wo,r.cust,r.dist,r.tek,pill(stLabel(r.s),C[r.s]),{h:`<span class="wrapc">${E(r.ket)}</span>`},{h:`<span class="wrapc">${E(r.rem)}</span>`}]),'auto')}
 
@@ -788,25 +791,28 @@ function dayInfo(off){
  const J=S.D.jadwal||{},B=(off?J.besok:J.hari)||{};
  const t0=day0(new Date()),tm=new Date(t0.getFullYear(),t0.getMonth(),t0.getDate()+off);
  const W=S.D.wo?woNorm(S.D.wo):[];
- const pend=W.filter(r=>r.s==='PENDING'&&r.sched&&+day0(r.sched)===+tm);
+ const cur=W.filter(r=>r.s==='PENDING'&&r.sched&&+day0(r.sched)===+tm);
+ const list=snapDay(off,tm,cur,W);
  const b=parseFloat(String(B.val||'').replace(/[^0-9.\-]/g,''));
  const base=isNaN(b)?null:b;
- return {tm,val:B.ok?B.val:'-',base,pend,total:(base||0)+pend.length};
+ return {tm,val:B.ok?B.val:'-',base,pend:list,total:(base||0)+list.length};
 }
 function besokInfo(){return dayInfo(1)}
 function hariInfo(){return dayInfo(0)}
 function isoJS(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
 // Daftar pending besok: WO yang sudah berubah tanggal dan teknisinya sudah diisi tetap tampil (tandai SUDAH DI JADWALKAN)
-function snapBesok(bi){
- const key='apmPendBesok',iso=isoJS(bi.tm);
+// Pending untuk tanggal tertentu. WO yang sudah berubah tanggal dan teknisinya terisi tetap ada (ditandai done)
+// agar total install + pending tidak turun.
+function snapDay(off,tm,cur,W){
+ const key='apmPend'+off,iso=isoJS(tm);
  let snap=null;try{snap=JSON.parse(localStorage.getItem(key)||'null')}catch(e){snap=null}
  if(!snap||snap.date!==iso)snap={date:iso,items:{}};
- bi.pend.forEach(r=>{snap.items[r.wo]={sched:isoJS(r.sched),tek:String(r.tek||'').trim()}});
+ cur.forEach(r=>{snap.items[r.wo]={sched:isoJS(r.sched),tek:String(r.tek||'').trim()}});
  try{localStorage.setItem(key,JSON.stringify(snap))}catch(e){}
- const W=S.D.wo?woNorm(S.D.wo):[],byWo=new Map(W.map(r=>[r.wo,r]));
- const list=bi.pend.map(r=>({...r,done:false}));
+ const byWo=new Map(W.map(r=>[r.wo,r]));
+ const list=cur.map(r=>({...r,done:false}));
  Object.entries(snap.items).forEach(([wo,it])=>{
-   if(bi.pend.some(r=>r.wo===wo))return;
+   if(cur.some(r=>r.wo===wo))return;
    const c=byWo.get(wo);if(!c)return;
    const changed=c.sched?isoJS(c.sched)!==it.sched:c.s==='LAIN';
    if(changed&&String(c.tek||'').trim())list.push({...c,done:true});
@@ -814,7 +820,7 @@ function snapBesok(bi){
  return list;
 }
 function pendPanel(bi,label,rows){
- const list=rows||bi.pend.map(r=>({...r,done:false}));
+ const list=rows||bi.pend;
  const tr=list.map(r=>[r.wo,r.cust,r.dist,r.tek,r.done?pill(T('terjadwal'),'ok'):pill(T('st_pending'),'wr'),
    {h:`<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:260px"><span class="wrapc">${E(r.ket||r.rem||'')}</span>${r.done?`<span class="glass-ok">${T('sudah_jadwal')}</span>`:''}</div>`}]);
  return `<div class="panel"><div class="sec-t"><h3>${T('pend_title')} · ${label}</h3><small>${list.length} ${T('pend_wo')} · ${T('pend_ret')} ${fmtLong(bi.tm)}</small></div>
@@ -823,13 +829,13 @@ const jdSub=x=>`${fmtLong(x.tm)}<br>${fill(T('jd_plus'),{a:x.base==null?'-':x.ba
 R.jadwal=function(d){
  if(d.err){$('out').innerHTML=`<div class="err">${E(d.err)}</div>`;return}
  setCtl('');
- const H=d.hari||{},B=d.besok||{},hi=hariInfo(),bi=besokInfo(),bList=snapBesok(bi);
+ const H=d.hari||{},B=d.besok||{},hi=hariInfo(),bi=besokInfo();
  $('out').innerHTML=`<div class="grid kpis">
   ${card(T('jd_hari'),`<span class="big">${hi.total}</span>`,jdSub(hi),'var(--ac)')}
   ${card(T('jd_besok'),`<span class="big">${bi.total}</span>`,jdSub(bi),'var(--ok)')}
  </div>
  ${hi.pend.length?pendPanel(hi,T('hari_lbl').toUpperCase()):''}
- ${bList.length?pendPanel(bi,T('besok_lbl').toUpperCase(),bList):''}
+ ${bi.pend.length?pendPanel(bi,T('besok_lbl').toUpperCase()):''}
  <div class="panel"><div class="sec-t"><h3>${T('src')}</h3><small>${T('src_s')}</small></div>
   <div class="kv">
    <div><div style="color:var(--mu);font-size:11px;text-transform:uppercase">${T('hari_lbl')}</div><b>${E(H.tgl||'-')}</b>${H.ok?'':`<div style="color:var(--wr);font-size:12px">${E(H.why||'')}</div>`}</div>
