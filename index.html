@@ -284,10 +284,10 @@ function drawOverview(){$('out').classList.toggle('enter',Date.now()<(S.enterUnt
   ${card('Terlambat · periode terbaru',late,E(per),'var(--wr)',"go('absensi')")}
   ${card('KPI Tertinggi',`<span style="font-size:17px">${E(topN)}</span>`,topP?'Pencapaian '+E(topP):'','var(--ac2)',"go('kpi')")}
  </div>
- <div class="sec-t"><h3>Install Megavision</h3></div>
+ <div class="sec-t"><h3>Jadwal Install</h3></div>
  <div class="grid kpis">
-  ${card('Total Install Hari Ini',`<span class="big">${hariInfo().total}</span>`,(hariInfo().base==null?'-':hariInfo().base)+' + '+hariInfo().pend.length+' pending dijadwalkan ulang','var(--ac)',"go('jadwal')")}
-  ${card('Total Install Besok',`<span class="big">${besokInfo().total}</span>`,(besokInfo().base==null?'-':besokInfo().base)+' + '+besokInfo().pend.length+' pending dijadwalkan ulang','var(--ok)',"go('jadwal')")}
+  ${card('JADWAL INSTALL · HARI INI',`<span class="big">${hariInfo().total}</span>`,(hariInfo().base==null?'-':hariInfo().base)+' + '+hariInfo().pend.length+' pending dijadwalkan ulang','var(--ac)',"go('jadwal')")}
+  ${card('JADWAL INSTALL · BESOK',`<span class="big">${besokInfo().total}</span>`,(besokInfo().base==null?'-':besokInfo().base)+' + '+besokInfo().pend.length+' pending dijadwalkan ulang','var(--ok)',"go('jadwal')")}
  </div>`}
 async function load(name){const m=S.menu;if(!m)return;let r;
  try{r=await api({menu:m,name:name||''})}catch(e){$('upd').textContent='Koneksi terputus, dicoba lagi otomatis';return}
@@ -487,20 +487,19 @@ R.jadwal=function(d){
  if(d.err){$('out').innerHTML=`<div class="err">${E(d.err)}</div>`;return}
  setCtl('');
  const H=d.hari||{},B=d.besok||{},hi=hariInfo(),bi=besokInfo();
+ const sub=x=>`${fmtLong(x.tm)}<br>${x.base==null?'-':x.base} + ${x.pend.length} pending dijadwalkan ulang`;
  $('out').innerHTML=`<div class="grid kpis">
-  ${card('Install Scheduled · Hari Ini',`<span class="big">${E(hi.val)}</span>`,fmtLong(hi.tm),'var(--ac)')}
-  ${card('Total Hari Ini',`<span class="big">${hi.total}</span>`,`${hi.base==null?'-':hi.base} + ${hi.pend.length} pending dijadwalkan ulang`,'var(--ac)')}
-  ${card('Install Scheduled · Besok',`<span class="big">${E(bi.val)}</span>`,fmtLong(bi.tm),'var(--ok)')}
-  ${card('Total Besok',`<span class="big">${bi.total}</span>`,`${bi.base==null?'-':bi.base} + ${bi.pend.length} pending dijadwalkan ulang`,'var(--ac2)')}
+  ${card('JADWAL INSTALL · HARI INI',`<span class="big">${hi.total}</span>`,sub(hi),'var(--ac)')}
+  ${card('JADWAL INSTALL · BESOK',`<span class="big">${bi.total}</span>`,sub(bi),'var(--ok)')}
  </div>
- ${pendPanel(hi,'HARI INI')}
- ${pendPanel(bi,'BESOK')}
+ ${hi.pend.length?pendPanel(hi,'HARI INI'):''}
+ ${bi.pend.length?pendPanel(bi,'BESOK'):''}
  <div class="panel"><div class="sec-t"><h3>Sumber Data</h3><small>Sheet Depok · baris Install Scheduled</small></div>
   <div class="kv">
    <div><div style="color:var(--mu);font-size:11px;text-transform:uppercase">Hari ini</div><b>${E(H.tgl||'-')}</b>${H.ok?'':`<div style="color:var(--wr);font-size:12px">${E(H.why||'')}</div>`}</div>
    <div><div style="color:var(--mu);font-size:11px;text-transform:uppercase">Besok</div><b>${E(B.tgl||'-')}</b>${B.ok?'':`<div style="color:var(--wr);font-size:12px">${E(B.why||'')}</div>`}</div>
   </div>
-  <p style="color:var(--mu);font-size:12px;margin-bottom:0">Install dihitung dari sheet Depok, lalu ditambah pending WO yang jadwal ulangnya jatuh pada tanggal yang sama. Diperbarui otomatis setiap 1 menit.</p></div>`};
+  <p style="color:var(--mu);font-size:12px;margin-bottom:0">Jadwal install dihitung dari sheet Depok, lalu ditambah pending WO yang jadwal ulangnya jatuh pada tanggal yang sama. Diperbarui otomatis setiap 1 menit.</p></div>`};
 
 /* ---------- Slip gaji (opsional, dimatikan di Code.gs) ---------- */
 function slipView(d){setCtl('');
