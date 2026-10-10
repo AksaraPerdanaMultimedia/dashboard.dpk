@@ -316,6 +316,28 @@ html[data-theme=dark] .alert.amber{background:rgba(242,184,67,.15);border:3px so
  .panel{box-shadow:4px 4px 0 var(--ink)}
  .kpi{box-shadow:3px 3px 0 var(--ink)}
 }
+
+/* ===== REVISI TAMPILAN ===== */
+html[data-theme=light] .brand span{color:var(--ink)}
+#upd{display:none}
+.head h1{font-size:38px}
+.sec-t h3{font-size:21px}
+.brand b{font-size:34px}
+@media(max-width:980px){
+ .head h1{font-size:30px}
+ .sec-t h3{font-size:18px}
+ .layout{position:relative}
+ aside{padding-top:58px}
+ .topbar{position:absolute;top:10px;right:10px;margin:0;gap:6px;z-index:20;flex-wrap:nowrap}
+ .topbar .lng{border-width:2px}
+ .topbar .lng button{padding:4px 7px;font-size:10px}
+ .topbar .tg{transform:scale(.72);transform-origin:right center;margin:0 -8px}
+ .topbar .clock{font-size:10px;padding:4px 7px;border-width:2px;box-shadow:2px 2px 0 var(--ink);white-space:nowrap}
+}
+@media(max-width:480px){
+ .head h1{font-size:28px}
+ .sec-t h3{font-size:16px}
+}
 </style>
 </head>
 <body>
@@ -540,8 +562,15 @@ function draw(){chrome();$('out').classList.toggle('enter',Date.now()<(S.enterUn
  R[S.menu](d)}
 
 /* ---------- WO APM ---------- */
-function woNorm(rows){const mp=new Map();rows.forEach(r=>mp.set(r.wo,r));
- return [...mp.values()].map(r=>{const rm=String(r.rem||''),st=String(r.st||'').toUpperCase();let s;
+function woNorm(rows){
+ // Duplikat (nomor WO sama ATAU nama pelanggan sama) dihitung 1: baris paling bawah (update terakhir) yang dipakai
+ const seenW=new Set(),seenC=new Set(),keep=[];
+ for(let i=rows.length-1;i>=0;i--){const r=rows[i];
+   const wk=String(r.wo||'').trim().toUpperCase(),ck=String(r.cust||'').trim().toLowerCase();
+   if(seenW.has(wk)||(ck&&seenC.has(ck)))continue;
+   seenW.add(wk);if(ck)seenC.add(ck);keep.push(r)}
+ keep.reverse();
+ return keep.map(r=>{const rm=String(r.rem||''),st=String(r.st||'').toUpperCase();let s;
    if(/done|terinstal|installed/i.test(rm))s='DONE';else if(/cancel|batal/i.test(rm))s='CANCEL';
    else if(/CANCEL/.test(st))s='CANCEL';else if(/PEND/.test(st))s='PENDING';else if(/DONE|COMPLETE/.test(st))s='DONE';else s='LAIN';
    return{...r,s,d:pd(r.tgl),sched:s==='PENDING'?pd(rm+' '+(r.ket||'')):null}}).filter(r=>r.d)}
