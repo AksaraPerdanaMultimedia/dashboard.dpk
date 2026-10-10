@@ -105,6 +105,23 @@ html[data-theme=light] .err{color:#7f1d1d;background:rgba(239,68,68,.1)}
 .kv>div{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
 .big{font-size:34px;font-weight:800;font-variant-numeric:tabular-nums}
 .seg{display:flex;gap:8px;flex-wrap:wrap}.seg button.on{background:linear-gradient(90deg,var(--ac),var(--ac2));color:#fff;border-color:transparent}
+.topbar{display:flex;justify-content:flex-end;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.hero{position:relative;overflow:hidden;border-radius:22px;padding:26px 30px;display:flex;align-items:center;gap:24px;color:#fff;margin-bottom:18px;box-shadow:0 18px 40px rgba(0,0,0,.25)}
+.g-pagi{background:linear-gradient(120deg,#f97316,#ec4899 55%,#8b5cf6)}
+.g-siang{background:linear-gradient(120deg,#0ea5e9,#2563eb 55%,#22d3ee)}
+.g-sore{background:linear-gradient(120deg,#f59e0b,#ef4444 50%,#7c3aed)}
+.g-malam{background:linear-gradient(120deg,#1e1b4b,#312e81 50%,#0f172a)}
+.hero-ic{width:92px;height:92px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;flex-shrink:0;animation:float 3.2s ease-in-out infinite;box-shadow:0 0 0 10px rgba(255,255,255,.08),0 0 40px rgba(255,255,255,.35)}
+.hero-ic svg{width:56px;height:56px}
+.hero-tx{position:relative;z-index:1;min-width:0}
+.hero-k{font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
+.hero h2{font-family:'Orbitron',sans-serif;font-size:clamp(22px,4vw,34px);letter-spacing:.08em;margin:6px 0 8px;text-shadow:0 2px 14px rgba(0,0,0,.25);animation:heroIn .8s cubic-bezier(.2,.7,.2,1) both}
+.hero p{margin:0;font-size:15px;opacity:.95;max-width:580px;animation:heroIn .9s .15s cubic-bezier(.2,.7,.2,1) both}
+@keyframes heroIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.orb{position:absolute;border-radius:50%;background:rgba(255,255,255,.12);animation:float 6s ease-in-out infinite;pointer-events:none}
+.o1{width:200px;height:200px;right:-60px;top:-70px}.o2{width:120px;height:120px;right:170px;bottom:-60px;animation-delay:1.5s}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@media(max-width:600px){.hero{flex-direction:column;text-align:center;padding:24px 20px;gap:14px}.hero-ic{width:76px;height:76px}.hero p{margin:0 auto}}
 /* transisi */
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 #out.enter>*{animation:fadeUp .55s cubic-bezier(.2,.7,.2,1) both}
@@ -153,20 +170,8 @@ html[data-theme=light] .err{color:#7f1d1d;background:rgba(239,68,68,.1)}
  <nav id="nav"></nav>
 </aside>
 <main>
- <div class="head">
-  <div class="hl">
-   <button id="back" class="back" onclick="goBack()" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg><span id="backT">Kembali</span></button>
-   <h1 id="ttl"></h1>
-   <p id="upd"></p>
-  </div>
-  <div class="ctl">
-   <div id="ctl" class="ctl"></div>
-   <a id="disp" class="disp" href="https://fieldsa.fiberstar.co.id/#/tasklist/assigntome" target="_blank" rel="noopener" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg><span id="dispT">Dispatch Now</span></a>
-   <div class="lng" role="group" aria-label="Language"><button id="lid" onclick="setLang('id')">ID</button><button id="len" onclick="setLang('en')">EN</button></div>
-   <label class="tg" title="Mode siang / malam"><input type="checkbox" id="thm" aria-label="Mode siang" onchange="setTheme(this.checked?'light':'dark')"><span class="tr"></span></label>
-   <span class="clock" id="clk"></span>
-  </div>
- </div>
+ <div class="topbar"><div class="lng" role="group" aria-label="Language"><button id="lid" onclick="setLang('id')">ID</button><button id="len" onclick="setLang('en')">EN</button></div><label class="tg" title="Mode siang / malam"><input type="checkbox" id="thm" aria-label="Mode siang" onchange="setTheme(this.checked?'light':'dark')"><span class="tr"></span></label><span class="clock" id="clk"></span></div>
+ <div class="head"><div class="hl"><h1 id="ttl"></h1><p id="upd"></p></div><div class="ctl"><div id="ctl" class="ctl"></div><a id="disp" class="disp" href="https://fieldsa.fiberstar.co.id/#/tasklist/assigntome" target="_blank" rel="noopener" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg><span id="dispT">Dispatch Now</span></a></div></div>
  <div id="out"></div>
 </main>
 </div>
@@ -183,7 +188,7 @@ const R={};
 /* ---------- bahasa ---------- */
 // Setiap kunci: [Bahasa Indonesia, English]
 const TX={
- dashboard:['DASHBOARD','DASHBOARD'], menu:['MENU','MENU'], back:['Kembali','Back'], dispatch:['Dispatch Now','Dispatch Now'],
+ dashboard:['OVERVIEW','OVERVIEW'], menu:['MENU','MENU'], back:['Kembali','Back'], dispatch:['Dispatch Now','Dispatch Now'],
  lbl_absensi:['ABSENSI','ATTENDANCE'], lbl_kpi:['KPI','KPI'], lbl_wo:['WO APM','WO APM'], lbl_barang:['WAREHOUSE','WAREHOUSE'], lbl_jadwal:['JADWAL INSTALL','INSTALL SCHEDULE'], lbl_slip:['SLIP GAJI','PAYSLIP'],
  loading:['Memuat data...','Loading data...'], nodata:['Belum ada data','No data yet'], notable:['Tidak ada data','No data'],
  updated:['Diperbarui','Updated'], autoref:['otomatis setiap 1 menit','auto-refresh every minute'],
@@ -337,13 +342,11 @@ function updText(){return S.updAt?`${T('updated')} ${new Date(S.updAt).toLocaleS
 function chrome(){
  document.documentElement.lang=LANG;
  $('ttl').textContent=S.menu==='dashboard'?T('dashboard'):(S.menu?T('lbl_'+S.menu):'');
- $('back').hidden=S.menu!=='dashboard';$('backT').textContent=T('back');
  $('disp').hidden=S.menu!=='jadwal';$('dispT').textContent=T('dispatch');
  $('lid').classList.toggle('on',LANG==='id');$('len').classList.toggle('on',LANG==='en');
  $('upd').textContent=updText();
 }
 function setLang(l){LANG=l;localStorage.apmLang=l;buildNav();chrome();if(S.menu)draw()}
-function goBack(){go(S.back&&S.back!=='dashboard'?S.back:(S.menus?S.menus[0]:'absensi'))}
 
 async function start(){
  if(API.indexOf('GANTI')>=0){$('out').innerHTML=empty(T('cfgmissing'));return}
@@ -355,7 +358,7 @@ async function start(){
  go((localStorage.apmMenu==='dashboard'||S.menus.includes(localStorage.apmMenu))?localStorage.apmMenu:'dashboard');
 }
 function go(m){
- if(m==='dashboard'&&S.menu&&S.menu!=='dashboard')S.back=S.menu;
+ 
  S.enterUntil=Date.now()+2500;S.menu=m;S.k='';S.auto=1;S.q='';S.wf='ALL';S.bf='ALL';S.bq='';localStorage.apmMenu=m;
  if(m!=='dashboard'&&!S.grpOpen){S.grpOpen=true;$('grp')&&$('grp').classList.remove('hide');$('arr')&&($('arr').textContent='▾')}
  markNav();chrome();setCtl('');
@@ -566,6 +569,24 @@ R.jadwal=function(d){
   <p style="color:var(--mu);font-size:12px;margin-bottom:0">${T('src_note')}</p></div>`};
 
 /* ---------- OVERVIEW ---------- */
+const BAND=h=>(h>=4&&h<11)?'pagi':(h>=11&&h<15)?'siang':(h>=15&&h<18)?'sore':'malam';
+const GREET={
+ pagi:{t:['SELAMAT PAGI','GOOD MORNING'],m:['Semangat pagi, tim APM Depok! Mulai hari ini dengan langkah terbaik dan energi penuh.','Rise and shine, APM Depok team! Start today with full energy and your best step forward.'],c:'g-pagi'},
+ siang:{t:['SELAMAT SIANG','GOOD AFTERNOON'],m:['Kerja hebat sejauh ini! Jaga semangat dan sempatkan istirahat sejenak ya.','Great work so far! Keep the momentum going and take a short break when you need it.'],c:'g-siang'},
+ sore:{t:['SELAMAT SORE','GOOD EVENING'],m:['Hampir sampai di penghujung hari. Terima kasih atas dedikasi kalian hari ini!','Almost at the end of the day. Thank you for your dedication today!'],c:'g-sore'},
+ malam:{t:['SELAMAT MALAM','GOOD NIGHT'],m:['Terima kasih sudah bekerja keras hari ini. Istirahat yang cukup, sampai jumpa besok!','Thank you for working hard today. Rest well, see you tomorrow!'],c:'g-malam'}
+};
+const ICON={
+ pagi:'<svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"><path d="M16 40a16 16 0 0 1 32 0"/><path d="M6 48h52"/><path d="M32 14v7M14 22l5 5M50 22l-5 5M6 36h6M52 36h6"/></svg>',
+ siang:'<svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"><circle cx="32" cy="32" r="11" fill="#fde047" stroke="#fde047"/><path d="M32 6v7M32 51v7M6 32h7M51 32h7M13.6 13.6l5 5M45.4 45.4l5 5M13.6 50.4l5-5M45.4 18.6l5-5"/></svg>',
+ sore:'<svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"><circle cx="32" cy="36" r="12" fill="#fde047" stroke="#fde047"/><path d="M6 48h52"/><path d="M32 16v7M14 24l5 5M50 24l-5 5M8 36h5M51 36h5"/></svg>',
+ malam:'<svg viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M40 10a22 22 0 1 0 14 38a18 18 0 0 1-14-38z" fill="#fde68a" stroke="#fde68a" stroke-width="2"/><circle cx="52" cy="14" r="2" fill="#fff"/><circle cx="12" cy="18" r="1.6" fill="#fff"/><circle cx="20" cy="50" r="1.4" fill="#fff"/></svg>'
+};
+function greetHTML(){const b=BAND(new Date().getHours()),g=GREET[b];
+ const dt=new Date().toLocaleDateString(locale(),{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+ return `<div class="hero ${g.c}"><span class="orb o1"></span><span class="orb o2"></span>
+  <div class="hero-ic">${ICON[b]}</div>
+  <div class="hero-tx"><div class="hero-k">${E(dt)}</div><h2>${g.t[li()]}</h2><p>${E(g.m[li()])}</p></div></div>`}
 function drawOverview(){
  $('out').classList.toggle('enter',Date.now()<(S.enterUntil||0));
  setCtl('');
@@ -591,6 +612,7 @@ function drawOverview(){
  const hi=hariInfo(),bi=besokInfo();
  const sub=x=>fill(T('jd_plus'),{a:x.base==null?'-':x.base,b:x.pend.length});
  $('out').innerHTML=`
+ ${greetHTML()}
  <div class="sec-t"><h3>${T('ov_wo')} · ${k!=null?E(monLabel(k)):'-'}</h3></div>
  <div class="grid kpis">
   ${card(T('wo_total'),n,T('ov_click'),'var(--ac)',"go('wo')")}
