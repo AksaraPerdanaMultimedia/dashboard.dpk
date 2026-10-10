@@ -43,8 +43,10 @@ const $=i=>document.getElementById(i),E=s=>String(s==null?'':s).replace(/[&<>"]/
 let S=JSON.parse(localStorage.apm||'null')||{};S.D={};S.q='';S.auto=1;
 async function api(b){const r=await fetch(API,{method:'POST',body:JSON.stringify(b)});return r.json()}
 function save(){const {t,name,nik,menus,menu}=S;localStorage.apm=JSON.stringify({t,name,nik,menus,menu})}
-async function login(){$('err').textContent='';let r;try{r=await api({a:'login',nik:$('nik').value,pw:$('pw').value})}catch(e){$('err').textContent='Gagal terhubung ke server';return}
- if(!r.ok){$('err').textContent=r.err;return}Object.assign(S,r,{menu:r.menus[0]});save();start()}
+async function login(){const er=$('err');if(API.indexOf('GANTI')>=0){er.textContent='URL Apps Script belum diisi di index.html (baris const API)';return}
+ er.style.color='#8fa0c4';er.textContent='Memproses login, mohon tunggu (bisa 10-20 detik pertama kali)...';let r;
+ try{r=await api({a:'login',nik:$('nik').value,pw:$('pw').value})}catch(e){er.style.color='';er.textContent='Gagal terhubung. Pastikan Web App di-deploy: Execute as Me, akses Anyone, URL berakhiran /exec';return}
+ er.style.color='';if(!r.ok){er.textContent=r.err;return}er.textContent='';Object.assign(S,r,{menu:r.menus[0]});save();start()}
 function logout(){localStorage.removeItem('apm');location.reload()}
 function start(){$('login').style.display='none';$('app').style.display='block';$('usr').textContent=S.name+' ('+S.nik+')';
  $('nav').innerHTML=S.menus.map(m=>`<a id="n_${m}" onclick="go('${m}')">${LBL[m]}</a>`).join('');go(S.menu&&S.menus.includes(S.menu)?S.menu:S.menus[0])}
