@@ -89,17 +89,42 @@ html[data-theme=light] .err{color:#7f1d1d;background:rgba(239,68,68,.1)}
 .tg{position:relative;display:inline-flex;align-items:center;gap:10px;cursor:pointer;color:var(--tx);font-weight:600;font-size:13px;user-select:none}
 .tr{position:relative;width:78px;height:34px;border-radius:999px;background:var(--line);transition:background .3s;flex-shrink:0;box-shadow:inset 0 0 0 1px var(--line)}
 .tr:after{content:"";position:absolute;top:4px;left:4px;width:26px;height:26px;border-radius:50%;background:#fff;transition:transform .3s;box-shadow:0 2px 6px rgba(0,0,0,.3)}
-.tr:before{content:"OFF";position:absolute;right:9px;top:9px;font-size:11px;font-weight:700;color:var(--mu)}
 #thm:checked+.tr{background:linear-gradient(90deg,var(--ac),var(--ac2))}
 #thm:checked+.tr:after{transform:translateX(44px)}
-#thm:checked+.tr:before{content:"ON";right:auto;left:10px;color:#fff}
 #thm:focus-visible+.tr{box-shadow:0 0 0 3px var(--glow)}
+.tr:after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'%3E%3Cpath d='M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z'/%3E%3C/svg%3E");background-size:16px;background-repeat:no-repeat;background-position:center}
+#thm:checked+.tr:after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f59e0b' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='4' fill='%23f59e0b'/%3E%3Cpath d='M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4'/%3E%3C/svg%3E")}
+.sub.hide{display:none}
 @media(max-width:980px){
  .layout{grid-template-columns:1fr}
- aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:14px}
- .brand{text-align:center;padding:0 0 10px}
- nav{display:flex;gap:6px;overflow:auto}nav a{white-space:nowrap;margin:0}nav .sect{display:none}
- .two{grid-template-columns:1fr}main{padding:16px}
+ aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:16px 14px 14px}
+ .brand{padding:0 0 14px}
+ .brand b{font-size:22px;letter-spacing:.06em}
+ .brand span{font-size:12px;margin-top:6px}
+ nav{display:flex;flex-wrap:wrap;gap:8px}
+ nav>a{flex:1 1 calc(50% - 8px);text-align:center;margin:0;padding:12px 10px;background:var(--panel2);border:1px solid var(--line)}
+ nav>a.on{border-color:transparent}
+ .grp{width:100%;margin:4px 0 0;padding:12px 14px;background:var(--panel2);border:1px solid var(--line)}
+ .sub{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;border-left:0;margin:0;padding:0}
+ .sub>a{margin:0;text-align:center;background:var(--panel2);border:1px solid var(--line)}
+ main{padding:16px 14px}
+ .head{margin-bottom:14px;gap:10px}
+ .head h1{font-size:20px}
+ .ctl{width:100%;justify-content:space-between}
+ .ctl select{flex:1 1 140px}
+ .clock{font-size:12px;padding:8px 10px}
+ .two{grid-template-columns:1fr}
+ .panel{padding:14px;border-radius:14px}
+ .kpis{grid-template-columns:1fr 1fr;gap:10px}
+ .kpi{padding:14px}
+ .kpi .v{font-size:21px}
+ .search{width:100%}
+ .sec-t h3{font-size:14px}
+}
+@media(max-width:480px){
+ .kpis{grid-template-columns:1fr}
+ nav>a{flex:1 1 100%}
+ .head h1{font-size:18px}
 }
 </style>
 </head>
@@ -113,7 +138,7 @@ html[data-theme=light] .err{color:#7f1d1d;background:rgba(239,68,68,.1)}
 <main>
  <div class="head">
   <div><h1 id="ttl">Overview</h1><p id="upd">Memuat data...</p></div>
-  <div class="ctl"><div id="ctl" class="ctl"></div><label class="tg"><span>Mode Siang</span><input type="checkbox" id="thm" onchange="setTheme(this.checked?'light':'dark')"><span class="tr"></span></label><span class="clock" id="clk"></span></div>
+  <div class="ctl"><div id="ctl" class="ctl"></div><label class="tg" title="Mode siang / malam"><input type="checkbox" id="thm" aria-label="Mode siang" onchange="setTheme(this.checked?'light':'dark')"><span class="tr"></span></label><span class="clock" id="clk"></span></div>
  </div>
  <div id="out"></div>
 </main>
@@ -183,17 +208,17 @@ async function start(){
  S.menus=r.menus;
  $('nav').innerHTML='<a id="n_dashboard" onclick="go(\'dashboard\')">DASHBOARD</a>'
  +'<div class="grp" onclick="toggleGrp()"><span>MENU</span><span id="arr" class="arr">▸</span></div>'
- +'<div id="grp" class="sub" style="display:none">'+S.menus.map(m=>`<a id="n_${m}" onclick="go('${m}')">${E(LBL[m])}</a>`).join('')+'</div>';
+ +'<div id="grp" class="sub hide">'+S.menus.map(m=>`<a id="n_${m}" onclick="go('${m}')">${E(LBL[m])}</a>`).join('')+'</div>';
  go((S.menu==='dashboard'||S.menus.includes(S.menu))?S.menu:'dashboard');
 }
 function go(m){S.menu=m;S.k='';S.auto=1;S.q='';S.wf='ALL';S.bf='ALL';S.bq='';localStorage.apmMenu=m;
- if(m!=='dashboard')$('grp').style.display='block',$('arr').textContent='▾';
+ if(m!=='dashboard')$('grp').classList.remove('hide'),$('arr').textContent='▾';
  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.id==='n_'+m));
  $('ttl').textContent=m==='dashboard'?'DASHBOARD':LBL[m];setCtl('');
  if(m==='dashboard'){drawOverview();loadAll();return}
  if(S.D[m])draw();else $('out').innerHTML='<div class="panel" style="color:var(--mu)">Memuat data...</div>';
  load()}
-function toggleGrp(){const g=$('grp');const open=g.style.display==='none';g.style.display=open?'block':'none';$('arr').textContent=open?'▾':'▸'}
+function toggleGrp(){const g=$('grp');const open=g.classList.contains('hide');g.classList.toggle('hide',!open);$('arr').textContent=open?'▾':'▸'}
 async function loadAll(){if(!S.menus)return;
  const res=await Promise.all(S.menus.map(m=>api({menu:m,name:''}).then(r=>[m,r]).catch(()=>[m,null])));
  res.forEach(([m,r])=>{if(r&&r.ok)S.D[m]=r.d});
@@ -264,16 +289,19 @@ function woNorm(rows){const mp=new Map();rows.forEach(r=>mp.set(r.wo,r));
    else if(/CANCEL/.test(st))s='CANCEL';else if(/PEND/.test(st))s='PENDING';else if(/DONE|COMPLETE/.test(st))s='DONE';else s='LAIN';
    return{...r,s,d:pd(r.tgl),sched:s==='PENDING'?pd(rm+' '+(r.ket||'')):null}}).filter(r=>r.d)}
 function cmpChart(ms){if(!ms.length)return '';
- const W=Math.max(720,ms.length*96),H=260,P=36,mx=Math.max(4,...ms.map(m=>m.t));
- const gw=(W-2*P)/ms.length,bw=Math.min(18,gw/5);
- const y=v=>H-P-v/mx*(H-2*P);
- const cols=[['t','#5b8cff','Total'],['done','#22c55e','Done'],['pend','#f59e0b','Pending'],['canc','#ef4444','Cancel']];
+ const W=Math.max(720,ms.length*120),H=280,P=40,mx=Math.max(4,...ms.map(m=>m.t));
+ const x=i=>ms.length===1?W/2:P+i*(W-2*P)/(ms.length-1),y=v=>H-P-v/mx*(H-2*P);
+ const cols=[['t','#5b8cff','Total',2.5,''],['done','#22c55e','Done',2.5,''],['pend','#f59e0b','Pending',2,'6 4'],['canc','#ef4444','Cancel',2,'6 4']];
  const grid=[0,.25,.5,.75,1].map(t=>{const v=Math.round(mx*t);return `<line x1="${P}" x2="${W-P}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${P-8}" y="${y(v)+4}" fill="var(--mu)" font-size="11" text-anchor="end">${v}</text>`}).join('');
- const bars=ms.map((m,i)=>{const gx=P+i*gw+gw/2-(cols.length*bw)/2;
-   return cols.map((c,j)=>{const v=m[c[0]];return `<rect x="${(gx+j*bw).toFixed(1)}" y="${y(v).toFixed(1)}" width="${(bw-2).toFixed(1)}" height="${Math.max(0,H-P-y(v)).toFixed(1)}" rx="3" fill="${c[1]}"><title>${monLabel(m.k)} · ${c[2]}: ${v}</title></rect>`}).join('')
-   +`<text x="${(P+i*gw+gw/2).toFixed(1)}" y="${H-12}" fill="var(--mu)" font-size="11" text-anchor="middle">${MN[m.k%100].slice(0,3)} ${String(Math.floor(m.k/100)).slice(2)}</text>`}).join('');
- return `<div style="overflow-x:auto"><svg viewBox="0 0 ${W} ${H}" style="width:100%;min-width:${Math.min(W,ms.length*70+90)}px">${grid}${bars}</svg></div>
- <div class="legend">${cols.map(c=>`<span><i style="background:${c[1]}"></i>${c[2]}</span>`).join('')}</div>`}
+ const path=key=>ms.map((m,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(m[key]).toFixed(1)}`).join(' ');
+ const area=path('t')+` L${x(ms.length-1).toFixed(1)},${H-P} L${x(0).toFixed(1)},${H-P} Z`;
+ const lines=cols.map(c=>`<path d="${path(c[0])}" fill="none" stroke="${c[1]}" stroke-width="${c[3]}"${c[4]?` stroke-dasharray="${c[4]}"`:''}/>`
+   +ms.map((m,i)=>`<circle cx="${x(i).toFixed(1)}" cy="${y(m[c[0]]).toFixed(1)}" r="4" fill="${c[1]}"><title>${monLabel(m.k)} · ${c[2]}: ${m[c[0]]}</title></circle>`).join('')).join('');
+ const xl=ms.map((m,i)=>`<text x="${x(i).toFixed(1)}" y="${H-12}" fill="var(--mu)" font-size="11" text-anchor="middle">${MN[m.k%100].slice(0,3)} ${String(Math.floor(m.k/100)).slice(2)}</text>`).join('');
+ return `<div style="overflow-x:auto"><svg viewBox="0 0 ${W} ${H}" style="width:100%;min-width:${Math.min(W,ms.length*80+100)}px">
+ <defs><linearGradient id="gB" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#5b8cff" stop-opacity=".35"/><stop offset="1" stop-color="#5b8cff" stop-opacity="0"/></linearGradient></defs>
+ ${grid}<path d="${area}" fill="url(#gB)"/>${lines}${xl}</svg></div>
+ <div class="legend">${cols.map(c=>`<span><i style="background:${c[1]}"></i>${c[2]}${c[4]?' (putus-putus)':''}</span>`).join('')}</div>`}
 R.wo=function(rows){
  const all=woNorm(rows),now=new Date(),today=day0(now);
  const keys=keysOf(all,r=>ym(r.d));const k=pick(keys);
