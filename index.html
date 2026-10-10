@@ -35,7 +35,8 @@ th,td{padding:8px 10px;border-bottom:1px solid var(--ln);text-align:left;white-s
 <div id="app"><header><b id="ttl">DASHBOARD APM</b><span><span id="usr" class="mu"></span> &nbsp; <span id="clk"></span> &nbsp; <button onclick="logout()">Keluar</button></span></header>
 <div class="wrap"><nav id="nav"></nav><main><div class="bar"><h2 id="mt"></h2><select id="fm" onchange="S.m=this.value;S.auto=0;draw()"></select><select id="fy" onchange="S.y=this.value;draw()"></select><span class="mu" id="upd"></span></div><div id="out"></div></main></div></div>
 <script>
-const API='GANTI_DENGAN_URL_WEB_APP_APPS_SCRIPT';
+const API='https://script.google.com/macros/s/AKfycbzYf-ZJgv-e12p2oasAlsFhe3Uk8eIGO-LNaQ4UrO1ooGcOSzjdBg-W8fzWdCqgPaXnyA/exec
+';
 const MN=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 const LBL={absensi:'Rekap Absensi',kpi:'Format KPI Teknisi',wo:'WO APM',barang:'Form APM Keluar & Masuk Barang',jadwal:'Jadwal Install Megavision',slip:'Database Slip Gaji - PT Aksara Perdana Multimedia'};
 const $=i=>document.getElementById(i),E=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
