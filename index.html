@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>APM DEPOK</title>
+<title>SO DEPOK</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 [hidden]{display:none!important}
 :root{--bg:#0a0f1f;--side:#0d1430;--panel:#121b3a;--panel2:#0b1431;--line:#1f2b52;--tx:#e8edfb;--mu:#8793b8;--ac:#5b8cff;--ac2:#8b5cf6;--ok:#22c55e;--wr:#f59e0b;--er:#ef4444;--glow:rgba(91,140,255,.35)}
@@ -16,7 +16,7 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opa
 .layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
 aside{background:var(--side);border-right:1px solid var(--line);padding:24px 16px;position:sticky;top:0;height:100vh;overflow:auto;transition:background .4s}
 .brand{padding:10px 8px 28px;text-align:center}
-.brand b{display:block;font-family:'Orbitron',sans-serif;font-size:28px;font-weight:800;letter-spacing:.08em;line-height:1.15;background:linear-gradient(90deg,var(--ac),var(--ac2),#22d3ee,var(--ac));-webkit-background-clip:text;background-clip:text;color:transparent;background-size:300% auto;animation:shine 5s linear infinite}
+.brand b{display:block;font-family:'Unbounded',sans-serif;font-size:30px;font-weight:900;letter-spacing:.02em;line-height:1.15;background:linear-gradient(90deg,var(--ac),var(--ac2),#22d3ee,var(--ac));-webkit-background-clip:text;background-clip:text;color:transparent;background-size:300% auto;animation:shine 5s linear infinite}
 .brand span{display:block;color:var(--mu);font-size:14px;font-weight:500;letter-spacing:.02em;margin-top:12px}
 @keyframes shine{to{background-position:200% center}}
 nav a{position:relative;overflow:hidden;display:block;padding:11px 14px;border-radius:12px;color:var(--tx);cursor:pointer;margin-bottom:6px;font-weight:500;transition:transform .25s ease,background .3s ease,color .3s ease,box-shadow .3s ease}
@@ -33,7 +33,7 @@ nav a.on{background:linear-gradient(90deg,var(--ac),var(--ac2));color:#fff;box-s
 main{padding:24px 28px;min-width:0}
 .head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px;align-items:flex-end;margin-bottom:20px}
 .hl{display:flex;flex-direction:column;gap:6px;min-width:0}
-.head h1{margin:0;font-size:24px;letter-spacing:.04em;text-transform:uppercase}
+.head h1{margin:0;font-family:'Unbounded',sans-serif;font-weight:800;font-size:24px;letter-spacing:.02em;text-transform:uppercase}
 .head p{margin:0;color:var(--mu);font-size:13px}
 .back{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;background:linear-gradient(90deg,var(--ac),var(--ac2));color:#fff;border:0;font-weight:600;padding:7px 14px 7px 10px}
 .back svg{width:16px;height:16px}
@@ -45,6 +45,14 @@ button:active,.disp:active,.kpi.clk:active{transform:scale(.96)}
 select:focus,input:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px var(--glow)}
 .disp{display:inline-flex;align-items:center;gap:8px;text-decoration:none;background:linear-gradient(90deg,var(--ac),var(--ac2));color:#fff;border:0;font-weight:600}
 .disp svg{width:15px;height:15px}
+.disp{position:relative;overflow:hidden;background:linear-gradient(100deg,#f97316,#ef4444 50%,#f59e0b);background-size:200% auto;color:#fff;border:0;font-weight:700;letter-spacing:.03em;padding:10px 16px;box-shadow:0 8px 22px rgba(239,68,68,.45);animation:dispGlow 2.2s ease-in-out infinite,dispShift 4s linear infinite}
+.disp:after{content:"";position:absolute;top:0;left:-75%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);animation:dispSweep 2.8s ease-in-out infinite;pointer-events:none}
+.disp svg{animation:dispNudge 1.6s ease-in-out infinite}
+.disp:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(239,68,68,.6);border-color:transparent}
+@keyframes dispGlow{0%,100%{box-shadow:0 8px 22px rgba(239,68,68,.45),0 0 0 0 rgba(249,115,22,.55)}50%{box-shadow:0 8px 26px rgba(239,68,68,.55),0 0 0 9px rgba(249,115,22,0)}}
+@keyframes dispShift{to{background-position:200% center}}
+@keyframes dispSweep{0%{left:-75%}60%,100%{left:130%}}
+@keyframes dispNudge{0%,100%{transform:translate(0,0)}50%{transform:translate(2px,-2px)}}
 .lng{display:inline-flex;background:var(--panel2);border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .lng button{border:0;border-radius:0;padding:7px 11px;background:transparent;font-size:12px;font-weight:700;color:var(--mu)}
 .lng button.on{background:linear-gradient(90deg,var(--ac),var(--ac2));color:#fff}
@@ -115,13 +123,27 @@ html[data-theme=light] .err{color:#7f1d1d;background:rgba(239,68,68,.1)}
 .hero-ic svg{width:56px;height:56px}
 .hero-tx{position:relative;z-index:1;min-width:0}
 .hero-k{font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
-.hero h2{font-family:'Orbitron',sans-serif;font-size:clamp(22px,4vw,34px);letter-spacing:.08em;margin:6px 0 8px;text-shadow:0 2px 14px rgba(0,0,0,.25);animation:heroIn .8s cubic-bezier(.2,.7,.2,1) both}
+.hero h2{font-family:'Unbounded',sans-serif;font-size:clamp(19px,4vw,34px);letter-spacing:.03em;margin:6px 0 8px;text-shadow:0 2px 14px rgba(0,0,0,.25);animation:heroIn .8s cubic-bezier(.2,.7,.2,1) both}
 .hero p{margin:0;font-size:15px;opacity:.95;max-width:580px;animation:heroIn .9s .15s cubic-bezier(.2,.7,.2,1) both}
 @keyframes heroIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .orb{position:absolute;border-radius:50%;background:rgba(255,255,255,.12);animation:float 6s ease-in-out infinite;pointer-events:none}
 .o1{width:200px;height:200px;right:-60px;top:-70px}.o2{width:120px;height:120px;right:170px;bottom:-60px;animation-delay:1.5s}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 @media(max-width:600px){.hero{flex-direction:column;text-align:center;padding:24px 20px;gap:14px}.hero-ic{width:76px;height:76px}.hero p{margin:0 auto}}
+html[data-theme=dark] body{background:#04060c}
+html[data-theme=dark] body:before{opacity:1;background:
+ radial-gradient(42% 38% at 28% 42%,rgba(20,184,166,.42),transparent 70%),
+ radial-gradient(38% 34% at 74% 30%,rgba(220,38,38,.38),transparent 70%),
+ radial-gradient(55% 45% at 58% 88%,rgba(14,116,144,.35),transparent 70%),
+ radial-gradient(30% 26% at 12% 10%,rgba(248,113,113,.18),transparent 70%),
+ linear-gradient(160deg,#03050a 0%,#0a1420 45%,#06080f 100%);
+ background-size:140% 140%;background-position:0% 0%;animation:liquid 22s ease-in-out infinite alternate}
+@keyframes liquid{0%{background-position:0% 0%}100%{background-position:100% 100%}}
+html[data-theme=dark] aside{background:rgba(4,7,14,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+html[data-theme=dark] .panel,html[data-theme=dark] .kpi{background:rgba(10,16,30,.62);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-color:rgba(120,190,200,.14)}
+html[data-theme=dark] .brand b{background:linear-gradient(90deg,#f0fdfa,#5eead4,#fca5a5,#ffffff);background-size:300% auto;-webkit-background-clip:text;background-clip:text;color:transparent}
+html[data-theme=dark] .head h1{color:#f8fafc;text-shadow:0 2px 18px rgba(20,184,166,.25)}
+@media(prefers-reduced-motion:reduce){html[data-theme=dark] body:before,.hero-ic,.orb{animation:none}}
 /* transisi */
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 #out.enter>*{animation:fadeUp .55s cubic-bezier(.2,.7,.2,1) both}
@@ -135,7 +157,7 @@ html[data-theme=light] .err{color:#7f1d1d;background:rgba(239,68,68,.1)}
  .layout{grid-template-columns:1fr}
  aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:16px 14px 14px}
  .brand{padding:0 0 14px}
- .brand b{font-size:22px;letter-spacing:.06em}
+ .brand b{font-size:22px;letter-spacing:.02em}
  .brand span{font-size:12px;margin-top:6px}
  nav{display:flex;flex-wrap:wrap;gap:8px}
  nav>a{flex:1 1 calc(50% - 8px);text-align:center;margin:0;padding:12px 10px;background:var(--panel2);border:1px solid var(--line)}
@@ -166,7 +188,7 @@ html[data-theme=light] .err{color:#7f1d1d;background:rgba(239,68,68,.1)}
 <body>
 <div class="layout">
 <aside>
- <div class="brand"><b>APM DEPOK</b><span>PT Aksara Perdana Multimedia</span></div>
+ <div class="brand"><b>SO DEPOK</b><span>PT Aksara Perdana Multimedia</span></div>
  <nav id="nav"></nav>
 </aside>
 <main>
@@ -223,13 +245,13 @@ const TX={
  year:['Tahun','Year'],
  // warehouse
  wh_alert:['STOK HAMPIR HABIS, SEGERA MELAKUKAN PERMINTAAN BARANG','LOW STOCK, REQUEST ITEMS NOW'],
- wh_total:['TOTAL ITEMS','TOTAL ITEMS'], wh_jenis:['jenis barang','item types'], wh_rusakjenis:['jenis barang rusak','damaged item types'],
+ wh_total:['TOTAL BARANG DI PANTAU','ITEMS UNDER MONITORING'], wh_jenis:['jenis barang','item types'], wh_rusakjenis:['jenis barang rusak','broken item types'],
  wh_lowrule:['Stok akhir ≤ 30% stok awal','Ending stock ≤ 30% of starting stock'], wh_unit_note:['tanpa DropWire (meter)','excl. DropWire (meters)'],
- wh_rusak:['Barang Rusak','Damaged Items'], wh_req:['Perlu Request','Needs Request'], wh_units:['unit rusak','damaged units'],
+ wh_rusak:['Barang Rusak','Broken Items'], wh_req:['Perlu Request','Needs Request'], wh_units:['unit rusak','broken units'],
  wh_list:['Daftar Barang','Item List'], wh_search:['Cari nama atau kode barang...','Search item name or code...'],
- wh_h:[['Kode','Nama Barang','Satuan','Stok Awal','Masuk','Keluar','Rusak','Stok Akhir','Status'],['Code','Item Name','Unit','Opening','In','Out','Damaged','Ending','Status']],
+ wh_h:[['Kode','Nama Barang','Satuan','Stok Awal','Masuk','Keluar','Rusak','Stok Akhir','Status'],['Code','Item Name','Unit','Opening','In','Out','Broken','Ending','Status']],
  wh_pcs:['pcs','pcs'], wh_meter:['meter','meters'], wh_dw:['DropWire 1 Core','DropWire 1 Core'],
- wh_segera:['Segera Request','Request Now'], wh_rusakst:['Rusak','Damaged'], wh_aman:['Aman','OK'],
+ wh_segera:['Segera Request','Request Now'], wh_rusakst:['Rusak','Broken'], wh_aman:['Aman','OK'],
  // absensi
  abs_karyawan:['Karyawan','Employees'], abs_tercatat:['Tercatat di periode ini','Recorded in this period'],
  abs_hadir:['Total Hadir','Total Present'], abs_hadir_s:['Akumulasi hari hadir','Accumulated present days'],
