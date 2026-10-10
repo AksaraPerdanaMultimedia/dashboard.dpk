@@ -345,6 +345,32 @@ html[data-theme=light] .brand span{color:var(--ink)}
  .topbar .lng,.topbar .clock{display:none!important}
  .topbar .tg{transform:scale(.8);transform-origin:left center;margin:0}
 }
+
+/* ===== Musik, badge kaca, toggle HP ===== */
+.musbtn{position:fixed;right:18px;bottom:18px;z-index:60;width:56px;height:56px;border-radius:50%;background:#1db954;color:#fff;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);display:grid;place-items:center;padding:0;transition:transform .2s ease,box-shadow .2s ease}
+.musbtn svg{width:24px;height:24px}
+.musbtn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.musp{position:fixed;right:18px;bottom:86px;z-index:60;width:330px;max-width:calc(100vw - 36px);background:var(--panel);border:3px solid var(--ink);border-radius:18px;padding:14px;box-shadow:6px 6px 0 var(--ink)}
+.musp.hide{display:none}
+.musp h4{margin:0 0 6px;font-family:'Righteous',cursive;font-size:17px;letter-spacing:.06em;color:var(--tx)}
+.musp p{margin:0 0 10px;font-size:12px;color:var(--mu)}
+.musp input{width:100%;font-size:12px;padding:8px 10px;margin-bottom:8px}
+.musp .row{display:flex;gap:8px;justify-content:flex-end}
+.musp iframe{width:100%;height:352px;border:0;border-radius:12px;display:block}
+.musErr{background:#f5c2b5;color:#6b1113;border:2px solid var(--ink);border-radius:10px;padding:6px 8px;font-size:12px;margin-bottom:8px}
+html[data-theme=dark] .musErr{background:rgba(255,107,91,.2);color:#ffd0c8;border-color:var(--line)}
+.glass-ok{position:relative;overflow:hidden;display:inline-flex;align-items:center;white-space:nowrap;font-family:'Righteous',cursive;font-size:12px;letter-spacing:.04em;color:#14532d;background:linear-gradient(135deg,rgba(220,252,231,.9),rgba(134,239,172,.55));border:2px solid rgba(255,255,255,.9);border-radius:999px;padding:5px 12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 3px 10px rgba(22,101,52,.25);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);flex-shrink:0}
+.glass-ok:after{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.8),transparent);transform:skewX(-20deg);animation:glassShine 2.8s ease-in-out infinite;pointer-events:none}
+@keyframes glassShine{0%{left:-70%}55%,100%{left:130%}}
+@media(max-width:980px){
+ .topbar{padding:3px 6px}
+ .topbar .tg{transform:none;margin:0}
+ .topbar .tg .tr{width:40px;height:22px}
+ .topbar .tg .tr:after{width:16px;height:16px;top:3px;left:3px;background-size:9px}
+ .topbar #thm:checked+.tr:after{transform:translateX(18px)}
+ .musbtn{width:48px;height:48px;right:12px;bottom:12px}
+ .musp{right:12px;bottom:72px}
+}
 </style>
 </head>
 <body>
@@ -358,6 +384,15 @@ html[data-theme=light] .brand span{color:var(--ink)}
  <div class="head"><div class="hl"><h1 id="ttl"></h1><p id="upd"></p></div><div class="ctl"><div id="ctl" class="ctl"></div><a id="disp" class="disp" href="https://fieldsa.fiberstar.co.id/#/tasklist/assigntome" target="_blank" rel="noopener" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg><span id="dispT">Dispatch Now</span></a></div></div>
  <div id="out"></div>
 </main>
+</div>
+
+<button id="mus" class="musbtn" onclick="toggleMusic()" aria-label="Musik"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></button>
+<div id="musp" class="musp hide">
+ <h4 id="musT">Musik</h4>
+ <p id="musH"></p>
+ <div id="musForm"><input id="spl" placeholder="Tempel link Spotify"><div class="musErr" id="musErr" hidden></div><div class="row"><button id="musSave" onclick="saveMusic()">Simpan</button></div></div>
+ <iframe id="spf" hidden allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Spotify"></iframe>
+ <div class="row" id="musChgRow" hidden><button id="musChg" onclick="changeMusic()">Ganti link</button></div>
 </div>
 
 <script>
@@ -387,7 +422,7 @@ const TX={
  ov_kpi_top:['KPI Tertinggi','Top KPI'], ov_pencapaian:['Pencapaian','Achievement'],
  // WO
  wo_title:['Work Order per Tanggal','Work Orders by Date'], wo_status:['Komposisi Status','Status Breakdown'], wo_total:['Total Work Order','Total Work Orders'],
- wo_pctof:['dari total','of total'], wo_all:['Semua','All'], wo_allmonths:['Semua Bulan','All Months'], wo_cmp:['Perbandingan Semua Bulan','All-Month Comparison'],
+ wo_pctof:['dari total','of total'], wo_all:['Semua','All'], wo_allmonths:['Semua Bulan','All Months'], mus_title:['Musik','Music'], mus_hint:['Tempel link playlist, album, atau lagu Spotify lalu tekan Simpan. Setelah disimpan, musik bisa diputar langsung dari dashboard.','Paste a Spotify playlist, album or track link and press Save. Once saved, you can play music right from the dashboard.'], mus_save:['Simpan','Save'], mus_change:['Ganti link','Change link'], mus_ph:['Tempel link Spotify','Paste Spotify link'], mus_bad:['Link tidak dikenali. Pakai link playlist, album, atau lagu Spotify.','Link not recognized. Use a Spotify playlist, album or track link.'], sudah_jadwal:['SUDAH DI JADWALKAN','ALREADY SCHEDULED'], terjadwal:['Terjadwal','Scheduled'], wo_cmp:['Perbandingan Semua Bulan','All-Month Comparison'],
  wo_cmp_sum:['bulan · total','months · total'], wo_best:['Persentase Done tertinggi','Highest Done rate'],
  wo_resched:['Jadwal Ulang (Pending)','Rescheduled (Pending)'], wo_detail:['Detail Work Order','Work Order Details'],
  wo_search:['Cari WO, customer, teknisi...','Search WO, customer, technician...'],
@@ -525,12 +560,23 @@ function markNav(){document.querySelectorAll('nav a').forEach(a=>a.classList.tog
 function toggleGrp(){S.grpOpen=!S.grpOpen;$('grp').classList.toggle('hide',!S.grpOpen);$('arr').textContent=S.grpOpen?'▾':'▸'}
 function updText(){return S.updAt?`${T('updated')} ${new Date(S.updAt).toLocaleString(locale(),{dateStyle:'medium',timeStyle:'short'})} · ${T('autoref')}`:T('loading')}
 function chrome(){
+ musicLabels();
  document.documentElement.lang=LANG;
  $('ttl').textContent=S.menu==='dashboard'?T('dashboard'):(S.menu?T('lbl_'+S.menu):'');
  $('disp').hidden=S.menu!=='jadwal';$('dispT').textContent=T('dispatch');
  $('lid').classList.toggle('on',LANG==='id');$('len').classList.toggle('on',LANG==='en');
  $('upd').textContent=updText();
 }
+function musicEmbed(url){const u=String(url||'').trim();
+ const m=u.match(/open\.spotify\.com\/(?:intl-[a-z]+\/)?(playlist|album|track|artist|episode|show)\/([A-Za-z0-9]+)/)||u.match(/spotify:(playlist|album|track|artist|episode|show):([A-Za-z0-9]+)/);
+ return m?`https://open.spotify.com/embed/${m[1]}/${m[2]}`:''}
+function musicLabels(){$('musT').textContent=T('mus_title');$('musH').textContent=T('mus_hint');$('musSave').textContent=T('mus_save');$('musChg').textContent=T('mus_change');$('spl').placeholder=T('mus_ph');$('musErr').textContent=T('mus_bad')}
+function musicInit(){const u=localStorage.getItem('apmSpotify')||'';
+ $('musForm').hidden=!!u;$('spf').hidden=!u;$('musChgRow').hidden=!u;
+ if(u){if($('spf').getAttribute('src')!==u)$('spf').src=u}else{$('spf').removeAttribute('src')}}
+function saveMusic(){const e=musicEmbed($('spl').value);$('musErr').hidden=!!e;if(!e)return;localStorage.setItem('apmSpotify',e);musicInit()}
+function changeMusic(){localStorage.removeItem('apmSpotify');$('spl').value='';musicInit()}
+function toggleMusic(){$('musp').classList.toggle('hide')}
 function setLang(l){LANG=l;localStorage.apmLang=l;buildNav();chrome();if(S.menu)draw()}
 
 async function start(){
@@ -679,6 +725,7 @@ R.barang=function(d){
  const totRusak=pcsRows.reduce((s,r)=>s+(+r[5]||0),0);
  const totItems=pcsRows.reduce((s,r)=>s+(+r[6]||0),0);
  const dw=d.rekap.find(isM),dwAkhir=dw?(+dw[6]||0):0;
+ const totNames=new Set(d.rekap.map(r=>String(r[1]).trim())).size;
  const WF={ALL:[T('wh_total'),d.rekap],LOW:[T('wh_req'),low],RUSAK:[T('wh_rusak'),rusak]};
  if(!WF[S.bf])S.bf='ALL';
  S.bsrc=WF[S.bf][1];S.blow=low;
@@ -688,7 +735,7 @@ R.barang=function(d){
  <div class="grid kpis">
   ${card(T('wh_rusak'),totRusak,`${rusak.length} ${T('wh_rusakjenis')}`,'var(--er)',"bfSet('RUSAK')",S.bf==='RUSAK')}
   ${card(T('wh_req'),low.length,T('wh_lowrule'),'var(--wr)',"bfSet('LOW')",S.bf==='LOW')}
-  ${card(T('wh_total'),totItems,`${d.rekap.length} ${T('wh_jenis')} · ${T('wh_dw')} ${dwAkhir} ${T('wh_meter')}`,'var(--ac)',"bfSet('ALL')",S.bf==='ALL')}
+  ${card(T('wh_total'),totNames,`${T('wh_dw')} ${dwAkhir} ${T('wh_meter')}`,'var(--ac)',"bfSet('ALL')",S.bf==='ALL')}
  </div>
  <div class="panel" id="bdet"><div class="sec-t"><h3>${T('wh_list')} · ${E(WF[S.bf][0])}</h3><input id="bq" class="search" placeholder="${T('wh_search')}" oninput="S.bq=this.value;barTab()"></div><div id="bt"></div></div>`;
  $('bq').value=S.bq||'';barTab();
@@ -748,21 +795,41 @@ function dayInfo(off){
 }
 function besokInfo(){return dayInfo(1)}
 function hariInfo(){return dayInfo(0)}
-function pendPanel(bi,label){
- const rows=bi.pend.map(r=>[r.wo,r.cust,r.dist,r.tek,pill(T('st_pending'),'wr'),{h:`<span class="wrapc">${E(r.ket||r.rem||'')}</span>`}]);
- return `<div class="panel"><div class="sec-t"><h3>${T('pend_title')} · ${label}</h3><small>${bi.pend.length} ${T('pend_wo')} · ${T('pend_ret')} ${fmtLong(bi.tm)}</small></div>
-  ${tbl(T('pend_h'),rows,'auto')}</div>`}
+function isoJS(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+// Daftar pending besok: WO yang sudah berubah tanggal dan teknisinya sudah diisi tetap tampil (tandai SUDAH DI JADWALKAN)
+function snapBesok(bi){
+ const key='apmPendBesok',iso=isoJS(bi.tm);
+ let snap=null;try{snap=JSON.parse(localStorage.getItem(key)||'null')}catch(e){snap=null}
+ if(!snap||snap.date!==iso)snap={date:iso,items:{}};
+ bi.pend.forEach(r=>{snap.items[r.wo]={sched:isoJS(r.sched),tek:String(r.tek||'').trim()}});
+ try{localStorage.setItem(key,JSON.stringify(snap))}catch(e){}
+ const W=S.D.wo?woNorm(S.D.wo):[],byWo=new Map(W.map(r=>[r.wo,r]));
+ const list=bi.pend.map(r=>({...r,done:false}));
+ Object.entries(snap.items).forEach(([wo,it])=>{
+   if(bi.pend.some(r=>r.wo===wo))return;
+   const c=byWo.get(wo);if(!c)return;
+   const changed=c.sched?isoJS(c.sched)!==it.sched:c.s==='LAIN';
+   if(changed&&String(c.tek||'').trim())list.push({...c,done:true});
+ });
+ return list;
+}
+function pendPanel(bi,label,rows){
+ const list=rows||bi.pend.map(r=>({...r,done:false}));
+ const tr=list.map(r=>[r.wo,r.cust,r.dist,r.tek,r.done?pill(T('terjadwal'),'ok'):pill(T('st_pending'),'wr'),
+   {h:`<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:260px"><span class="wrapc">${E(r.ket||r.rem||'')}</span>${r.done?`<span class="glass-ok">${T('sudah_jadwal')}</span>`:''}</div>`}]);
+ return `<div class="panel"><div class="sec-t"><h3>${T('pend_title')} · ${label}</h3><small>${list.length} ${T('pend_wo')} · ${T('pend_ret')} ${fmtLong(bi.tm)}</small></div>
+  ${tbl(T('pend_h'),tr,'auto')}</div>`}
 const jdSub=x=>`${fmtLong(x.tm)}<br>${fill(T('jd_plus'),{a:x.base==null?'-':x.base,b:x.pend.length})}`;
 R.jadwal=function(d){
  if(d.err){$('out').innerHTML=`<div class="err">${E(d.err)}</div>`;return}
  setCtl('');
- const H=d.hari||{},B=d.besok||{},hi=hariInfo(),bi=besokInfo();
+ const H=d.hari||{},B=d.besok||{},hi=hariInfo(),bi=besokInfo(),bList=snapBesok(bi);
  $('out').innerHTML=`<div class="grid kpis">
   ${card(T('jd_hari'),`<span class="big">${hi.total}</span>`,jdSub(hi),'var(--ac)')}
   ${card(T('jd_besok'),`<span class="big">${bi.total}</span>`,jdSub(bi),'var(--ok)')}
  </div>
  ${hi.pend.length?pendPanel(hi,T('hari_lbl').toUpperCase()):''}
- ${bi.pend.length?pendPanel(bi,T('besok_lbl').toUpperCase()):''}
+ ${bList.length?pendPanel(bi,T('besok_lbl').toUpperCase(),bList):''}
  <div class="panel"><div class="sec-t"><h3>${T('src')}</h3><small>${T('src_s')}</small></div>
   <div class="kv">
    <div><div style="color:var(--mu);font-size:11px;text-transform:uppercase">${T('hari_lbl')}</div><b>${E(H.tgl||'-')}</b>${H.ok?'':`<div style="color:var(--wr);font-size:12px">${E(H.why||'')}</div>`}</div>
@@ -794,9 +861,10 @@ function drawOverview(){
  setCtl('');
  const W=S.D.wo?woNorm(S.D.wo):[];const keys=keysOf(W,r=>ym(r.d));const k=keys.includes(ym(new Date()))?ym(new Date()):keys[0];
  const f=k!=null?W.filter(r=>ym(r.d)===k):[];const n=f.length,c=t=>f.filter(r=>r.s===t).length,pc=t=>n?(c(t)/n*100).toFixed(1)+'%':'0%';
- const B=S.D.barang;let low=0,rusakT=0,akhirT=0;
+ const B=S.D.barang;let low=0,rusakT=0,akhirT=0,namesT=0;
  if(B){const pcs=B.rekap.filter(r=>r[0]!==DW);low=B.rekap.filter(r=>{const aw=+r[2]||0;return aw>0&&(+r[6])<=aw*BARANG_LIMIT}).length;
    rusakT=pcs.reduce((s,r)=>s+(+r[5]||0),0);akhirT=pcs.reduce((s,r)=>s+(+r[6]||0),0)}
+ namesT=B?new Set(B.rekap.map(r=>String(r[1]).trim())).size:0;
  const pv=x=>parseFloat(String(x).replace('%','').replace(',','.'))||0;
  let topN='-',topP='';
  const KP=S.D.kpi;
@@ -826,7 +894,7 @@ function drawOverview(){
  <div class="grid kpis">
   ${card(T('wh_req'),low,T('wh_lowrule'),'var(--wr)',"go('barang')")}
   ${card(T('wh_rusak'),rusakT,T('wh_units'),'var(--er)',"go('barang')")}
-  ${card(T('wh_total'),akhirT,T('wh_unit_note'),'var(--ac)',"go('barang')")}
+  ${card(T('wh_total'),namesT,T('wh_jenis'),'var(--ac)',"go('barang')")}
  </div>
  <div class="sec-t"><h3>${T('ov_abs')}</h3></div>
  <div class="grid kpis">
@@ -852,6 +920,7 @@ const tick=()=>{$('clk').textContent=new Date().toLocaleString(locale(),{weekday
 tick();setInterval(tick,1000);
 setInterval(()=>{if(!S.menus)return;if(S.menu==='dashboard'||S.menu==='jadwal')loadAll();else if(S.menu&&S.menu!=='slip')load()},60000);
 window.matchMedia('(max-width:980px)').addEventListener('change',e=>{LANG=e.matches?'id':(localStorage.apmLang||'id');buildNav();chrome();if(S.menu)draw()});
+musicLabels();musicInit();
 start();
 </script>
 </body>
