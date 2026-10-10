@@ -338,6 +338,13 @@ html[data-theme=light] .brand span{color:var(--ink)}
  .head h1{font-size:28px}
  .sec-t h3{font-size:16px}
 }
+
+/* ===== HP: hanya tombol tema, pojok kiri atas, tetap saat scroll ===== */
+@media(max-width:980px){
+ .topbar{position:fixed;top:10px;left:10px;right:auto;margin:0;z-index:50;gap:0;background:var(--panel);border:3px solid var(--ink);border-radius:999px;padding:4px 10px;box-shadow:3px 3px 0 var(--ink)}
+ .topbar .lng,.topbar .clock{display:none!important}
+ .topbar .tg{transform:scale(.8);transform-origin:left center;margin:0}
+}
 </style>
 </head>
 <body>
@@ -380,7 +387,7 @@ const TX={
  ov_kpi_top:['KPI Tertinggi','Top KPI'], ov_pencapaian:['Pencapaian','Achievement'],
  // WO
  wo_title:['Work Order per Tanggal','Work Orders by Date'], wo_status:['Komposisi Status','Status Breakdown'], wo_total:['Total Work Order','Total Work Orders'],
- wo_pctof:['dari total','of total'], wo_all:['Semua','All'], wo_cmp:['Perbandingan Semua Bulan','All-Month Comparison'],
+ wo_pctof:['dari total','of total'], wo_all:['Semua','All'], wo_allmonths:['Semua Bulan','All Months'], wo_cmp:['Perbandingan Semua Bulan','All-Month Comparison'],
  wo_cmp_sum:['bulan · total','months · total'], wo_best:['Persentase Done tertinggi','Highest Done rate'],
  wo_resched:['Jadwal Ulang (Pending)','Rescheduled (Pending)'], wo_detail:['Detail Work Order','Work Order Details'],
  wo_search:['Cari WO, customer, teknisi...','Search WO, customer, technician...'],
@@ -435,6 +442,7 @@ const TX={
  pctSep:['','']
 };
 let LANG=localStorage.apmLang||'id';
+if(window.matchMedia('(max-width:980px)').matches)LANG='id';
 const li=()=>LANG==='en'?1:0;
 const T=k=>{const v=TX[k];return v?v[li()]:k};
 const fill=(s,o)=>Object.keys(o).reduce((a,k)=>a.replace('{'+k+'}',o[k]),s);
@@ -575,22 +583,32 @@ function woNorm(rows){
    else if(/CANCEL/.test(st))s='CANCEL';else if(/PEND/.test(st))s='PENDING';else if(/DONE|COMPLETE/.test(st))s='DONE';else s='LAIN';
    return{...r,s,d:pd(r.tgl),sched:s==='PENDING'?pd(rm+' '+(r.ket||'')):null}}).filter(r=>r.d)}
 R.wo=function(rows){
- const all=woNorm(rows),now=new Date(),today=day0(now);
- const keys=keysOf(all,r=>ym(r.d));const k=pick(keys);
- if(k==null){$('out').innerHTML=empty();return}
- setCtl(`<select onchange="S.k=this.value;draw()">${opts(keys,k,monLabel)}</select>`);
- const f=all.filter(r=>ym(r.d)===k);
+ const all=woNorm(rows),now=new Date(),today=day0(now),curK=ym(today);
+ const keys=keysOf(all,r=>ym(r.d));
+ if(!keys.length){$('out').innerHTML=empty();return}
+ if(!S.k)S.k=String(keys.includes(curK)?curK:keys[0]);
+ const isAll=S.k==='all';
+ const k=isAll?null:(keys.includes(+S.k)?+S.k:(keys.includes(curK)?curK:keys[0]));
+ setCtl(`<select onchange="S.k=this.value;draw()"><option value="all" ${isAll?'selected':''}>${E(T('wo_allmonths'))}</option>${opts(keys,k,monLabel)}</select>`);
+ const f=isAll?all:all.filter(r=>ym(r.d)===k);
  const n=f.length,c=t=>f.filter(r=>r.s===t).length,pc=t=>n?c(t)/n*100:0;
  S.cache=S.wf==='ALL'?f:f.filter(r=>r.s===S.wf);
- const y=Math.floor(k/100),mo=k%100,days=new Date(y,mo+1,0).getDate();
- const tot=Array(days).fill(0),dn=Array(days).fill(0);
- f.forEach(r=>{const i=r.d.getDate()-1;tot[i]++;if(r.s==='DONE')dn[i]++});
  const a1=pc('DONE'),a2=a1+pc('PENDING');
+ const periodTxt=isAll?T('wo_allmonths'):monLabel(k);
+ const ms=keys.slice().sort((a,b)=>a-b).map(kk=>{const g=all.filter(r=>ym(r.d)===kk),cn=s=>g.filter(r=>r.s===s).length;
+   return{k:kk,t:g.length,done:cn('DONE'),pend:cn('PENDING'),canc:cn('CANCEL'),lain:cn('LAIN')}});
+ let lineP;
+ if(isAll){
+   lineP=`<div class="panel"><div class="sec-t"><h3>${T('wo_cmp')}</h3><small>${ms.length} ${T('wo_cmp_sum')} ${all.length} WO</small></div>${cmpChart(ms)}</div>`;
+ }else{
+   const y=Math.floor(k/100),mo=k%100,days=new Date(y,mo+1,0).getDate();
+   const tot=Array(days).fill(0),dn=Array(days).fill(0);
+   f.forEach(r=>{const i=r.d.getDate()-1;tot[i]++;if(r.s==='DONE')dn[i]++});
+   lineP=`<div class="panel"><div class="sec-t"><h3>${T('wo_title')}</h3><small>${mName(mo)} ${y}</small></div>${line(tot,dn)}</div>`;
+ }
  const pend=all.filter(r=>r.s==='PENDING'&&r.sched).map(r=>({...r,diff:Math.round((day0(r.sched)-today)/864e5)})).sort((a,b)=>a.diff-b.diff);
  const rem=pend.filter(r=>r.diff>=0&&r.diff<=3).map(r=>{const urgent=r.diff===0||(r.diff===1&&now.getHours()>=16);return{...r,urgent}});
  const remH=rem.length?`<div class="grid" style="margin-bottom:16px">${rem.map(r=>`<div class="alert ${r.urgent?'red blink':'amber blink-a'}"><div style="flex:1"><b>${r.urgent?(r.diff===0?T('rem_now'):T('rem_tmr')):T('rem_h')+r.diff}</b>${E(r.wo)} · ${E(r.cust)} · ${E(r.tek)}<br><span style="opacity:.85">${T('rem_sched')} ${fmtLong(r.sched)}</span></div></div>`).join('')}</div>`:'';
- const ms=keys.slice().sort((a,b)=>a-b).map(kk=>{const g=all.filter(r=>ym(r.d)===kk),cn=s=>g.filter(r=>r.s===s).length;
-   return{k:kk,t:g.length,done:cn('DONE'),pend:cn('PENDING'),canc:cn('CANCEL'),lain:cn('LAIN')}});
  const allT=all.length,allDone=all.filter(r=>r.s==='DONE').length;
  const best=ms.filter(m=>m.t>0).sort((a,b)=>b.done/b.t-a.done/a.t)[0];
  const cmpRows=ms.map((m,i)=>{const prev=i?ms[i-1].t:null,dl=prev==null?null:m.t-prev;
@@ -603,20 +621,20 @@ R.wo=function(rows){
    .map(([v,t,q])=>`<button class="${S.wf===v?'on':''}" onclick="wfSet('${v}')">${E(t)} · ${q}</button>`).join('');
  $('out').innerHTML=`${remH}
  <div class="grid kpis">
-  ${card(T('wo_total'),n,monLabel(k),'var(--ac)',"wfSet('ALL')",S.wf==='ALL')}
+  ${card(T('wo_total'),n,periodTxt,'var(--ac)',"wfSet('ALL')",S.wf==='ALL')}
   ${card(T('st_done'),c('DONE'),`<span style="color:#22a355">${pc('DONE').toFixed(1)}%</span> ${T('wo_pctof')}`,'var(--ok)',"wfSet('DONE')",S.wf==='DONE')}
   ${card(T('st_pending'),c('PENDING'),`<span style="color:#d97706">${pc('PENDING').toFixed(1)}%</span> ${T('wo_pctof')}`,'var(--wr)',"wfSet('PENDING')",S.wf==='PENDING')}
   ${card(T('st_cancel'),c('CANCEL'),`<span style="color:#dc2626">${pc('CANCEL').toFixed(1)}%</span> ${T('wo_pctof')}`,'var(--er)',"wfSet('CANCEL')",S.wf==='CANCEL')}
   ${card(T('st_working'),c('LAIN'),`<span>${pc('LAIN').toFixed(1)}%</span> ${T('wo_pctof')}`,'var(--ac2)',"wfSet('LAIN')",S.wf==='LAIN')}
  </div>
  <div class="grid two">
-  <div class="panel"><div class="sec-t"><h3>${T('wo_title')}</h3><small>${mName(mo)} ${y}</small></div>${line(tot,dn)}</div>
+  ${lineP}
   <div class="panel"><div class="sec-t"><h3>${T('wo_status')}</h3><small>${T('wo_total')}: ${n}</small></div>
    <div style="display:grid;place-items:center;padding:6px 0"><div style="width:180px;height:180px;border-radius:50%;background:${n?`conic-gradient(#22c55e 0 ${a1}%,#f59e0b ${a1}% ${a2}%,#ef4444 ${a2}% 100%)`:'var(--line)'};display:grid;place-items:center"><div style="width:120px;height:120px;border-radius:50%;background:var(--panel);display:grid;place-items:center;text-align:center"><div><div class="big">${n}</div><small style="color:var(--mu)">Work Order</small></div></div></div></div>
    <div class="legend"><span><i style="background:#22c55e"></i>${T('st_done')}</span><span><i style="background:#f59e0b"></i>${T('st_pending')}</span><span><i style="background:#ef4444"></i>${T('st_cancel')}</span></div></div>
  </div>
  <div class="panel"><div class="sec-t"><h3>${T('wo_cmp')}</h3><small>${ms.length} ${T('wo_cmp_sum')} ${allT} WO · Done ${allT?(allDone/allT*100).toFixed(1):'0'}%</small></div>
-  ${cmpChart(ms)}
+  ${isAll?'':cmpChart(ms)}
   <div style="height:14px"></div>
   ${tbl(T('wo_hc'),cmpRows)}
   ${best?`<p style="color:var(--mu);font-size:12px;margin:10px 0 0">${T('wo_best')}: <b>${E(monLabel(best.k))}</b> (${(best.done/best.t*100).toFixed(1)}%)</p>`:''}
@@ -774,7 +792,7 @@ function greetHTML(){const b=BAND(new Date().getHours()),g=GREET[b];
 function drawOverview(){
  $('out').classList.toggle('enter',Date.now()<(S.enterUntil||0));
  setCtl('');
- const W=S.D.wo?woNorm(S.D.wo):[];const keys=keysOf(W,r=>ym(r.d));const k=keys[0];
+ const W=S.D.wo?woNorm(S.D.wo):[];const keys=keysOf(W,r=>ym(r.d));const k=keys.includes(ym(new Date()))?ym(new Date()):keys[0];
  const f=k!=null?W.filter(r=>ym(r.d)===k):[];const n=f.length,c=t=>f.filter(r=>r.s===t).length,pc=t=>n?(c(t)/n*100).toFixed(1)+'%':'0%';
  const B=S.D.barang;let low=0,rusakT=0,akhirT=0;
  if(B){const pcs=B.rekap.filter(r=>r[0]!==DW);low=B.rekap.filter(r=>{const aw=+r[2]||0;return aw>0&&(+r[6])<=aw*BARANG_LIMIT}).length;
@@ -833,6 +851,7 @@ function slipView(d){setCtl('');
 const tick=()=>{$('clk').textContent=new Date().toLocaleString(locale(),{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'})};
 tick();setInterval(tick,1000);
 setInterval(()=>{if(!S.menus)return;if(S.menu==='dashboard'||S.menu==='jadwal')loadAll();else if(S.menu&&S.menu!=='slip')load()},60000);
+window.matchMedia('(max-width:980px)').addEventListener('change',e=>{LANG=e.matches?'id':(localStorage.apmLang||'id');buildNav();chrome();if(S.menu)draw()});
 start();
 </script>
 </body>
