@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SO DEPOK</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Righteous&family=Shrikhand&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 [hidden]{display:none!important}
 :root{--bg:#0a0f1f;--side:#0d1430;--panel:#121b3a;--panel2:#0b1431;--line:#1f2b52;--tx:#e8edfb;--mu:#8793b8;--ac:#5b8cff;--ac2:#8b5cf6;--ok:#22c55e;--wr:#f59e0b;--er:#ef4444;--glow:rgba(91,140,255,.35)}
@@ -182,6 +182,139 @@ html[data-theme=dark] .head h1{color:#f8fafc;text-shadow:0 2px 18px rgba(20,184,
  .kpis{grid-template-columns:1fr}
  nav>a{flex:1 1 100%}
  .head h1{font-size:18px}
+}
+
+/* ===== TEMA RETRO (1950-an) ===== */
+:root{--cream:#fdf1d6;--cream2:#fff8e8;--teal:#2c7b82;--teal2:#3d9aa1;--red:#d6262b;--red2:#8e1a1c;--mustard:#f2b843;--ink:#2a1a14;--shadowtxt:var(--cream)}
+html[data-theme=light]{--bg:#2c7b82;--side:#fdf1d6;--panel:#fff8e8;--panel2:#f7e7c2;--line:#2a1a14;--tx:#2a1a14;--mu:#6b4a3a;--ac:#d6262b;--ac2:#f2b843;--ok:#2f8f5b;--wr:#d98e0b;--er:#d6262b;--glow:rgba(214,38,43,.35)}
+html[data-theme=dark]{--bg:#0f2f35;--side:#15262a;--panel:#22302f;--panel2:#2b3b3a;--line:#f2b843;--tx:#fdf1d6;--mu:#e8c98e;--ac:#f2b843;--ac2:#ff6b5b;--ok:#6fd39a;--wr:#f2b843;--er:#ff6b5b;--glow:rgba(242,184,67,.35);--shadowtxt:#0a1f24}
+body{background:var(--bg)}
+body:before{opacity:1;animation:none;background:
+ repeating-conic-gradient(from 0deg at 50% 16%,rgba(253,241,214,.22) 0deg 7deg,transparent 7deg 15deg),
+ radial-gradient(120% 70% at 50% 0%,rgba(242,184,67,.28),transparent 60%),
+ linear-gradient(180deg,var(--teal2),var(--teal) 55%,#1f5f66)}
+html[data-theme=dark] body:before{animation:none;background:
+ repeating-conic-gradient(from 0deg at 50% 16%,rgba(242,184,67,.10) 0deg 7deg,transparent 7deg 15deg),
+ linear-gradient(180deg,#1d4f55,#0f2f35 60%,#0a1f24)}
+
+/* kartu, panel, sidebar: bingkai tebal + bayangan keras */
+.panel{background:var(--panel);border:3px solid var(--ink);border-radius:18px;box-shadow:6px 6px 0 var(--ink)}
+.kpi{background:var(--panel);border:3px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--ink)}
+.kpi:before{width:10px;background:var(--c,var(--ac))}
+.kpi:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--ink)}
+aside{background:var(--side);border-right:3px solid var(--ink)}
+html[data-theme=dark] .panel{background:var(--panel);border-color:var(--line);box-shadow:6px 6px 0 #0a1f24}
+html[data-theme=dark] .kpi{background:var(--panel);border-color:var(--line);box-shadow:5px 5px 0 #0a1f24}
+html[data-theme=dark] aside{background:var(--side);border-right-color:var(--line)}
+
+/* judul: script merah bergaris krem */
+.brand b,.head h1,.hero h2{font-family:'Shrikhand',cursive;font-weight:400;letter-spacing:.01em;text-transform:none;background:none;-webkit-background-clip:border-box;background-clip:border-box;-webkit-text-fill-color:var(--ac);color:var(--ac);text-shadow:3px 3px 0 var(--shadowtxt),5px 5px 0 var(--red2)}
+.brand b{font-size:34px}
+.head h1{font-size:30px}
+html[data-theme=dark] .brand b{-webkit-text-fill-color:var(--ac);color:var(--ac);text-shadow:3px 3px 0 #0a1f24,5px 5px 0 var(--red2)}
+.hero h2{color:#fff8e8;-webkit-text-fill-color:#fff8e8;text-shadow:3px 3px 0 var(--ink),5px 5px 0 var(--red2)}
+.brand span{font-family:'Righteous',cursive;color:var(--cream);font-size:13px;letter-spacing:.04em}
+html[data-theme=dark] .brand span{color:var(--mu)}
+
+/* label & angka: Righteous */
+.kpi .l,.sec-t h3,.grp,nav a,.clock,.lng button,.legend,.kpi .v,.big,th,.pill,.hero-k,.bar span{font-family:'Righteous',cursive}
+.kpi .l{color:var(--mu);letter-spacing:.06em}
+.kpi .v{font-size:30px;color:var(--tx)}
+.sec-t h3{font-size:16px;letter-spacing:.06em;color:var(--tx)}
+.sec-t small{color:var(--mu)}
+
+/* navigasi */
+nav a{color:var(--tx);border:3px solid transparent;letter-spacing:.04em}
+nav a:hover{background:rgba(214,38,43,.12);border-color:var(--ink);transform:translate(3px,-2px)}
+nav a.on{background:var(--red);color:var(--cream2);border-color:var(--ink);box-shadow:4px 4px 0 var(--ink);font-weight:400}
+html[data-theme=dark] nav a.on{background:var(--ac);color:#15262a;border-color:var(--line);box-shadow:4px 4px 0 #0a1f24}
+.grp{color:var(--tx);letter-spacing:.1em}
+.sub{border-left:3px dashed var(--ink)}
+html[data-theme=dark] .sub{border-left-color:var(--line)}
+
+/* tombol, input, pilihan */
+select,input,button{font-family:'Righteous',cursive;background:var(--cream2);color:var(--ink);border:3px solid var(--ink);border-radius:12px;box-shadow:3px 3px 0 var(--ink)}
+html[data-theme=dark] select,html[data-theme=dark] input,html[data-theme=dark] button{background:var(--panel2);color:var(--tx);border-color:var(--line);box-shadow:3px 3px 0 #0a1f24}
+button:hover{border-color:var(--ink);box-shadow:5px 5px 0 var(--ink)}
+button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.seg button.on{background:var(--red);color:var(--cream2);border-color:var(--ink)}
+html[data-theme=dark] .seg button.on{background:var(--ac);color:#15262a;border-color:var(--line)}
+.lng{background:var(--cream2);border:3px solid var(--ink);border-radius:12px;box-shadow:3px 3px 0 var(--ink)}
+.lng button{border:0;box-shadow:none;background:transparent;color:var(--ink)}
+.lng button.on{background:var(--red);color:var(--cream2)}
+html[data-theme=dark] .lng{background:var(--panel2);border-color:var(--line);box-shadow:3px 3px 0 #0a1f24}
+html[data-theme=dark] .lng button.on{background:var(--ac);color:#15262a}
+.clock{background:var(--cream2);border:3px solid var(--ink);border-radius:12px;box-shadow:3px 3px 0 var(--ink);color:var(--red)}
+html[data-theme=dark] .clock{background:var(--panel2);border-color:var(--line);box-shadow:3px 3px 0 #0a1f24;color:var(--ac)}
+.disp{background:linear-gradient(100deg,#f2b843,#e8772e 50%,#f2b843);background-size:200% auto;color:var(--ink);border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
+.disp:hover{color:var(--ink);border-color:var(--ink)}
+.disp:after{background:linear-gradient(90deg,transparent,rgba(255,248,232,.6),transparent)}
+#thm:checked+.tr{background:var(--mustard)}
+.tr{background:var(--ink);box-shadow:none}
+.tr:after{background-color:var(--cream2)}
+html[data-theme=dark] .tr{background:#0a1f24}
+html[data-theme=dark] #thm:checked+.tr{background:var(--mustard)}
+
+/* tabel */
+.tw{background:var(--cream2);border:3px solid var(--ink);border-radius:14px;box-shadow:6px 6px 0 var(--ink);color:var(--ink)}
+th{background:var(--red);color:var(--cream2);border-bottom:3px solid var(--ink);letter-spacing:.06em}
+td{border-bottom:1px dashed rgba(42,26,20,.35);color:var(--ink)}
+tr:nth-child(even) td{background:#fbeccb}
+tr:hover td{background:#f5ddb0}
+html[data-theme=dark] .tw{background:var(--panel);color:var(--tx);border-color:var(--line);box-shadow:6px 6px 0 #0a1f24}
+html[data-theme=dark] th{background:#7a1d1f;color:var(--cream2);border-bottom-color:var(--line)}
+html[data-theme=dark] td{border-bottom-color:rgba(242,184,67,.2);color:var(--tx)}
+html[data-theme=dark] tr:nth-child(even) td{background:#1b2a2e}
+html[data-theme=dark] tr:hover td{background:#2f4442}
+td.empty{color:#8a6a52}
+
+/* badge, bar, peringatan */
+.pill{border:2px solid var(--ink);font-size:12px}
+.p-ok{background:#cfe9c4;color:#1f5e2e}.p-wr{background:#fbe3a2;color:#6b4a0a}.p-er{background:#f5c2b5;color:#8e1a1c}.p-in{background:#cfe6e8;color:#1d4f55}
+html[data-theme=dark] .pill{border-color:var(--line)}
+.bar{background:var(--cream2);border:2px solid var(--ink)}
+.bar i{background:var(--red)}
+.avatar{background:var(--red);border:2px solid var(--ink);color:var(--cream2)}
+html[data-theme=light] .alert.red{background:#f5c2b5;border:3px solid var(--ink);color:#6b1113;box-shadow:4px 4px 0 var(--ink)}
+html[data-theme=light] .alert.amber{background:#fbe3a2;border:3px solid var(--ink);color:#6b4a0a;box-shadow:4px 4px 0 var(--ink)}
+html[data-theme=dark] .alert.red{background:rgba(255,107,91,.15);border:3px solid var(--line);color:#ffd0c8}
+html[data-theme=dark] .alert.amber{background:rgba(242,184,67,.15);border:3px solid var(--line);color:#fde9b0}
+.err{background:#f5c2b5;border:3px solid var(--ink);color:#6b1113}
+
+/* sapaan (hero) */
+.hero{border:3px solid var(--ink);border-radius:20px;box-shadow:6px 6px 0 var(--ink)}
+.g-pagi{background:linear-gradient(120deg,#f2b843,#e8772e 55%,#d6262b)}
+.g-siang{background:linear-gradient(120deg,#3d9aa1,#2c7b82 55%,#f2b843)}
+.g-sore{background:linear-gradient(120deg,#e8772e,#d6262b 55%,#8e1a1c)}
+.g-malam{background:linear-gradient(120deg,#0f2f35,#1d4f55 55%,#8e1a1c)}
+.hero-ic{background:var(--cream2);border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
+.hero-ic svg{filter:drop-shadow(2px 2px 0 var(--ink))}
+.hero-k{letter-spacing:.1em;color:var(--cream2)}
+.hero p{color:var(--cream2)}
+.orb{background:rgba(253,241,214,.18);border:2px solid rgba(42,26,20,.25)}
+
+/* tampilan HP */
+@media(max-width:980px){
+ aside{border-bottom:3px solid var(--ink);border-right:0}
+ nav>a{border:3px solid var(--ink);background:var(--cream2);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+ nav>a.on{background:var(--red);color:var(--cream2)}
+ html[data-theme=dark] nav>a{background:var(--panel2);color:var(--tx);border-color:var(--line);box-shadow:3px 3px 0 #0a1f24}
+ html[data-theme=dark] nav>a.on{background:var(--ac);color:#15262a}
+ .grp{background:var(--cream2);border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink)}
+ html[data-theme=dark] .grp{background:var(--panel2);border-color:var(--line);box-shadow:3px 3px 0 #0a1f24}
+ .sub>a{border:3px solid var(--ink);background:var(--cream2);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+ html[data-theme=dark] .sub>a{background:var(--panel2);color:var(--tx);border-color:var(--line);box-shadow:3px 3px 0 #0a1f24}
+ .brand b{font-size:30px}
+ .head h1{font-size:24px}
+ .hero h2{font-size:clamp(22px,6vw,30px)}
+ .kpi .v{font-size:24px}
+ .tw{box-shadow:4px 4px 0 var(--ink)}
+}
+@media(max-width:480px){
+ .brand b{font-size:28px}
+ .head h1{font-size:21px}
+ .panel{box-shadow:4px 4px 0 var(--ink)}
+ .kpi{box-shadow:3px 3px 0 var(--ink)}
 }
 </style>
 </head>
