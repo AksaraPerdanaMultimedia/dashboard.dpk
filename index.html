@@ -426,8 +426,10 @@ nav a.ext:hover .xo{transform:translate(2px,-2px)}
 }
 @media(prefers-reduced-motion:reduce){.blink,.blink-a,.st-segera{animation:none}}
 
-/* ===== HP: hilangkan efek berdenyut (kotak peringatan & status stok) ===== */
+/* ===== HP: hilangkan efek berdenyut (header tabel sticky yang berkedip saat scroll) ===== */
 @media(max-width:980px){
+ th{position:static!important}
+ .tw tr,.tw td{transition:none!important}
  .blink,.blink-a,.st-segera,.st-menipis{animation:none!important}
 }
 </style>
