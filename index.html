@@ -435,6 +435,13 @@ nav a.ext:hover .xo{transform:translate(2px,-2px)}
  #out>*{opacity:1!important}
  html{scroll-behavior:auto!important}
 }
+
+/* ===== Filter tanggal Work Order ===== */
+.dtr{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.dtr label{font-family:'Righteous',cursive;font-size:13px;display:flex;gap:6px;align-items:center;color:var(--tx)}
+.dtr input{padding:7px 10px;font-size:13px}
+.dtr button{padding:7px 14px;font-size:13px}
+@media(max-width:980px){.dtr label{flex:1 1 100%}.dtr button{flex:1 1 100%}}
 </style>
 </head>
 <body>
@@ -466,7 +473,7 @@ const MENIPIS_LIMIT=0.40;          // Stok Menipis: stok akhir <= 40% stok awal
 const DW='H-008';                  // DropWire 1 Core: satuan meter
 const $=i=>document.getElementById(i);
 const E=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const S={menu:'',k:'',auto:1,q:'',D:{},wf:'ALL',bf:'ALL',bq:'',back:'',grpOpen:false,updAt:0};
+const S={menu:'',k:'',auto:1,q:'',D:{},wf:'ALL',bf:'ALL',bq:'',back:'',grpOpen:false,updAt:0,dFrom:'',dTo:''};
 const R={};
 
 /* ---------- bahasa ---------- */
@@ -495,7 +502,7 @@ const TX={
  wo_hc:[['Bulan','Total','Done','Done %','Pending','Pending %','Cancel','Cancel %','Lainnya','Selisih Total'],['Month','Total','Done','Done %','Pending','Pending %','Cancel','Cancel %','Other','Change in Total']],
  wo_hr:[['Work Order','Customer','Teknisi','Jadwal Ulang','Sisa'],['Work Order','Customer','Technician','Reschedule','Remaining']],
  wo_overdue:['Lewat jadwal','Overdue'], wo_today:['Hari ini','Today'],
- st_done:['Done','Done'], st_pending:['Pending','Pending'], st_cancel:['Cancel','Cancel'], st_working:['Sedang Di Kerjakan Hari Ini','Being Worked On Today'], st_belum:['Belum Dikerjakan','Not Started Yet'], card_resched:['JADWAL ULANG PENDINGAN','RESCHEDULED PENDING'], sd_besok:['Sudah Dijadwalkan Besok','Scheduled for Tomorrow'], sd_hari:['Sudah Dijadwalkan Hari Ini','Scheduled for Today'], sd_tgl:['Sudah Dijadwalkan {tgl}','Scheduled for {tgl}'], ov_allmonths:['Semua bulan','All months'],
+ st_done:['Done','Done'], st_pending:['Pending','Pending'], st_cancel:['Cancel','Cancel'], st_working:['Sedang Di Kerjakan Hari Ini','Being Worked On Today'], st_belum:['Belum Dikerjakan','Not Started Yet'], card_resched:['JADWAL ULANG PENDINGAN','RESCHEDULED PENDING'], sd_besok:['Sudah Dijadwalkan Besok','Scheduled for Tomorrow'], sd_hari:['Sudah Dijadwalkan Hari Ini','Scheduled for Today'], sd_tgl:['Sudah Dijadwalkan {tgl}','Scheduled for {tgl}'], ov_allmonths:['Semua bulan','All months'], dt_from:['Dari','From'], dt_to:['Sampai','To'], dt_reset:['Reset','Reset'],
  // reminder
  rem_now:['SEGERA – JADWAL ULANG HARI INI','URGENT – RESCHEDULE TODAY'], rem_tmr:['SEGERA – JADWAL ULANG BESOK 16.00','URGENT – RESCHEDULE TOMORROW 16:00'],
  rem_h:['PENGINGAT JADWAL ULANG H-','RESCHEDULE REMINDER D-'], rem_sched:['Jadwal:','Schedule:'],
@@ -659,7 +666,7 @@ async function start(){
 }
 function go(m){
  
- S.enterUntil=Date.now()+2500;S.menu=m;S.k='';S.auto=1;S.q='';S.wf='ALL';S.bf='ALL';S.bq='';localStorage.apmMenu=m;
+ S.enterUntil=Date.now()+2500;S.menu=m;S.k='';S.auto=1;S.q='';S.wf='ALL';S.bf='ALL';S.bq='';S.dFrom='';S.dTo='';localStorage.apmMenu=m;
  if(m!=='dashboard'&&!S.grpOpen){S.grpOpen=true;$('grp')&&$('grp').classList.remove('hide');$('arr')&&($('arr').textContent='▾')}
  markNav();chrome();setCtl('');
  const wait=()=>{$('out').innerHTML=`<div class="panel" style="color:var(--mu)">${T('loading')}</div>`};
@@ -735,11 +742,16 @@ R.wo=function(rows){
  const k=isAll?null:(keys.includes(+S.k)?+S.k:(keys.includes(curK)?curK:keys[0]));
  setCtl(`<select onchange="S.k=this.value;draw()"><option value="all" ${isAll?'selected':''}>${E(T('wo_allmonths'))}</option>${opts(keys,k,monLabel)}</select>`);
  const f=isAll?all:all.filter(r=>ym(r.d)===k);
- const n=f.length,c=t=>f.filter(r=>r.s===t).length,pc=t=>n?c(t)/n*100:0;
- const cR=f.filter(r=>r.resched).length;
- S.cache=S.wf==='ALL'?f:(S.wf==='RESCHED'?f.filter(r=>r.resched):f.filter(r=>r.s===S.wf));
+ const useDate=!!(S.dFrom||S.dTo);
+ const dF=S.dFrom?pd(S.dFrom):null,dT=S.dTo?pd(S.dTo):null;
+ const inRange=r=>(!dF||r.d>=dF)&&(!dT||r.d<=new Date(dT.getFullYear(),dT.getMonth(),dT.getDate(),23,59,59));
+ const base=useDate?all.filter(inRange):f;
+ const n=base.length,c=t=>base.filter(r=>r.s===t).length,pc=t=>n?c(t)/n*100:0;
+ const cR=base.filter(r=>r.resched).length;
+ const bc=t=>base.filter(r=>r.s===t).length;
+ S.cache=S.wf==='ALL'?base:(S.wf==='RESCHED'?base.filter(r=>r.resched):base.filter(r=>r.s===S.wf));
  const a1=pc('DONE'),a2=a1+pc('PENDING');
- const periodTxt=isAll?T('wo_allmonths'):monLabel(k);
+ const periodTxt=useDate?`${S.dFrom||'…'} – ${S.dTo||'…'}`:(isAll?T('wo_allmonths'):monLabel(k));
  const ms=keys.slice().sort((a,b)=>a-b).map(kk=>{const g=all.filter(r=>ym(r.d)===kk),cn=s=>g.filter(r=>r.s===s).length;
    return{k:kk,t:g.length,done:cn('DONE'),pend:cn('PENDING'),canc:cn('CANCEL'),lain:cn('LAIN')+cn('BELUM')}});
  let lineP;
@@ -762,7 +774,7 @@ R.wo=function(rows){
    const lab=m.k===k?`<b style="color:var(--ac)">${E(monLabel(m.k))}</b>`:E(monLabel(m.k));
    return [{h:lab},m.t,m.done,pp(m.done),m.pend,pp(m.pend),m.canc,pp(m.canc),m.lain,dh]});
  const WL={ALL:T('wo_all'),DONE:T('st_done'),PENDING:T('st_pending'),CANCEL:T('st_cancel'),LAIN:T('st_working'),BELUM:T('st_belum'),RESCHED:T('card_resched')};
- const seg=[['ALL',T('wo_all'),n],['DONE',T('st_done'),c('DONE')],['PENDING',T('st_pending'),c('PENDING')],['CANCEL',T('st_cancel'),c('CANCEL')],['LAIN',T('st_working'),c('LAIN')],['RESCHED',T('card_resched'),cR]]
+ const seg=[['ALL',T('wo_all'),base.length],['DONE',T('st_done'),bc('DONE')],['PENDING',T('st_pending'),bc('PENDING')],['CANCEL',T('st_cancel'),bc('CANCEL')],['LAIN',T('st_working'),bc('LAIN')],['RESCHED',T('card_resched'),cR]]
    .map(([v,t,q])=>`<button class="${S.wf===v?'on':''}" onclick="wfSet('${v}')">${E(t)} · ${q}</button>`).join('');
  $('out').innerHTML=`${remH}
  <div class="grid kpis">
@@ -788,7 +800,7 @@ R.wo=function(rows){
  <div class="panel"><div class="sec-t"><h3>${T('wo_resched')}</h3><small>${pend.length} WO</small></div>
   ${tbl(T('wo_hr'),pend.map(r=>{const t=r.diff<0?T('wo_overdue'):r.diff===0?T('wo_today'):'H-'+r.diff;return [r.wo,r.cust,r.tek,fmtLong(r.sched),pill(t,r.diff<0?'er':r.diff<=1?'wr':'in')]}))}</div>
  <div class="panel" id="wdet"><div class="sec-t"><h3>${T('wo_detail')} · ${E(WL[S.wf])}</h3><input id="wq" class="search" placeholder="${T('wo_search')}" oninput="S.q=this.value;woTab()"></div>
-  <div class="seg" style="margin-bottom:14px">${seg}</div><div id="wt"></div></div>`;
+  <div class="dtr"><label>${T('dt_from')} <input type="date" value="${S.dFrom||''}" onchange="S.dFrom=this.value;draw()"></label><label>${T('dt_to')} <input type="date" value="${S.dTo||''}" onchange="S.dTo=this.value;draw()"></label><button onclick="S.dFrom='';S.dTo='';draw()">${T('dt_reset')}</button></div><div class="seg" style="margin-bottom:14px">${seg}</div><div id="wt"></div></div>`;
  $('wq').value=S.q;woTab();
 };
 function wfSet(t){S.wf=t;S.q='';draw();const e=$('wdet');if(e){e.classList.add('reveal');setTimeout(()=>e.scrollIntoView({behavior:SMOOTH(),block:'start'}),60)}}
