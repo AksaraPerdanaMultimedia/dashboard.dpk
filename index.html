@@ -426,22 +426,81 @@ nav a.ext:hover .xo{transform:translate(2px,-2px)}
 }
 @media(prefers-reduced-motion:reduce){.blink,.blink-a,.st-segera{animation:none}}
 
-/* ===== HP: semua efek dimatikan (animasi, transisi, kilau, kaca, gulir halus) ===== */
+/* ===== HP: transisi halus & tata letak rapi (tanpa denyut/kedip/putar) ===== */
+@keyframes fadeUpM{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @media(max-width:980px){
- *,*:before,*:after{animation:none!important;transition:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+ /* matikan semua animasi berulang (denyut, kedip, putar, kilau) */
+ *,*:before,*:after{animation:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
  nav a:after,.stp:after,.glass-ok:after{display:none!important}
- nav a:hover,nav a:active,.kpi:hover,.kpi.clk:active,button:active,.disp:active,.disp:hover,.musbtn:hover{transform:none!important}
+ /* transisi halus */
+ nav a,.grp,.sub>a,button,select,input,.lng button,.disp,.musbtn{transition:background-color .35s ease,color .35s ease,border-color .35s ease,box-shadow .35s ease,transform .35s cubic-bezier(.2,.7,.2,1)!important}
+ .panel,.kpi,.tw{transition:box-shadow .35s ease,transform .35s cubic-bezier(.2,.7,.2,1)!important}
+ .tw tr td{transition:background-color .25s ease!important}
+ #out.enter>*,.reveal{animation:fadeUpM .5s cubic-bezier(.2,.7,.2,1) both!important}
+ #out.enter>*:nth-child(n+2){animation-delay:.05s!important}
+ html{scroll-behavior:smooth}
  th{position:static!important}
- #out>*{opacity:1!important}
- html{scroll-behavior:auto!important}
-}
+ /* tanpa efek hover yang tertinggal di layar sentuh */
+ @media(hover:none){nav a:hover,.kpi:hover,.panel:hover{transform:none!important}}
+ nav a:active,.kpi.clk:active,button:active,.disp:active{transform:scale(.97)!important}
 
-/* ===== Filter tanggal Work Order ===== */
-.dtr{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
-.dtr label{font-family:'Righteous',cursive;font-size:13px;display:flex;gap:6px;align-items:center;color:var(--tx)}
-.dtr input{padding:7px 10px;font-size:13px}
-.dtr button{padding:7px 14px;font-size:13px}
-@media(max-width:980px){.dtr label{flex:1 1 100%}.dtr button{flex:1 1 100%}}
+ /* tata letak */
+ .layout{grid-template-columns:1fr;position:relative}
+ aside{position:static;height:auto;border:0;border-bottom:3px solid var(--ink);padding:58px 14px 14px}
+ .brand{padding:0 0 12px}
+ .brand b{font-size:24px}
+ .brand span{font-size:12px;margin-top:4px}
+ nav{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ nav>a{grid-column:1/-1;margin:0;padding:12px 10px;text-align:center}
+ .grp{grid-column:1/-1;margin:4px 0 0;padding:11px 14px}
+ .sub{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:8px;border:0;margin:0;padding:0}
+ .sub>a{margin:0;padding:11px 8px;text-align:center}
+ .sub>a.ext{grid-column:1/-1}
+ main{padding:16px 14px 96px}
+ .head{flex-direction:column;align-items:stretch;gap:12px;margin-bottom:14px}
+ .hl{gap:4px}
+ .head h1{font-size:26px}
+ .head p{display:none}
+ .ctl{width:100%;justify-content:stretch;gap:10px}
+ .ctl>*{flex:1 1 100%}
+ .ctl select{width:100%}
+ .disp{justify-content:center;width:100%}
+ .panel{padding:14px;margin-bottom:14px;border-radius:16px}
+ .kpis{grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+ .kpi{padding:12px 12px 12px 14px}
+ .kpi .l{font-size:10px;line-height:1.3}
+ .kpi .v{font-size:22px;margin-top:4px}
+ .kpi .s{font-size:11px}
+ .two{grid-template-columns:1fr;gap:14px}
+ .sec-t{margin-bottom:10px;gap:6px}
+ .sec-t h3{font-size:15px;line-height:1.3}
+ .search{width:100%;max-width:none}
+ .dtr{flex-direction:column;align-items:stretch;gap:8px}
+ .dtr label{flex:1 1 100%;justify-content:space-between}
+ .dtr input{width:100%}
+ .dtr button{width:100%}
+ .seg{gap:8px}
+ .seg button{flex:1 1 calc(50% - 8px);font-size:12px;padding:8px 10px}
+ .tw{max-height:420px;margin:0 -2px}
+ .legend{gap:10px 14px;font-size:11px}
+ .hero{flex-direction:column;text-align:center;padding:20px 16px;gap:12px;margin-bottom:14px}
+ .hero-ic{width:72px;height:72px}
+ .hero-ic svg{width:44px;height:44px}
+ .hero h2{font-size:clamp(19px,6vw,26px);margin:2px 0 6px}
+ .hero p{font-size:13px;margin:0 auto}
+ .hero-k{font-size:11px}
+ .topbar{position:fixed;top:10px;left:10px;right:auto;margin:0;z-index:50}
+ .musbtn{width:48px;height:48px;left:12px;bottom:12px}
+ .musp{left:12px;right:12px;bottom:72px;width:auto;max-width:none}
+ .musp iframe{height:300px}
+ .rank li{padding:8px 0}
+ .avatar{width:30px;height:30px;font-size:11px}
+ .big{font-size:28px}
+}
+@media(max-width:360px){
+ .kpis{grid-template-columns:1fr}
+ nav>a{font-size:13px}
+}
 </style>
 </head>
 <body>
@@ -621,7 +680,7 @@ function cmpChart(ms){if(!ms.length)return '';
  ${grid}<path d="${area}" fill="url(#gB)"/>${lines}${xl}</svg></div>
  <div class="legend">${cols.map(c=>`<span><i style="background:${c[1]}"></i>${c[2]}${c[4]?' ('+(LANG==='en'?'dashed':'putus-putus')+')':''}</span>`).join('')}</div>`}
 
-const SMOOTH=()=>window.matchMedia('(max-width:980px)').matches?'auto':'smooth';
+const SMOOTH=()=>'smooth';
 /* ---------- navigasi & kerangka ---------- */
 const NC={dashboard:['#2c7b82','#1d4f55','#fff8e8'],absensi:['#d6262b','#8e1a1c','#fff8e8'],kpi:['#2f8f5b','#14532d','#fff8e8'],wo:['#f2b843','#e8772e','#2a1a14'],barang:['#7c3aed','#4c1d95','#fff8e8'],jadwal:['#0ea5e9','#1d4ed8','#fff8e8']};
 const ncSt=k=>{const c=NC[k]||['#5b8cff','#8b5cf6','#fff'];return `--nc:${c[0]};--nc2:${c[1]};--nt:${c[2]}`};
