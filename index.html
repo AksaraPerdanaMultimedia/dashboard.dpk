@@ -999,7 +999,7 @@ R.barang=function(d){
   ${card(T('wh_req'),low.length,T('wh_lowrule'),'var(--wr)',"bfSet('LOW')",S.bf==='LOW')}
   ${card(T('wh_total'),totNames,`${T('wh_dw')} ${dwAkhir} ${T('wh_meter')}`,'var(--ac)',"bfSet('ALL')",S.bf==='ALL')}
  </div>
- <div class="panel" id="bdet"><div class="sec-t"><h3>${T('wh_list')} · ${E(WF[S.bf][0])}</h3><input id="bq" class="search" placeholder="${T('wh_search')}" oninput="S.bq=this.value;barTab()"></div><div id="bt"></div></div>${storedPanel(d)}${unretPanel(d)}`;
+ <div class="panel" id="bdet"><div class="sec-t"><h3>${T('wh_list')} · ${E(WF[S.bf][0])}</h3><input id="bq" class="search" placeholder="${T('wh_search')}" oninput="S.bq=this.value;barTab()"></div><div id="bt"></div></div>${S.bf==='RUSAK'?storedPanel(d)+unretPanel(d):''}`;
  $('bq').value=S.bq||'';barTab();
 };
 function isReturn(r){return /return/i.test(String(r[4]||''))||String(r[5]||'').trim()!==''}
