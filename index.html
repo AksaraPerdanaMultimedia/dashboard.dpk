@@ -535,6 +535,23 @@ nav a.ext:hover .xo{transform:translate(2px,-2px)}
 @keyframes sunGlow{0%,100%{filter:drop-shadow(0 0 3px #fde047)}50%{filter:drop-shadow(0 0 14px #fde047) drop-shadow(0 0 26px #fbbf24)}}
 @keyframes moonGlow{0%,100%{filter:drop-shadow(0 0 4px #fde68a)}50%{filter:drop-shadow(0 0 14px #fde68a)}}
 @media(max-width:980px){.ic-pagi .sunG,.ic-sore .sunG,.ic-siang .sunG,.ic-malam .moonG{animation:none!important}}
+.dt-blink{animation:dtBlink 1.3s ease-in-out infinite}
+@keyframes dtBlink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* ===== Overview: kartu rapi (grid 12 kolom) ===== */
+.ov12{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px;margin-bottom:6px}
+.ov12>.kpi{grid-column:span 3;min-width:0}
+.ov12.g3>.kpi{grid-column:span 4}
+.ov12.g2>.kpi{grid-column:span 6}
+.ov-h{display:flex;align-items:center;gap:10px;margin:22px 0 10px;font-family:'Righteous',cursive;font-size:17px;letter-spacing:.07em;color:var(--tx)}
+.ov-h h3{margin:0;font-size:inherit;text-transform:uppercase}
+.ov-h small{margin-left:auto;font-family:'Poppins',sans-serif;font-size:12px;color:var(--mu)}
+.ov-h:before{content:"";width:10px;height:10px;border-radius:50%;background:var(--ac);border:2px solid var(--ink);flex-shrink:0}
+@media(max-width:980px){
+ .ov12{gap:10px}
+ .ov12>.kpi,.ov12.g3>.kpi,.ov12.g2>.kpi{grid-column:span 6}
+ .ov-h{font-size:15px;margin:16px 0 8px}
+}
 </style>
 </head>
 <body>
@@ -724,7 +741,7 @@ function drawMap(rows){
  const el=document.getElementById('wmap');
  if(!el||!window.L)return;
  if(MAP){MAP.remove();MAP=null}
- const map=L.map(el,{zoomControl:true,scrollWheelZoom:false}).setView(DEPOK_C,11);
+ const map=L.map(el,{zoomControl:true,scrollWheelZoom:true}).setView(DEPOK_C,11);
  MAP=map;
  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap'}).addTo(map);
  const g=new Map();
@@ -738,7 +755,7 @@ function drawMap(rows){
    const isDT1=/DT\s*1/i.test(v.dt),isDT2=/DT\s*2/i.test(v.dt);
    const off=isDT1?-0.006:isDT2?0.006:0;
    const col=isDT1?'#2563eb':isDT2?'#16a34a':'#7c3aed';
-   L.circleMarker([c[0],c[1]+off],{radius:Math.min(26,6+Math.sqrt(v.n)*2.2),color:'#2a1a14',weight:2,fillColor:col,fillOpacity:.85})
+   L.circleMarker([c[0],c[1]+off],{radius:Math.min(26,6+Math.sqrt(v.n)*2.2),color:'#2a1a14',weight:2,fillColor:col,fillOpacity:.85,className:(isDT1||isDT2)?'dt-blink':''})
      .bindTooltip(`${v.kec} · ${v.dt}: ${v.n} WO Done`,{direction:'top'})
      .addTo(map);
  });
@@ -1162,27 +1179,27 @@ function drawOverview(){
  const sub=x=>fill(T('jd_plus'),{a:x.base==null?'-':x.base,b:x.pend.length});
  $('out').innerHTML=`
  ${greetHTML()}
- <div class="sec-t"><h3>${T('ov_wo')}</h3><small>${k!=null?E(monLabel(k)):'-'}</small></div>
- <div class="grid kpis">
+ <div class="ov-h"><h3>${T('ov_wo')}</h3><small>${k!=null?E(monLabel(k)):'-'}</small></div>
+ <div class="ov12 g4">
   ${card(T('wo_total'),W.length,T('ov_allmonths'),'var(--ac)',"go('wo')")}
   ${card(T('st_done'),pc('DONE'),c('DONE')+' WO','var(--ok)',"go('wo')")}
   ${card(T('st_pending'),c('PENDING'),pc('PENDING')+' '+T('wo_pctof'),'var(--wr)',"go('wo')")}
   ${card(T('st_cancel'),c('CANCEL'),pc('CANCEL')+' '+T('wo_pctof'),'var(--er)',"go('wo')")}
  </div>
- <div class="sec-t"><h3>${T('ov_wh')}</h3></div>
- <div class="grid kpis">
+ <div class="ov-h"><h3>${T('ov_wh')}</h3></div>
+ <div class="ov12 g3">
   ${card(T('wh_req'),low,T('wh_lowrule'),'var(--wr)',"go('barang')")}
   ${card(T('wh_rusak'),rusakT,T('wh_units'),'var(--er)',"go('barang')")}
   ${card(T('wh_total'),namesT,T('wh_jenis'),'var(--ac)',"go('barang')")}
  </div>
- <div class="sec-t"><h3>${T('ov_abs')}</h3></div>
- <div class="grid kpis">
+ <div class="ov-h"><h3>${T('ov_abs')}</h3></div>
+ <div class="ov12 g3">
   ${card(T('ov_hadir'),hadir,E(per),'var(--ok)',"go('absensi')")}
   ${card(T('ov_late'),late,E(per),'var(--wr)',"go('absensi')")}
   ${card(T('ov_kpi_top'),`<span style="font-size:17px">${E(topN)}</span>`,topP?T('ov_pencapaian')+' '+E(topP):'','var(--ac2)',"go('kpi')")}
  </div>
- <div class="sec-t"><h3>${T('ov_jadwal')}</h3></div>
- <div class="grid kpis">
+ <div class="ov-h"><h3>${T('ov_jadwal')}</h3></div>
+ <div class="ov12 g2">
   ${card(T('jd_hari'),`<span class="big">${hi.total}</span>`,sub(hi),'var(--ac)',"go('jadwal')")}
   ${card(T('jd_besok'),`<span class="big">${bi.total}</span>`,sub(bi),'var(--ok)',"go('jadwal')")}
  </div>`}
