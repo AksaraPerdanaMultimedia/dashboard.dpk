@@ -800,7 +800,8 @@ function musicInit(){const u=localStorage.getItem('apmSpotify')||'';
  if(u){if($('spf').getAttribute('src')!==u)$('spf').src=u}else{$('spf').removeAttribute('src')}}
 function saveMusic(){const e=musicEmbed($('spl').value);$('musErr').hidden=!!e;if(!e)return;localStorage.setItem('apmSpotify',e);musicInit()}
 function changeMusic(){localStorage.removeItem('apmSpotify');$('spl').value='';musicInit()}
-function toggleMusic(){$('musp').classList.toggle('hide')}
+function toggleMusic(){const h=$('musp').classList.toggle('hide');localStorage.setItem('apmMusicOpen',h?'0':'1')}
+function restoreMusic(){if(localStorage.getItem('apmSpotify')&&localStorage.getItem('apmMusicOpen')==='1')$('musp').classList.remove('hide')}
 function setLang(l){LANG=l;localStorage.apmLang=l;buildNav();chrome();if(S.menu)draw()}
 
 async function start(){
@@ -1227,7 +1228,7 @@ const tick=()=>{$('clk').textContent=new Date().toLocaleString(locale(),{weekday
 tick();setInterval(tick,1000);
 setInterval(()=>{if(!S.menus)return;if(S.menu==='dashboard'||S.menu==='jadwal')loadAll();else if(S.menu&&S.menu!=='slip')load()},60000);
 window.matchMedia('(max-width:980px)').addEventListener('change',e=>{LANG=e.matches?'id':(localStorage.apmLang||'id');buildNav();chrome();if(S.menu)draw()});
-musicLabels();musicInit();
+musicLabels();musicInit();restoreMusic();
 start();
 </script>
 </body>
