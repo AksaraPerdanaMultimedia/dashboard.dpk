@@ -501,6 +501,23 @@ nav a.ext:hover .xo{transform:translate(2px,-2px)}
  .kpis{grid-template-columns:1fr}
  nav>a{font-size:13px}
 }
+
+/* ===== LAPTOP/PC: menu sidebar ditata ulang (rapi, tiap menu punya warna) ===== */
+@media(min-width:981px){
+ nav{display:flex;flex-direction:column;gap:10px}
+ nav>a#n_dashboard{display:flex;align-items:center;justify-content:center;min-height:50px;margin:0;padding:10px 14px;border:3px solid var(--ink);border-radius:14px;background:var(--cream2);color:var(--ink);box-shadow:3px 3px 0 var(--ink);font-family:'Righteous',cursive;font-size:15px;letter-spacing:.08em;text-align:center}
+ nav>a#n_dashboard.on{background:linear-gradient(90deg,var(--nc),var(--nc2))!important;color:var(--nt)!important;border-color:var(--ink)!important;box-shadow:3px 3px 0 var(--ink)!important}
+ nav>a#n_dashboard:before{display:none}
+ .grp{margin:4px 0 0;display:flex;justify-content:space-between;align-items:center;min-height:50px;padding:8px 14px;border:3px solid var(--ink);border-radius:14px;background:var(--cream2);box-shadow:3px 3px 0 var(--ink);font-family:'Righteous',cursive;font-size:14px;letter-spacing:.12em;color:var(--ink);text-transform:uppercase}
+ .grp .arr{display:grid;place-items:center;width:28px;height:28px;border:2px solid var(--ink);border-radius:9px;background:var(--mustard);font-size:12px;line-height:1;color:var(--ink)}
+ .sub{display:flex;flex-direction:column;gap:10px;margin:0;padding:6px 0 0;border:0}
+ .sub.hide{display:none!important}
+ .sub>a{position:relative;margin:0;min-height:52px;display:flex;align-items:center;padding:10px 12px 10px 16px;border:3px solid var(--ink);border-left:8px solid var(--nc,var(--ac));border-radius:14px;background:var(--cream2);color:var(--ink);box-shadow:3px 3px 0 var(--ink);font-family:'Righteous',cursive;font-size:13px;letter-spacing:.06em;line-height:1.25;text-transform:uppercase}
+ .sub>a:before{display:none}
+ .sub>a.on{background:linear-gradient(90deg,var(--nc),var(--nc2))!important;color:var(--nt)!important;border-color:var(--ink)!important;border-left-color:var(--ink)!important;box-shadow:3px 3px 0 var(--ink)!important}
+ .sub>a.ext{justify-content:center;min-height:46px;border-style:dashed;border-left:3px dashed var(--ink);background:linear-gradient(90deg,rgba(249,115,22,.18),rgba(185,28,28,.1));color:var(--ink);font-size:12px}
+ .sub>a.ext:hover{background:linear-gradient(90deg,#f97316,#b91c1c);color:#fff8e8}
+}
 </style>
 </head>
 <body>
@@ -687,8 +704,7 @@ const ncSt=k=>{const c=NC[k]||['#5b8cff','#8b5cf6','#fff'];return `--nc:${c[0]};
 function buildNav(){
  $('nav').innerHTML=`<a id="n_dashboard" style="${ncSt('dashboard')}" onclick="go('dashboard')">${T('dashboard')}</a>`
   +`<div class="grp" onclick="toggleGrp()"><span>${T('menu')}</span><span id="arr" class="arr">${S.grpOpen?'▾':'▸'}</span></div>`
-  +`<div id="grp" class="sub ${S.grpOpen?'':'hide'}">${(S.menus||[]).map(m=>`<a id="n_${m}" style="${ncSt(m)}" onclick="go('${m}')">${T('lbl_'+m)}</a>`).join('')}`
-  +`<a class="ext" style="--nc:#f97316;--nc2:#b91c1c;--nt:#fff8e8" href="https://fieldsa.fiberstar.co.id/#/tasklist/dispatchingboard" target="_blank" rel="noopener">FIELDSA <span class="xo">↗</span></a></div>`;
+  +`<div id="grp" class="sub ${S.grpOpen?'':'hide'}">${(S.menus||[]).map(m=>`<a id="n_${m}" style="${ncSt(m)}" onclick="go('${m}')">${T('lbl_'+m)}</a>`).join('')}`;
  markNav();
 }
 function markNav(){document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.id==='n_'+S.menu))}
