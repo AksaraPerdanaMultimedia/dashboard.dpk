@@ -571,16 +571,14 @@ nav a.ext:hover .xo{transform:translate(2px,-2px)}
 .geo-lbl{position:absolute;left:20px;top:-7px;white-space:nowrap;background:var(--cream2);color:var(--ink);border:2px solid var(--ink);border-radius:10px;padding:2px 9px;font-family:'Righteous',cursive;font-size:12px;letter-spacing:.03em;box-shadow:2px 2px 0 var(--ink)}
 .geo-lbl b{color:var(--red)}
 
-/* ===== Teks musik berjalan di samping tombol ===== */
-.musnow{position:fixed;left:86px;bottom:26px;z-index:59;width:min(280px,calc(100vw - 120px));height:40px;background:var(--cream2);border:3px solid var(--ink);border-radius:12px;box-shadow:3px 3px 0 var(--ink);overflow:hidden;display:flex;align-items:center}
+/* ===== Info lagu: tampil 5 detik lalu masuk ke logo musik ===== */
+.musnow{position:fixed;left:18px;bottom:92px;z-index:59;width:min(244px,calc(100vw - 36px));padding:10px 14px 11px;background:var(--cream2);border:3px solid var(--ink);border-radius:14px;box-shadow:4px 4px 0 var(--ink);transform-origin:left bottom;--fx:28px;--fy:46px}
 .musnow[hidden]{display:none!important}
-.mq{display:inline-flex;white-space:nowrap;font-family:'Righteous',cursive;font-size:13px;letter-spacing:.03em;color:var(--ink);animation:mqRun 16s linear infinite;will-change:transform}
-.mq span{padding-right:48px}
-@keyframes mqRun{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@media(max-width:980px){
- .musnow{left:70px;bottom:16px;width:min(240px,calc(100vw - 96px));height:36px}
- .mq{font-size:12px}
-}
+.musnow.go{animation:musFly 5s ease-in-out 0s 1 both}
+.mk{font-family:'Righteous',cursive;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--red)}
+.mt{margin-top:4px;font-family:'Righteous',cursive;font-size:14px;line-height:1.3;color:var(--ink);overflow-wrap:anywhere;word-break:break-word}
+@keyframes musFly{0%{opacity:0;transform:translateY(10px) scale(.9)}8%{opacity:1;transform:none}80%{opacity:1;transform:none}100%{opacity:0;transform:translate(var(--fx),var(--fy)) scale(.08)}}
+@media(max-width:980px){.musnow{left:12px;bottom:76px;width:min(240px,calc(100vw - 24px));--fx:24px;--fy:40px}}
 </style>
 </head>
 <body>
@@ -597,7 +595,7 @@ nav a.ext:hover .xo{transform:translate(2px,-2px)}
 </div>
 
 <button id="mus" class="musbtn" onclick="toggleMusic()" aria-label="Musik"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></button>
-<div id="musNow" class="musnow" hidden><div class="mq" id="mqT"></div></div>
+<div id="musNow" class="musnow" hidden><div class="mk">Musik</div><div class="mt" id="mqT"></div></div>
 <div id="musp" class="musp hide">
  <h4 id="musT">Musik</h4>
  <p id="musH"></p>
@@ -818,15 +816,29 @@ function musicLabels(){$('musT').textContent=T('mus_title');$('musH').textConten
 function musicInit(){const u=localStorage.getItem('apmSpotify')||'';
  $('musForm').hidden=!!u;$('spf').hidden=!u;$('musChgRow').hidden=!u;
  if(u){if($('spf').getAttribute('src')!==u)$('spf').src=u}else{$('spf').removeAttribute('src')}}
-function saveMusic(){const e=musicEmbed($('spl').value);$('musErr').hidden=!!e;if(!e)return;localStorage.setItem('apmSpotify',e);localStorage.setItem('apmSpotifyUrl',$('spl').value.trim());localStorage.removeItem('apmSpotifyName');musicInit();musicNow();fetchMusicName()}
-function changeMusic(){localStorage.removeItem('apmSpotify');localStorage.removeItem('apmSpotifyUrl');localStorage.removeItem('apmSpotifyName');$('spl').value='';musicInit();musicNow()}
+function saveMusic(){const e=musicEmbed($('spl').value);$('musErr').hidden=!!e;if(!e)return;localStorage.setItem('apmSpotify',e);localStorage.setItem('apmSpotifyUrl',$('spl').value.trim());localStorage.removeItem('apmSpotifyName');musicInit();fetchMusicName(true)}
+function changeMusic(){localStorage.removeItem('apmSpotify');localStorage.removeItem('apmSpotifyUrl');localStorage.removeItem('apmSpotifyName');$('spl').value='';musicInit();musicNow(false)}
 function toggleMusic(){const h=$('musp').classList.toggle('hide');localStorage.setItem('apmMusicOpen',h?'0':'1')}
-function restoreMusic(){if(localStorage.getItem('apmSpotify')&&localStorage.getItem('apmMusicOpen')==='1')$('musp').classList.remove('hide');musicNow();if(localStorage.getItem('apmSpotify')&&!localStorage.getItem('apmSpotifyName'))fetchMusicName()}
-function musicNow(){const el=$('musNow');if(!el)return;const u=localStorage.getItem('apmSpotify');el.hidden=!u;if(!u)return;
- const t='Musik: '+(localStorage.getItem('apmSpotifyName')||'Playlist Spotify')+'   •   ';
- $('mqT').innerHTML='<span>'+E(t)+'</span><span>'+E(t)+'</span>'}
-async function fetchMusicName(){const u=localStorage.getItem('apmSpotifyUrl');if(!u)return;
- try{const r=await fetch('https://open.spotify.com/oembed?url='+encodeURIComponent(u));const j=await r.json();if(j&&j.title){localStorage.setItem('apmSpotifyName',j.title);musicNow()}}catch(e){}}
+let MUS_SHOWN=false,MUS_T=null;
+function restoreMusic(){
+ if(localStorage.getItem('apmSpotify')&&localStorage.getItem('apmMusicOpen')==='1')$('musp').classList.remove('hide');
+ if(localStorage.getItem('apmSpotify')){if(localStorage.getItem('apmSpotifyName'))musicNow(false);else fetchMusicName(false)}else musicNow(false);
+}
+function musicNow(force){
+ const el=$('musNow');if(!el)return;
+ if(!localStorage.getItem('apmSpotify')){el.hidden=true;return}
+ $('mqT').textContent=localStorage.getItem('apmSpotifyName')||'Playlist Spotify';
+ if(force||!MUS_SHOWN){
+   MUS_SHOWN=true;
+   el.hidden=false;el.classList.remove('go');void el.offsetWidth;el.classList.add('go');
+   clearTimeout(MUS_T);MUS_T=setTimeout(()=>{el.hidden=true;el.classList.remove('go')},5000);
+ }
+}
+async function fetchMusicName(force){
+ const u=localStorage.getItem('apmSpotifyUrl');
+ if(u){try{const r=await fetch('https://open.spotify.com/oembed?url='+encodeURIComponent(u));const j=await r.json();if(j&&j.title)localStorage.setItem('apmSpotifyName',j.title)}catch(e){}}
+ musicNow(force);
+}
 function setLang(l){LANG=l;localStorage.apmLang=l;buildNav();chrome();if(S.menu)draw()}
 
 async function start(){
