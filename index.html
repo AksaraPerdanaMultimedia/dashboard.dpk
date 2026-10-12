@@ -428,6 +428,14 @@ nav a.ext:hover .xo{transform:translate(2px,-2px)}
 }
 @media(prefers-reduced-motion:reduce){.blink,.blink-a,.st-segera{animation:none}}
 
+/* ===== Filter tanggal (kembali) ===== */
+.dtr{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.dtr label{font-family:'Righteous',cursive;font-size:13px;display:flex;gap:8px;align-items:center;color:var(--tx)}
+.dtr label+label{margin-left:18px}
+.dtr input{padding:7px 10px;font-size:13px}
+.dtr button{padding:7px 14px;font-size:13px}
+@media(max-width:980px){.dtr label+label{margin-left:0}}
+
 /* ===== HP: transisi halus & tata letak rapi (tanpa denyut/kedip/putar) ===== */
 @keyframes fadeUpM{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @media(max-width:980px){
@@ -562,6 +570,17 @@ nav a.ext:hover .xo{transform:translate(2px,-2px)}
 @keyframes geoRip{0%{transform:scale(.6);opacity:.9}100%{transform:scale(2.6);opacity:0}}
 .geo-lbl{position:absolute;left:20px;top:-7px;white-space:nowrap;background:var(--cream2);color:var(--ink);border:2px solid var(--ink);border-radius:10px;padding:2px 9px;font-family:'Righteous',cursive;font-size:12px;letter-spacing:.03em;box-shadow:2px 2px 0 var(--ink)}
 .geo-lbl b{color:var(--red)}
+
+/* ===== Teks musik berjalan di samping tombol ===== */
+.musnow{position:fixed;left:86px;bottom:26px;z-index:59;width:min(280px,calc(100vw - 120px));height:40px;background:var(--cream2);border:3px solid var(--ink);border-radius:12px;box-shadow:3px 3px 0 var(--ink);overflow:hidden;display:flex;align-items:center}
+.musnow[hidden]{display:none!important}
+.mq{display:inline-flex;white-space:nowrap;font-family:'Righteous',cursive;font-size:13px;letter-spacing:.03em;color:var(--ink);animation:mqRun 16s linear infinite;will-change:transform}
+.mq span{padding-right:48px}
+@keyframes mqRun{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(max-width:980px){
+ .musnow{left:70px;bottom:16px;width:min(240px,calc(100vw - 96px));height:36px}
+ .mq{font-size:12px}
+}
 </style>
 </head>
 <body>
@@ -578,6 +597,7 @@ nav a.ext:hover .xo{transform:translate(2px,-2px)}
 </div>
 
 <button id="mus" class="musbtn" onclick="toggleMusic()" aria-label="Musik"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></button>
+<div id="musNow" class="musnow" hidden><div class="mq" id="mqT"></div></div>
 <div id="musp" class="musp hide">
  <h4 id="musT">Musik</h4>
  <p id="musH"></p>
@@ -622,7 +642,7 @@ const TX={
  wo_hc:[['Bulan','Total','Done','Done %','Pending','Pending %','Cancel','Cancel %','Lainnya','Selisih Total'],['Month','Total','Done','Done %','Pending','Pending %','Cancel','Cancel %','Other','Change in Total']],
  wo_hr:[['Work Order','Customer','Teknisi','Jadwal Ulang','Sisa'],['Work Order','Customer','Technician','Reschedule','Remaining']],
  wo_overdue:['Lewat jadwal','Overdue'], wo_today:['Hari ini','Today'],
- st_done:['Done','Done'], st_pending:['Pending','Pending'], st_cancel:['Cancel','Cancel'], st_working:['Sedang Di Kerjakan Hari Ini','Being Worked On Today'], st_belum:['Belum Dikerjakan','Not Started Yet'], card_resched:['JADWAL ULANG PENDINGAN','RESCHEDULED PENDING'], sd_besok:['Sudah Dijadwalkan Besok','Scheduled for Tomorrow'], sd_hari:['Sudah Dijadwalkan Hari Ini','Scheduled for Today'], sd_tgl:['Sudah Dijadwalkan {tgl}','Scheduled for {tgl}'], ov_allmonths:['Semua bulan','All months'], dt_from:['Dari','From'], dt_to:['Sampai','To'], dt_reset:['Reset','Reset'],
+ st_done:['Done','Done'], st_pending:['Pending','Pending'], st_cancel:['Cancel','Cancel'], st_working:['Sedang Di Kerjakan Hari Ini','Being Worked On Today'], st_belum:['Belum Dikerjakan','Not Started Yet'], card_resched:['JADWAL ULANG PENDINGAN','RESCHEDULED PENDING'], card_resched_t:['Jadwal Ulang Pendingan','Rescheduled Pending'], sd_besok:['Sudah Dijadwalkan Besok','Scheduled for Tomorrow'], sd_hari:['Sudah Dijadwalkan Hari Ini','Scheduled for Today'], sd_tgl:['Sudah Dijadwalkan {tgl}','Scheduled for {tgl}'], ov_allmonths:['Semua bulan','All months'], dt_from:['Dari','From'], dt_to:['Sampai','To'], dt_reset:['Reset','Reset'],
  // reminder
  rem_now:['SEGERA – JADWAL ULANG HARI INI','URGENT – RESCHEDULE TODAY'], rem_tmr:['SEGERA – JADWAL ULANG BESOK 16.00','URGENT – RESCHEDULE TOMORROW 16:00'],
  rem_h:['PENGINGAT JADWAL ULANG H-','RESCHEDULE REMINDER D-'], rem_sched:['Jadwal:','Schedule:'],
@@ -798,10 +818,15 @@ function musicLabels(){$('musT').textContent=T('mus_title');$('musH').textConten
 function musicInit(){const u=localStorage.getItem('apmSpotify')||'';
  $('musForm').hidden=!!u;$('spf').hidden=!u;$('musChgRow').hidden=!u;
  if(u){if($('spf').getAttribute('src')!==u)$('spf').src=u}else{$('spf').removeAttribute('src')}}
-function saveMusic(){const e=musicEmbed($('spl').value);$('musErr').hidden=!!e;if(!e)return;localStorage.setItem('apmSpotify',e);musicInit()}
-function changeMusic(){localStorage.removeItem('apmSpotify');$('spl').value='';musicInit()}
+function saveMusic(){const e=musicEmbed($('spl').value);$('musErr').hidden=!!e;if(!e)return;localStorage.setItem('apmSpotify',e);localStorage.setItem('apmSpotifyUrl',$('spl').value.trim());localStorage.removeItem('apmSpotifyName');musicInit();musicNow();fetchMusicName()}
+function changeMusic(){localStorage.removeItem('apmSpotify');localStorage.removeItem('apmSpotifyUrl');localStorage.removeItem('apmSpotifyName');$('spl').value='';musicInit();musicNow()}
 function toggleMusic(){const h=$('musp').classList.toggle('hide');localStorage.setItem('apmMusicOpen',h?'0':'1')}
-function restoreMusic(){if(localStorage.getItem('apmSpotify')&&localStorage.getItem('apmMusicOpen')==='1')$('musp').classList.remove('hide')}
+function restoreMusic(){if(localStorage.getItem('apmSpotify')&&localStorage.getItem('apmMusicOpen')==='1')$('musp').classList.remove('hide');musicNow();if(localStorage.getItem('apmSpotify')&&!localStorage.getItem('apmSpotifyName'))fetchMusicName()}
+function musicNow(){const el=$('musNow');if(!el)return;const u=localStorage.getItem('apmSpotify');el.hidden=!u;if(!u)return;
+ const t='Musik: '+(localStorage.getItem('apmSpotifyName')||'Playlist Spotify')+'   •   ';
+ $('mqT').innerHTML='<span>'+E(t)+'</span><span>'+E(t)+'</span>'}
+async function fetchMusicName(){const u=localStorage.getItem('apmSpotifyUrl');if(!u)return;
+ try{const r=await fetch('https://open.spotify.com/oembed?url='+encodeURIComponent(u));const j=await r.json();if(j&&j.title){localStorage.setItem('apmSpotifyName',j.title);musicNow()}}catch(e){}}
 function setLang(l){LANG=l;localStorage.apmLang=l;buildNav();chrome();if(S.menu)draw()}
 
 async function start(){
@@ -923,7 +948,7 @@ R.wo=function(rows){
    const lab=m.k===k?`<b style="color:var(--ac)">${E(monLabel(m.k))}</b>`:E(monLabel(m.k));
    return [{h:lab},m.t,m.done,pp(m.done),m.pend,pp(m.pend),m.canc,pp(m.canc),m.lain,dh]});
  const WL={ALL:T('wo_all'),DONE:T('st_done'),PENDING:T('st_pending'),CANCEL:T('st_cancel'),LAIN:T('st_working'),BELUM:T('st_belum'),RESCHED:T('card_resched')};
- const seg=[['ALL',T('wo_all'),base.length],['DONE',T('st_done'),bc('DONE')],['PENDING',T('st_pending'),bc('PENDING')],['CANCEL',T('st_cancel'),bc('CANCEL')],['LAIN',T('st_working'),bc('LAIN')],['RESCHED',T('card_resched'),cR]]
+ const seg=[['ALL',T('wo_all'),base.length],['DONE',T('st_done'),bc('DONE')],['PENDING',T('st_pending'),bc('PENDING')],['CANCEL',T('st_cancel'),bc('CANCEL')],['LAIN',T('st_working'),bc('LAIN')],['RESCHED',T('card_resched_t'),cR]]
    .map(([v,t,q])=>`<button class="${S.wf===v?'on':''}" onclick="wfSet('${v}')">${E(t)} · ${q}</button>`).join('');
  $('out').innerHTML=`${remH}
  <div class="grid kpis">
